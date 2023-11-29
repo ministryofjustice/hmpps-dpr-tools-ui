@@ -17,6 +17,7 @@ import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 
 import routes from './routes'
+import previewRoutes from './routes/preview'
 import type { Services } from './services'
 
 export default function createApp(services: Services): express.Application {
@@ -39,6 +40,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCurrentUser(services))
 
   app.use(routes())
+  app.use(previewRoutes(services.reportingClient))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

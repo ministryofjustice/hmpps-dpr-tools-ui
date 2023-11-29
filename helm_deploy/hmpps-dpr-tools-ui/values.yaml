@@ -1,18 +1,17 @@
 generic-service:
-  nameOverride: hmpps-dpr-fake-dps-service-ui
+  nameOverride: hmpps-dpr-tools-ui
   productId: "UNASSIGNED" # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
   replicaCount: 2
 
   image:
-    repository: quay.io/hmpps/hmpps-dpr-fake-dps-service-ui
+    repository: quay.io/hmpps/hmpps-dpr-tools-ui
     tag: app_version # override at deployment time
     port: 3000
 
   ingress:
     enabled: true
-    host: hmpps-dpr-fake-dps-service-ui.hmpps.service.justice.gov.uk
-    tlsSecretName: hmpps-dpr-fake-dps-service-cert
+    tlsSecretName: hmpps-dpr-tools-cert
 
   livenessProbe:
     httpGet:
@@ -36,18 +35,13 @@ generic-service:
     APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
-    INGRESS_URL: https://hmpps-dpr-fake-dps-service-ui.hmpps.service.justice.gov.uk
-    API_URL: https://hmpps-dpr-fake-dps-service.hmpps.service.justice.gov.uk
-
-  # Pre-existing kubernetes secrets to load as environment variables in the deployment.
-  # namespace_secrets:
-  #   [name of kubernetes secret]:
-  #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
+    INGRESS_URL: dpr-tools-ui-dev.hmpps.service.justice.gov.uk
+    AUTHORISED_ROLES: ROLE_PRISONS_TOOLS_USER
 
   namespace_secrets:
-    hmpps-dpr-fake-dps-service-ui:
+    hmpps-dpr-tools-ui:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
-    hmpps-dpr-fake-dps-service-ui-ec-cluster-output:
+    hmpps-dpr-tools-ui-ec-cluster-output:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"
     ui-session-secret:
@@ -63,4 +57,4 @@ generic-service:
       - internal
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-dpr-fake-dps-service-ui
+  targetApplication: hmpps-dpr-tools-ui

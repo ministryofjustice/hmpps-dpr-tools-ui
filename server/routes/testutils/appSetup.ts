@@ -2,12 +2,17 @@ import express, { Express } from 'express'
 import cookieSession from 'cookie-session'
 import { NotFound } from 'http-errors'
 
+import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/reportingClient'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
-import type { Services } from '../../services'
 import type { ApplicationInfo } from '../../applicationInfo'
+import previewRoutes from '../preview'
+
+const reportingClient: ReportingClient = jest.createMockFromModule(
+  '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/reportingClient',
+)
 
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',
@@ -48,6 +53,7 @@ function appSetup(production: boolean, userSupplier: () => Express.User): Expres
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes())
+  app.use(previewRoutes(reportingClient))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 
@@ -59,7 +65,6 @@ export function appWithAllRoutes({
   userSupplier = () => user,
 }: {
   production?: boolean
-  services?: Partial<Services>
   userSupplier?: () => Express.User
 }): Express {
   auth.default.authenticationMiddleware = () => (req, res, next) => next()

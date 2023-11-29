@@ -1,6 +1,6 @@
-# HMPPS DPR Fake DPS Service UI
-[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-dpr-fake-dps-service-ui)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-dpr-fake-dps-service-ui "Link to report")
-[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-dpr-fake-dps-service-ui/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-dpr-fake-dps-service-ui)
+# HMPPS DPR Tools UI
+[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-dpr-tools-ui)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-dpr-tools-ui "Link to report")
+[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-dpr-tools-ui/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-dpr-tools-ui)
 
 Template github repo used for new Typescript based projects.
 

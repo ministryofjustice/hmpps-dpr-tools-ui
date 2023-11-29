@@ -18,7 +18,7 @@ describe('GET /', () => {
       .get('/')
       .expect('Content-Type', /html/)
       .expect(res => {
-        expect(res.text).toContain('DPR Fake DPS Service')
+        expect(res.text).toContain('HMPPS DPR Tools UI')
       })
   })
 })

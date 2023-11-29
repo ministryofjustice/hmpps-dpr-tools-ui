@@ -71,7 +71,7 @@ export default {
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
     report: {
-      url: get('API_URL', 'https://hmpps-dpr-fake-dps-service.hmpps.service.justice.gov.uk', requiredInProduction),
+      url: get('API_URL', 'https://dpr-tools-api-dev.hmpps.service.justice.gov.uk', requiredInProduction),
       timeout: Number(get('API_TIMEOUT', 10000)),
     },
   },
