@@ -29,6 +29,16 @@ export interface ApiConfig {
   agent: AgentConfig
 }
 
+function getAuthorisedRoles() {
+  const envVarRoles = get('AUTHORISED_ROLES', '', requiredInProduction)
+
+  if (envVarRoles.length !== 0) {
+    return envVarRoles.split(',')
+  }
+
+  return []
+}
+
 export default {
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
   productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
@@ -77,4 +87,7 @@ export default {
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
+  authorisation: {
+    roles: getAuthorisedRoles(),
+  },
 }
