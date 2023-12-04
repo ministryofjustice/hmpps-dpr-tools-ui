@@ -19,6 +19,7 @@ import setUpWebSession from './middleware/setUpWebSession'
 import routes from './routes'
 import previewRoutes from './routes/preview'
 import type { Services } from './services'
+import config from './config'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -35,7 +36,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app, services.applicationInfo)
   app.use(setUpAuthentication())
-  app.use(authorisationMiddleware())
+  app.use(authorisationMiddleware(config.authorisation.roles))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
 
