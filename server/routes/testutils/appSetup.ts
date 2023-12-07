@@ -11,11 +11,49 @@ import type { ApplicationInfo } from '../../applicationInfo'
 import previewRoutes from '../preview'
 import PreviewClient from '../../data/previewClient'
 
-const reportingClient: ReportingClient = jest.createMockFromModule(
-  '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/reportingClient',
-)
+const definitions = [
+  {
+    id: 'test',
+    name: 'Test definition',
+    description: 'This is a test definition',
+    variants: [
+      {
+        id: 'testvariant',
+        name: 'Test variant',
+        description: 'This is a test variant definition',
+        specification: {
+          template: 'list',
+          fields: [
+            {
+              name: 'field',
+              display: 'Field',
+              defaultsort: true,
+            },
+          ],
+        },
+      },
+    ],
+  },
+]
 
-const previewClient: PreviewClient = jest.createMockFromModule('../../data/previewClient')
+const reportingClient: ReportingClient = {
+  // @ts-expect-error Incomplete value for testing
+  getDefinitions: () => Promise.resolve(definitions),
+  getCount: () => Promise.resolve(123),
+  getList: () => Promise.resolve([{ field: 'Value' }]),
+}
+
+// @ts-expect-error Incomplete value for testing
+const previewClient: PreviewClient = {
+  deleteDefinition: () => {
+    definitions.pop()
+    return Promise.resolve()
+  },
+  uploadDefinition: definition => {
+    definitions.push(JSON.parse(definition))
+    return Promise.resolve()
+  },
+}
 
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',

@@ -23,8 +23,8 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
 
           if (req.params.variantId) {
             const variant = definition.variants.find(v => v.id === req.params.variantId)
-            if (!definition) {
-              next(`Definition ID not found: ${req.params.definitionId}`)
+            if (!variant) {
+              next(`Variant ID not found: ${req.params.definitionId}`)
             }
             res.locals.variant = variant
           }
@@ -121,7 +121,9 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
         break
 
       default:
-        next()
+        next(
+          `Unrecognised template: '${variantDefinition.specification.template}', currently only 'list' is supported.`,
+        )
     }
   })
 
