@@ -1,10 +1,12 @@
 import { NextFunction, Request, type RequestHandler, Response, Router } from 'express'
+import multer from 'multer'
 import ReportListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/utils'
 import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/reportingClient'
 import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
 import asyncMiddleware from '../middleware/asyncMiddleware'
+import PreviewClient from '../data/previewClient'
 
-export default function routes(reportingClient: ReportingClient): Router {
+export default function routes(reportingClient: ReportingClient, previewClient: PreviewClient): Router {
   const router = Router()
 
   const populateDefinitions = (req: Request, res: Response, next: NextFunction) => {
@@ -56,47 +58,29 @@ export default function routes(reportingClient: ReportingClient): Router {
   get('/preview', (req, res) => {
     const reportDefinitions: Array<components['schemas']['ReportDefinition']> = res.locals.reports
 
-    res.render('pages/card', {
+    res.render('pages/preview', {
       title: 'Preview Reports',
-      groups: [
-        {
-          cards: [
-            {
-              text: 'Upload',
-              href: '/preview/upload',
-              description: 'Upload a report definition',
-            },
-          ],
-        },
-        {
-          title: 'Definition Previews',
-          cards: reportDefinitions.map(definition => ({
-            text: definition.name,
-            description: definition.description,
-            href: `/preview/definitions/${definition.id}`,
-          })),
-        },
-      ],
+      cards: reportDefinitions.map(definition => ({
+        text: definition.name,
+        description: definition.description,
+        href: `/preview/definitions/${definition.id}`,
+      })),
+      definitions: reportDefinitions.map(definition => ({
+        value: definition.id,
+        text: definition.name,
+      })),
+      errorSummary: req.query.errorSummary,
+      errorMessage: req.query.errorMessage,
     })
   })
 
-  get('/preview/definitions/{definitionId}', (req, res) => {
+  get('/preview/definitions/:definitionId', (req, res) => {
     const reportDefinition: components['schemas']['ReportDefinition'] = res.locals.report
 
     res.render('pages/card', {
-      title: 'Preview Reports - ',
+      title: reportDefinition.name,
       groups: [
         {
-          cards: [
-            {
-              text: 'Upload',
-              href: '/preview/upload',
-              description: 'Upload a report definition',
-            },
-          ],
-        },
-        {
-          title: 'Definition Previews',
           cards: reportDefinition.variants.map(variant => ({
             text: variant.name,
             description: variant.description,
@@ -108,7 +92,7 @@ export default function routes(reportingClient: ReportingClient): Router {
     })
   })
 
-  get('/preview/definitions/{definitionId}/{variantId}', (req, res, next) => {
+  get('/preview/definitions/:definitionId/:variantId', (req, res, next) => {
     const reportDefinition: components['schemas']['ReportDefinition'] = res.locals.report
     const variantDefinition: components['schemas']['VariantDefinition'] = res.locals.variant
     const { resourceName } = variantDefinition
@@ -139,6 +123,37 @@ export default function routes(reportingClient: ReportingClient): Router {
       default:
         next()
     }
+  })
+
+  router.post('/preview/delete', (req, res) => {
+    const deleteDefinitionId = req.body.deleteDefinition
+    const { token } = res.locals.user
+
+    previewClient.deleteDefinition(deleteDefinitionId, token).then(() => {
+      res.redirect('/preview')
+    })
+  })
+
+  const storage = multer.memoryStorage()
+  const upload = multer({ storage })
+
+  router.post('/preview/upload', upload.single('uploadDefinition'), (req, res) => {
+    const definition = req.file
+    const { token } = res.locals.user
+
+    previewClient
+      .uploadDefinition(definition.buffer.toString(), token)
+      .then(() => {
+        res.redirect('/preview')
+      })
+      .catch(reason => {
+        let summary = 'Invalid definition'
+        if (reason.status !== 400) {
+          summary = 'Upload failed'
+        }
+        const message = (reason.data ?? {}).userMessage
+        res.redirect(`/preview?errorSummary=${encodeURI(summary)}&errorMessage=${encodeURI(message)}`)
+      })
   })
 
   return router

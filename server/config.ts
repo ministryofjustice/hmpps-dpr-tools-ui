@@ -20,15 +20,6 @@ export class AgentConfig {
   }
 }
 
-export interface ApiConfig {
-  url: string
-  timeout: {
-    response: number
-    deadline: number
-  }
-  agent: AgentConfig
-}
-
 function getAuthorisedRoles() {
   const envVarRoles = get('AUTHORISED_ROLES', '', requiredInProduction)
 

@@ -2,6 +2,7 @@ import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-f
 import { dataAccess } from '../data'
 import UserService from './userService'
 import config from '../config'
+import PreviewClient from '../data/previewClient'
 
 export const services = () => {
   const { hmppsAuthClient, applicationInfo } = dataAccess()
@@ -15,10 +16,18 @@ export const services = () => {
     },
   })
 
+  const previewClient = new PreviewClient({
+    url: config.apis.report.url,
+    agent: {
+      timeout: config.apis.report.timeout,
+    },
+  })
+
   return {
     applicationInfo,
     userService,
     reportingClient,
+    previewClient,
   }
 }
 

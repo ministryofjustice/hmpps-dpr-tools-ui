@@ -1,0 +1,101 @@
+{% from "dpr/components/card-group/view.njk" import dprCardGroup %}
+{% from "govuk/components/accordion/macro.njk" import govukAccordion %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + title %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  <h1>{{ title }}</h1>
+
+  {% if errorMessage %}
+    {{ govukErrorSummary({
+      titleText: errorSummary,
+      errorList: [
+        {
+          text: errorMessage
+        }
+      ]
+    }) }}
+  {% endif %}
+
+  {% set uploadDefinition %}
+    <div class="govuk-grid-row">
+      <form action="/preview/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
+        <div class="govuk-grid-column-one-third">
+          {{ govukInput({
+            id: "uploadDefinition",
+            name: "uploadDefinition",
+            type: "file",
+            attributes: {
+              accept: "application/json"
+            }
+          }) }}
+        </div>
+        <div class="govuk-grid-column-one-third">
+          {{ govukButton({
+            text: "Upload",
+            type: "submit"
+          }) }}
+        </div>
+      </form>
+    </div>
+  {% endset %}
+
+  {% set deleteDefinition %}
+    <div class="govuk-grid-row">
+      <form action="/preview/delete" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <div class="govuk-grid-column-one-third">
+          {{ govukSelect({
+            id: "deleteDefinition",
+            name: "deleteDefinition",
+            items: definitions
+          }) }}
+        </div>
+        <div class="govuk-grid-column-one-third">
+          {{ govukButton({
+            text: "Delete",
+            type: "submit"
+          }) }}
+        </div>
+      </form>
+    </div>
+
+  {% endset %}
+
+  {{ govukAccordion({
+    rememberExpanded: false,
+    items: [
+      {
+        heading: {
+          text: "Upload definition"
+        },
+        content: {
+          html: uploadDefinition
+        }
+      },
+      {
+        heading: {
+          text: "Delete definition"
+        },
+        content: {
+          html: deleteDefinition
+        }
+      }
+    ]
+  }) }}
+
+  <h2>Preview definitions</h2>
+
+  <div class="govuk-width-container ">
+    {{ dprCardGroup(cards) }}
+  </div>
+
+{% endblock %}

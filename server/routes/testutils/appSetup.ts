@@ -9,10 +9,13 @@ import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
 import type { ApplicationInfo } from '../../applicationInfo'
 import previewRoutes from '../preview'
+import PreviewClient from '../../data/previewClient'
 
 const reportingClient: ReportingClient = jest.createMockFromModule(
   '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/reportingClient',
 )
+
+const previewClient: PreviewClient = jest.createMockFromModule('../../data/previewClient')
 
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',
@@ -53,7 +56,7 @@ function appSetup(production: boolean, userSupplier: () => Express.User): Expres
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes())
-  app.use(previewRoutes(reportingClient))
+  app.use(previewRoutes(reportingClient, previewClient))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 

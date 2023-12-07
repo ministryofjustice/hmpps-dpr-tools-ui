@@ -3,9 +3,9 @@ import { Readable } from 'stream'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 import superagent from 'superagent'
 
+import type { ApiConfig } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/types'
 import logger from '../../logger'
 import sanitiseError from '../sanitisedError'
-import type { ApiConfig } from '../config'
 import type { UnsanitisedError } from '../sanitisedError'
 import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
 
@@ -18,7 +18,7 @@ interface Request {
 }
 
 interface RequestWithBody extends Request {
-  data?: Record<string, unknown>
+  data?: Record<string, unknown> | string
   retry?: boolean
 }
 
@@ -44,7 +44,7 @@ export default class RestClient {
   }
 
   private timeoutConfig() {
-    return this.config.timeout
+    return this.config.agent.timeout
   }
 
   async get<Response = unknown>({
@@ -61,7 +61,7 @@ export default class RestClient {
         .query(query)
         .agent(this.agent)
         .use(restClientMetricsMiddleware)
-        .retry(2, (err, res) => {
+        .retry(2, err => {
           if (err) logger.info(`Retry handler found ${this.name} API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
@@ -89,7 +89,7 @@ export default class RestClient {
         .send(data)
         .agent(this.agent)
         .use(restClientMetricsMiddleware)
-        .retry(2, (err, res) => {
+        .retry(2, err => {
           if (retry === false) {
             return false
           }
@@ -135,7 +135,7 @@ export default class RestClient {
         .query(query)
         .agent(this.agent)
         .use(restClientMetricsMiddleware)
-        .retry(2, (err, res) => {
+        .retry(2, err => {
           if (err) logger.info(`Retry handler found ${this.name} API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
@@ -160,7 +160,7 @@ export default class RestClient {
         .agent(this.agent)
         .auth(this.token, { type: 'bearer' })
         .use(restClientMetricsMiddleware)
-        .retry(2, (err, res) => {
+        .retry(2, err => {
           if (err) logger.info(`Retry handler found ${this.name} API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
