@@ -56,7 +56,7 @@ const redirect = () =>
       urlPattern: '/auth/oauth/authorize\\?response_type=code&redirect_uri=.+?&state=.+?&client_id=clientid',
     },
     response: {
-      status: 302,
+      status: 200,
       headers: {
         'Content-Type': 'text/html',
         Location: 'http://localhost:3007/sign-in/callback?code=codexxxx&state=stateyyyy',
