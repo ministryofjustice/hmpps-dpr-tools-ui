@@ -7,10 +7,6 @@ const restClient = new RestClient(
   'api-name',
   {
     url: 'http://localhost:8080/api',
-    timeout: {
-      response: 1000,
-      deadline: 1000,
-    },
     agent: new AgentConfig(1000),
   },
   'token-1',

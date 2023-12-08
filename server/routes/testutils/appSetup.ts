@@ -9,10 +9,51 @@ import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
 import type { ApplicationInfo } from '../../applicationInfo'
 import previewRoutes from '../preview'
+import PreviewClient from '../../data/previewClient'
 
-const reportingClient: ReportingClient = jest.createMockFromModule(
-  '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/reportingClient',
-)
+const definitions = [
+  {
+    id: 'test',
+    name: 'Test definition',
+    description: 'This is a test definition',
+    variants: [
+      {
+        id: 'testvariant',
+        name: 'Test variant',
+        description: 'This is a test variant definition',
+        specification: {
+          template: 'list',
+          fields: [
+            {
+              name: 'field',
+              display: 'Field',
+              defaultsort: true,
+            },
+          ],
+        },
+      },
+    ],
+  },
+]
+
+const reportingClient: ReportingClient = {
+  // @ts-expect-error Incomplete value for testing
+  getDefinitions: () => Promise.resolve(definitions),
+  getCount: () => Promise.resolve(123),
+  getList: () => Promise.resolve([{ field: 'Value' }]),
+}
+
+// @ts-expect-error Incomplete value for testing
+const previewClient: PreviewClient = {
+  deleteDefinition: () => {
+    definitions.pop()
+    return Promise.resolve()
+  },
+  uploadDefinition: (definitionId, definition) => {
+    definitions.push(JSON.parse(definition))
+    return Promise.resolve()
+  },
+}
 
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',
@@ -53,7 +94,7 @@ function appSetup(production: boolean, userSupplier: () => Express.User): Expres
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(routes())
-  app.use(previewRoutes(reportingClient))
+  app.use(previewRoutes(reportingClient, previewClient))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 

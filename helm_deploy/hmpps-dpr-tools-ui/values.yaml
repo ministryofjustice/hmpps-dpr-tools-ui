@@ -36,7 +36,7 @@ generic-service:
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
     INGRESS_URL: dpr-tools-ui-dev.hmpps.service.justice.gov.uk
-    AUTHORISED_ROLES: ROLE_PRISONS_TOOLS_USER
+    AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
 
   namespace_secrets:
     hmpps-dpr-tools-ui:
