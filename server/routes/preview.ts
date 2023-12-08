@@ -143,8 +143,11 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
     const definition = req.file
     const { token } = res.locals.user
 
+    const definitionBody = definition.buffer.toString()
+    const definitionId = JSON.parse(definitionBody)
+
     previewClient
-      .uploadDefinition(definition.buffer.toString(), token)
+      .uploadDefinition(definitionId, definitionBody, token)
       .then(() => {
         res.redirect('/preview')
       })
