@@ -86,9 +86,9 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
             description: variant.description,
             href: `/preview/definitions/${req.params.definitionId}/${variant.id}`,
           })),
-          breadCrumbList: [{ text: 'Preview reports', href: '/preview' }],
         },
       ],
+      breadCrumbList: [{ title: 'Preview reports', href: '/preview' }],
     })
   })
 
@@ -112,8 +112,8 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
           }),
           otherOptions: {
             breadCrumbList: [
-              { text: 'Preview reports', href: '/preview' },
-              { text: reportDefinition.name, href: `/preview/definitions/${reportDefinition.id}` },
+              { title: 'Preview reports', href: '/preview' },
+              { title: reportDefinition.name, href: `/preview/definitions/${reportDefinition.id}` },
             ],
           },
           layoutTemplate: 'partials/layout.njk',
