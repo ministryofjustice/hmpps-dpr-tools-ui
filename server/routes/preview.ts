@@ -144,7 +144,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
     const { token } = res.locals.user
 
     const definitionBody = definition.buffer.toString()
-    const definitionId = JSON.parse(definitionBody)
+    const definitionId = JSON.parse(definitionBody).id
 
     previewClient
       .uploadDefinition(definitionId, definitionBody, token)
