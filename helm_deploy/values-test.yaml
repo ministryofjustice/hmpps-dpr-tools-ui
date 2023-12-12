@@ -11,10 +11,5 @@ generic-service:
     API_URL: "http://hmpps-dpr-tools-api-test.hmpps-dpr-tools-test.svc.cluster.local"
     TOKEN_VERIFICATION_ENABLED: true
 
-  allowlist:
-    groups:
-      - circleci
-      - internal
-
 generic-prometheus-alerts:
   alertSeverity: digital-prison-reporting-dev
