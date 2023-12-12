@@ -27,7 +27,7 @@
 
   {% set uploadDefinition %}
     <div class="govuk-grid-row">
-      <form action="/preview/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
+      <form id="upload-definition-form" action="/preview/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
         <div class="govuk-grid-column-one-third">
           {{ govukInput({
             id: "uploadDefinition",

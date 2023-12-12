@@ -5,5 +5,6 @@ $(function () {
     const button = $('#upload-definition-form-submit')
     button.prop('disabled', true)
     button.text('Please wait')
+    $('#upload-definition-form').trigger('submit')
   })
 })
