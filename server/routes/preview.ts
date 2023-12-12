@@ -1,6 +1,7 @@
 import { NextFunction, Request, type RequestHandler, Response, Router } from 'express'
 import multer from 'multer'
 import ReportListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/utils'
+import CardUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/card-group/utils'
 import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/reportingClient'
 import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
 import asyncMiddleware from '../middleware/asyncMiddleware'
@@ -60,11 +61,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
 
     res.render('pages/preview', {
       title: 'Preview Reports',
-      cards: reportDefinitions.map(definition => ({
-        text: definition.name,
-        description: definition.description,
-        href: `/preview/definitions/${definition.id}`,
-      })),
+      cards: CardUtils.reportDefinitionsToCards(reportDefinitions, '/preview/definitions'),
       definitions: reportDefinitions.map(definition => ({
         value: definition.id,
         text: definition.name,
@@ -81,11 +78,11 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
       title: reportDefinition.name,
       groups: [
         {
-          cards: reportDefinition.variants.map(variant => ({
-            text: variant.name,
-            description: variant.description,
-            href: `/preview/definitions/${req.params.definitionId}/${variant.id}`,
-          })),
+          cards: CardUtils.variantDefinitionsToCards(
+            reportDefinition,
+            '/preview/definitions',
+            ReportListUtils.filtersQueryParameterPrefix,
+          ),
         },
       ],
       breadCrumbList: [{ title: 'Preview reports', href: '/preview' }],
