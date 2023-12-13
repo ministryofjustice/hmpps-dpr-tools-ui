@@ -5,6 +5,8 @@ export default class PreviewPage extends Page {
     super('Preview Reports')
   }
 
+  uploadDefinitionAccordionButton = (): PageElement => cy.get('.govuk-accordion__section-toggle-text:first-child')
+
   uploadDefinitionInput = (): PageElement => cy.get('#uploadDefinition')
 
   uploadDefinitionSubmit = (): PageElement => cy.get('#upload-definition-form-submit')
