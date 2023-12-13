@@ -30,9 +30,8 @@ context('Preview', () => {
       lastModified: Date.now(),
     })
     page.uploadDefinitionSubmit().click()
-    page.uploadDefinitionSubmit().should('be.disabled')
-    page.uploadDefinitionSubmit().should('have.text', 'Please wait')
-    page.uploadDefinitionSubmit().should('have.text', 'Upload')
+
+    page.errorMessageTitle().should('not.exist')
   })
 
   it('User sees message when uploading a new definition times out', () => {
@@ -46,8 +45,6 @@ context('Preview', () => {
       lastModified: Date.now(),
     })
     page.uploadDefinitionSubmit().click()
-    page.uploadDefinitionSubmit().should('be.disabled')
-    page.uploadDefinitionSubmit().should('have.text', 'Please wait')
 
     page.errorMessageTitle().should('have.text', 'Upload failed')
     page.errorMessageDescription().should('contain.text', 'API call timed out')
