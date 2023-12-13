@@ -47,6 +47,6 @@ context('Preview', () => {
     page.uploadDefinitionSubmit().click()
 
     page.errorMessageTitle().should('contain.text', 'Upload failed')
-    page.errorMessageDescription().should('contain.text', 'API call timed out')
+    page.errorMessageDescription().should('contain.text', 'Timeout of 2000ms exceeded')
   })
 })

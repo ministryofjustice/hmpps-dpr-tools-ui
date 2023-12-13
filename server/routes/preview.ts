@@ -153,8 +153,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
         if (reason.status !== 400) {
           summary = 'Upload failed'
         }
-        // const message = (reason.data ?? {}).userMessage
-        const message = JSON.stringify(reason)
+        const message = reason.data ? reason.data.userMessage : reason.message
         res.redirect(`/preview?errorSummary=${encodeURI(summary)}&errorMessage=${encodeURI(message)}`)
       })
   })
