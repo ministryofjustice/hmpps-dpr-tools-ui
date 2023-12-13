@@ -179,8 +179,24 @@ const stubDefinitions = () =>
     },
   })
 
+const stubUploadDefinitionSuccess = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/reports/definitions/success',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      fixedDelayMilliseconds: 1000,
+    },
+  })
+
 export default {
   stubExternalMovementsCount,
   stubExternalMovements,
   stubDefinitions,
+  stubUploadDefinitionSuccess,
 }
