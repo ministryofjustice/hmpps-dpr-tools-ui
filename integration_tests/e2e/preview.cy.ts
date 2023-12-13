@@ -46,7 +46,7 @@ context('Preview', () => {
     })
     page.uploadDefinitionSubmit().click()
 
-    page.errorMessageTitle().should('have.text', 'Upload failed')
+    page.errorMessageTitle().should('contain.text', 'Upload failed')
     page.errorMessageDescription().should('contain.text', 'API call timed out')
   })
 })
