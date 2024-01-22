@@ -1,4 +1,4 @@
-import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/reportingClient'
+import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
 import { dataAccess } from '../data'
 import UserService from './userService'
 import config from '../config'

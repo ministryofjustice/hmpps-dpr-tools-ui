@@ -1,4 +1,4 @@
-import type { ApiConfig } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/types'
+import type { ApiConfig } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/types'
 import RestClient from './restClient'
 
 export default class PreviewClient {

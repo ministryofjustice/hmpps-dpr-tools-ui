@@ -73,7 +73,7 @@ export default {
     },
     report: {
       url: get('API_URL', 'https://dpr-tools-api-dev.hmpps.service.justice.gov.uk', requiredInProduction),
-      timeout: Number(get('API_TIMEOUT', 60000)),
+      timeout: Number(get('API_TIMEOUT', 120000)),
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
