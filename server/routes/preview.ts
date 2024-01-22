@@ -2,7 +2,7 @@ import { NextFunction, Request, type RequestHandler, Response, Router } from 'ex
 import multer from 'multer'
 import ReportListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/utils'
 import CardUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/card-group/utils'
-import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/data/reportingClient'
+import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
 import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import PreviewClient from '../data/previewClient'
@@ -99,7 +99,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
       case 'list':
         ReportListUtils.renderListWithData({
           title: `${reportDefinition.name} - ${variantDefinition.name}`,
-          fields: variantDefinition.specification.fields,
+          variantDefinition,
           request: req,
           response: res,
           next,
@@ -114,6 +114,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
             ],
           },
           layoutTemplate: 'partials/layout.njk',
+          dynamicAutocompleteEndpoint: `/preview/values/${reportDefinition.id}/${variantDefinition.id}/{fieldName}?prefix={prefix}`,
         })
         break
 
@@ -155,6 +156,24 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
         }
         const message = reason.data ? reason.data.userMessage : reason.message
         res.redirect(`/preview?errorSummary=${encodeURI(summary)}&errorMessage=${encodeURI(message)}`)
+      })
+  })
+
+  get('/preview/values/:definitionId/:variantId/:fieldName', (req, res, next) => {
+    reportingClient
+      .getFieldValues({
+        token: res.locals.user.token,
+        definitionName: req.params.definitionId,
+        variantName: req.params.variantId,
+        fieldName: req.params.fieldName,
+        prefix: req.query.prefix.toString(),
+      })
+      .then(result => {
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify(result))
+      })
+      .catch(err => {
+        next(err)
       })
   })
 

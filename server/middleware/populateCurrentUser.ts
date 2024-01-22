@@ -16,7 +16,7 @@ export default function populateCurrentUser(userService: UserService): RequestHa
       next()
     } catch (error) {
       logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.username}`)
-      next(error)
+      res.redirect('/sign-in')
     }
   }
 }
