@@ -109,6 +109,15 @@ jobs:
       - store_artifacts:
           path: integration_tests/screenshots
 
+  remember-app-version:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    steps:
+      - mem/remember:
+          env_var: APP_VERSION
+          value: "Build.${CIRCLE_WORKFLOW_ID}"
+
 workflows:
   version: 2
   build-test-and-deploy:
