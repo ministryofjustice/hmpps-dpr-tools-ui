@@ -78,11 +78,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
       title: reportDefinition.name,
       groups: [
         {
-          cards: CardUtils.variantDefinitionsToCards(
-            reportDefinition,
-            '/preview/definitions',
-            ReportListUtils.filtersQueryParameterPrefix,
-          ),
+          cards: CardUtils.variantDefinitionsToCards(reportDefinition, '/preview/definitions'),
         },
       ],
       breadCrumbList: [{ title: 'Preview reports', href: '/preview' }],
@@ -95,34 +91,36 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
     const { resourceName } = variantDefinition
     const { token } = res.locals.user
 
-    switch (variantDefinition.specification.template) {
-      case 'list':
-        ReportListUtils.renderListWithData({
-          title: `${reportDefinition.name} - ${variantDefinition.name}`,
-          variantDefinition,
-          request: req,
-          response: res,
-          next,
-          getListDataSources: reportQuery => ({
-            data: reportingClient.getList(resourceName, token, reportQuery),
-            count: reportingClient.getCount(resourceName, token, reportQuery),
-          }),
-          otherOptions: {
-            breadCrumbList: [
-              { title: 'Preview reports', href: '/preview' },
-              { title: reportDefinition.name, href: `/preview/definitions/${reportDefinition.id}` },
-            ],
-          },
-          layoutTemplate: 'partials/layout.njk',
-          dynamicAutocompleteEndpoint: `/preview/values/${reportDefinition.id}/${variantDefinition.id}/{fieldName}?prefix={prefix}`,
-        })
-        break
+    reportingClient.getDefinition(token, reportDefinition.id, variantDefinition.id).then(fullDefinition => {
+      switch (fullDefinition.variant.specification.template) {
+        case 'list':
+          ReportListUtils.renderListWithData({
+            title: `${reportDefinition.name} - ${variantDefinition.name}`,
+            variantDefinition: fullDefinition.variant,
+            request: req,
+            response: res,
+            next,
+            getListDataSources: reportQuery => ({
+              data: reportingClient.getList(resourceName, token, reportQuery),
+              count: reportingClient.getCount(resourceName, token, reportQuery),
+            }),
+            otherOptions: {
+              breadCrumbList: [
+                { title: 'Preview reports', href: '/preview' },
+                { title: reportDefinition.name, href: `/preview/definitions/${reportDefinition.id}` },
+              ],
+            },
+            layoutTemplate: 'partials/layout.njk',
+            dynamicAutocompleteEndpoint: `/preview/values/${reportDefinition.id}/${variantDefinition.id}/{fieldName}?prefix={prefix}`,
+          })
+          break
 
-      default:
-        next(
-          `Unrecognised template: '${variantDefinition.specification.template}', currently only 'list' is supported.`,
-        )
-    }
+        default:
+          next(
+            `Unrecognised template: '${variantDefinition.specification.template}', currently only 'list' is supported.`,
+          )
+      }
+    })
   })
 
   router.post('/preview/delete', (req, res) => {
