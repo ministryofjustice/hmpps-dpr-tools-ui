@@ -57,7 +57,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
   })
 
   get('/preview', (req, res) => {
-    const reportDefinitions: Array<components['schemas']['ReportDefinition']> = res.locals.reports
+    const reportDefinitions: Array<components['schemas']['ReportDefinitionSummary']> = res.locals.reports
 
     res.render('pages/preview', {
       title: 'Preview Reports',
@@ -72,7 +72,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
   })
 
   get('/preview/definitions/:definitionId', (req, res) => {
-    const reportDefinition: components['schemas']['ReportDefinition'] = res.locals.report
+    const reportDefinition: components['schemas']['ReportDefinitionSummary'] = res.locals.report
 
     res.render('pages/card', {
       title: reportDefinition.name,
@@ -86,23 +86,20 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
   })
 
   get('/preview/definitions/:definitionId/:variantId', (req, res, next) => {
-    const reportDefinition: components['schemas']['ReportDefinition'] = res.locals.report
-    const variantDefinition: components['schemas']['VariantDefinition'] = res.locals.variant
-    const { resourceName } = variantDefinition
     const { token } = res.locals.user
 
-    reportingClient.getDefinition(token, reportDefinition.id, variantDefinition.id).then(fullDefinition => {
-      switch (fullDefinition.variant.specification.template) {
+    reportingClient.getDefinition(token, req.params.definitionId, req.params.variantId).then(reportDefinition => {
+      switch (reportDefinition.variant.specification.template) {
         case 'list':
           ReportListUtils.renderListWithData({
-            title: `${reportDefinition.name} - ${variantDefinition.name}`,
-            variantDefinition: fullDefinition.variant,
+            title: `${reportDefinition.name} - ${reportDefinition.variant.name}`,
+            variantDefinition: reportDefinition.variant,
             request: req,
             response: res,
             next,
             getListDataSources: reportQuery => ({
-              data: reportingClient.getList(resourceName, token, reportQuery),
-              count: reportingClient.getCount(resourceName, token, reportQuery),
+              data: reportingClient.getList(reportDefinition.variant.resourceName, token, reportQuery),
+              count: reportingClient.getCount(reportDefinition.variant.resourceName, token, reportQuery),
             }),
             otherOptions: {
               breadCrumbList: [
@@ -111,13 +108,13 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
               ],
             },
             layoutTemplate: 'partials/layout.njk',
-            dynamicAutocompleteEndpoint: `/preview/values/${reportDefinition.id}/${variantDefinition.id}/{fieldName}?prefix={prefix}`,
+            dynamicAutocompleteEndpoint: `/preview/values/${reportDefinition.id}/${reportDefinition.variant.id}/{fieldName}?prefix={prefix}`,
           })
           break
 
         default:
           next(
-            `Unrecognised template: '${variantDefinition.specification.template}', currently only 'list' is supported.`,
+            `Unrecognised template: '${reportDefinition.variant.specification.template}', currently only 'list' is supported.`,
           )
       }
     })

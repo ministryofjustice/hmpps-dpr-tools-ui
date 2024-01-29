@@ -21,16 +21,6 @@ const definitions = [
         id: 'testvariant',
         name: 'Test variant',
         description: 'This is a test variant definition',
-        specification: {
-          template: 'list',
-          fields: [
-            {
-              name: 'field',
-              display: 'Field',
-              defaultsort: true,
-            },
-          ],
-        },
       },
     ],
   },
@@ -58,7 +48,6 @@ const fullDefinition = {
 }
 
 const reportingClient: ReportingClient = {
-  // @ts-expect-error Incomplete value for testing
   getDefinitions: () => Promise.resolve(definitions),
   // @ts-expect-error Incomplete value for testing
   getDefinition: () => Promise.resolve(fullDefinition),
