@@ -57,7 +57,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
   })
 
   get('/preview', (req, res) => {
-    const reportDefinitions: Array<components['schemas']['ReportDefinition']> = res.locals.reports
+    const reportDefinitions: Array<components['schemas']['ReportDefinitionSummary']> = res.locals.reports
 
     res.render('pages/preview', {
       title: 'Preview Reports',
@@ -72,7 +72,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
   })
 
   get('/preview/definitions/:definitionId', (req, res) => {
-    const reportDefinition: components['schemas']['ReportDefinition'] = res.locals.report
+    const reportDefinition: components['schemas']['ReportDefinitionSummary'] = res.locals.report
 
     res.render('pages/card', {
       title: reportDefinition.name,

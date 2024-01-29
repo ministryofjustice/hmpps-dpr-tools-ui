@@ -48,7 +48,6 @@ const fullDefinition = {
 }
 
 const reportingClient: ReportingClient = {
-  // @ts-expect-error Incomplete value for testing
   getDefinitions: () => Promise.resolve(definitions),
   // @ts-expect-error Incomplete value for testing
   getDefinition: () => Promise.resolve(fullDefinition),
