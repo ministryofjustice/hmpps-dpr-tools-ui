@@ -21,16 +21,6 @@ const definitions = [
         id: 'testvariant',
         name: 'Test variant',
         description: 'This is a test variant definition',
-        specification: {
-          template: 'list',
-          fields: [
-            {
-              name: 'field',
-              display: 'Field',
-              defaultsort: true,
-            },
-          ],
-        },
       },
     ],
   },
