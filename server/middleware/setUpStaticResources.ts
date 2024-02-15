@@ -17,11 +17,10 @@ export default function setUpStaticResources(): Router {
     '/assets',
     '/assets/stylesheets',
     '/assets/js',
-    '/node_modules/govuk-frontend/govuk/assets',
-    '/node_modules/govuk-frontend',
+    '/node_modules/govuk-frontend/dist/govuk/assets',
+    '/node_modules/govuk-frontend/dist',
     '/node_modules/@ministryofjustice/frontend/moj/assets',
     '/node_modules/@ministryofjustice/frontend',
-    '/node_modules/jquery/dist',
   ).forEach(dir => {
     router.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
   })
@@ -39,6 +38,11 @@ export default function setUpStaticResources(): Router {
     express.static(
       path.join(process.cwd(), '/node_modules/@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/assets'),
     ),
+  )
+
+  router.use(
+    '/assets/govuk/all.js',
+    express.static(path.join(process.cwd(), '/node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.js')),
   )
 
   // Don't cache dynamic resources
