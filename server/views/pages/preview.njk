@@ -26,10 +26,10 @@
   {% endif %}
 
   {% set uploadDefinition %}
-    <div class="govuk-grid-row">
-      <form id="upload-definition-form" action="/preview/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
-        <div class="govuk-grid-column-one-third">
-          {{ govukInput({
+  <div class="govuk-grid-row">
+    <form id="upload-definition-form" action="/preview/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
+      <div class="govuk-grid-column-one-third">
+        {{ govukInput({
             id: "uploadDefinition",
             name: "uploadDefinition",
             type: "file",
@@ -37,37 +37,37 @@
               accept: "application/json"
             }
           }) }}
-        </div>
-        <div class="govuk-grid-column-one-third">
-          {{ govukButton({
+      </div>
+      <div class="govuk-grid-column-one-third">
+        {{ govukButton({
             id: "upload-definition-form-submit",
             text: "Upload",
             type: "submit"
           }) }}
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
   {% endset %}
 
   {% set deleteDefinition %}
-    <div class="govuk-grid-row">
-      <form action="/preview/delete" method="post">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <div class="govuk-grid-column-one-third">
-          {{ govukSelect({
+  <div class="govuk-grid-row">
+    <form action="/preview/delete" method="post">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <div class="govuk-grid-column-one-third">
+        {{ govukSelect({
             id: "deleteDefinition",
             name: "deleteDefinition",
             items: definitions
           }) }}
-        </div>
-        <div class="govuk-grid-column-one-third">
-          {{ govukButton({
+      </div>
+      <div class="govuk-grid-column-one-third">
+        {{ govukButton({
             text: "Delete",
             type: "submit"
           }) }}
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
 
   {% endset %}
 
@@ -96,7 +96,7 @@
   <h2>Preview definitions</h2>
 
   <div class="govuk-width-container ">
-    {{ dprCardGroup(cards) }}
+    {{ dprCardGroup(cards.items, cards.variant) }}
   </div>
 
 {% endblock %}

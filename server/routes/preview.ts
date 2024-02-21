@@ -44,13 +44,16 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
       title: 'DPR Tools',
       groups: [
         {
-          cards: [
-            {
-              text: 'Preview reports',
-              href: '/preview',
-              description: 'Preview report definitions',
-            },
-          ],
+          cards: {
+            items: [
+              {
+                text: 'Preview reports',
+                href: '/preview',
+                description: 'Preview report definitions',
+              },
+            ],
+            variant: 1,
+          },
         },
       ],
     })
@@ -61,7 +64,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
 
     res.render('pages/preview', {
       title: 'Preview Reports',
-      cards: CardUtils.reportDefinitionsToCards(reportDefinitions, '/preview/definitions'),
+      cards: { items: CardUtils.reportDefinitionsToCards(reportDefinitions, '/preview/definitions'), variant: 1 },
       definitions: reportDefinitions.map(definition => ({
         value: definition.id,
         text: definition.name,
@@ -78,7 +81,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
       title: reportDefinition.name,
       groups: [
         {
-          cards: CardUtils.variantDefinitionsToCards(reportDefinition, '/preview/definitions'),
+          cards: { items: CardUtils.variantDefinitionsToCards(reportDefinition, '/preview/definitions'), variant: 1 },
         },
       ],
       breadCrumbList: [{ title: 'Preview reports', href: '/preview' }],
