@@ -9,14 +9,14 @@
 
   <h1>{{ title }}</h1>
 
-  {%  for group in groups %}
+  {% for group in groups %}
     {% if group.title %}
       <h2>{{ group.title }}</h2>
     {% endif %}
-
-  <div class="govuk-width-container ">
-    {{ dprCardGroup(group.cards) }}
-  </div>
+    {% set cards = group.cards %}
+    <div class="govuk-width-container ">
+      {{ dprCardGroup(cards.items, cards.variant) }}
+    </div>
   {% endfor %}
 
 {% endblock %}

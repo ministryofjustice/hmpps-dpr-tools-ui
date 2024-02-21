@@ -11,13 +11,16 @@ export default function routes(): Router {
       title: 'DPR Tools',
       groups: [
         {
-          cards: [
-            {
-              text: 'Preview reports',
-              href: '/preview',
-              description: 'Preview report definitions',
-            },
-          ],
+          cards: {
+            items: [
+              {
+                text: 'Preview reports',
+                href: '/preview',
+                description: 'Preview report definitions',
+              },
+            ],
+            variant: 1,
+          },
         },
       ],
     })
