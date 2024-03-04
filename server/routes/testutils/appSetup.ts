@@ -108,7 +108,7 @@ function appSetup(production: boolean, userSupplier: () => Express.User): Expres
   app.use(routes())
   app.use(previewRoutes(reportingClient, previewClient))
   app.use((req, res, next) => next(new NotFound()))
-  app.use(errorHandler(production))
+  app.use(errorHandler())
 
   return app
 }
