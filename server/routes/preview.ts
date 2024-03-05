@@ -71,6 +71,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
       })),
       errorSummary: req.query.errorSummary,
       errorMessage: req.query.errorMessage,
+      breadCrumbList: [{ title: 'Home', href: '/' }],
     })
   })
 
@@ -84,7 +85,10 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
           cards: { items: CardUtils.variantDefinitionsToCards(reportDefinition, '/preview/definitions'), variant: 1 },
         },
       ],
-      breadCrumbList: [{ title: 'Preview reports', href: '/preview' }],
+      breadCrumbList: [
+        { title: 'Home', href: '/' },
+        { title: 'Preview reports', href: '/preview' },
+      ],
     })
   })
 
@@ -106,6 +110,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
             }),
             otherOptions: {
               breadCrumbList: [
+                { title: 'Home', href: '/' },
                 { title: 'Preview reports', href: '/preview' },
                 { title: reportDefinition.name, href: `/preview/definitions/${reportDefinition.id}` },
               ],
