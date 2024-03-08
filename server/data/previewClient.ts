@@ -23,4 +23,11 @@ export default class PreviewClient {
       },
     })
   }
+
+  downloadDefinition(definitionId: string, token: string): Promise<Response> {
+    return new RestClient('Preview API Client', this.config, token).get({
+      path: `/definitions/original/${definitionId}`,
+      raw: true,
+    })
+  }
 }

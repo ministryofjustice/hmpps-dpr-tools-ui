@@ -137,6 +137,17 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
     })
   })
 
+  router.post('/preview/download', (req, res) => {
+    const downloadDefinitionId = req.body.downloadDefinition
+    const { token } = res.locals.user
+
+    previewClient.downloadDefinition(downloadDefinitionId, token).then(result => {
+      res.setHeader('Content-Type', 'application/json')
+      res.setHeader('Content-disposition', `attachment; filename=${downloadDefinitionId}.json`)
+      res.end(result.text)
+    })
+  })
+
   const storage = multer.memoryStorage()
   const upload = multer({ storage })
 

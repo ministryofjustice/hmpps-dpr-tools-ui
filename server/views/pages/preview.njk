@@ -71,6 +71,28 @@
 
   {% endset %}
 
+  {% set downloadDefinition %}
+    <div class="govuk-grid-row">
+      <form action="/preview/download" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <div class="govuk-grid-column-one-third">
+          {{ govukSelect({
+            id: "downloadDefinition",
+            name: "downloadDefinition",
+            items: definitions
+          }) }}
+        </div>
+        <div class="govuk-grid-column-one-third">
+          {{ govukButton({
+            text: "Download",
+            type: "submit"
+          }) }}
+        </div>
+      </form>
+    </div>
+
+  {% endset %}
+
   {{ govukAccordion({
     rememberExpanded: false,
     items: [
@@ -88,6 +110,14 @@
         },
         content: {
           html: deleteDefinition
+        }
+      },
+      {
+        heading: {
+          text: "Download definition"
+        },
+        content: {
+          html: downloadDefinition
         }
       }
     ]
