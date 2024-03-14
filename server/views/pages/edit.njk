@@ -1,0 +1,275 @@
+{% from "govuk/components/accordion/macro.njk" import govukAccordion %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "dpr/components/dropdown-button/view.njk"    import dprDropdownButton %}
+
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + title %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ dprDropdownButton({
+    id: "actionButton",
+    text: "Save/Publish",
+    classes: 'dropdown-button-class',
+    groups: [
+      {
+        title: "Save",
+        items: [
+        {
+          text: "Save locally",
+          href: "#",
+          id: "saveLocallyButton"
+        },
+        {
+          text: "Download",
+          href: "#",
+          id: "downloadButton"
+        }
+      ]
+      },
+      {
+        title: "Publish",
+        items: [
+        {
+          text: "Publish to Preview tool",
+          href: "#",
+          id: "publishToPreviewToolButton"
+        },
+        {
+          text: "Publish to console",
+          href: "#",
+          id: "publishToConsoleButton"
+        }
+      ]
+      }
+    ]
+  }) }}
+
+  <h1>DPD Editor</h1>
+
+  {% if errorMessage %}
+    {{ govukErrorSummary({
+      titleText: errorSummary,
+      errorList: [
+        {
+          text: errorMessage
+        }
+      ]
+    }) }}
+  {% endif %}
+
+  {% set reportDetails %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        {{ govukInput({
+          label: {
+            text: "ID"
+          },
+          id: "reportId",
+          name: "reportId",
+          pattern: "[-a-z]"
+        }) }}
+      {{ govukInput({
+        label: {
+          text: "Name"
+        },
+        id: "reportName",
+        name: "reportName"
+      }) }}
+      {{ govukInput({
+        label: {
+          text: "Description"
+        },
+        id: "reportDescription",
+        name: "reportDescription"
+      }) }}
+    </div>
+    <div class="govuk-grid-column-one-half">
+      {{ govukInput({
+        label: {
+          text: "Author"
+        },
+        id: "reportAuthor",
+        name: "reportAuthor"
+      }) }}
+      {{ govukInput({
+        label: {
+          text: "Owner"
+        },
+        id: "reportOwner",
+        name: "reportOwner"
+      }) }}
+      {{ govukInput({
+        label: {
+          text: "Version"
+        },
+        id: "reportVersion",
+        name: "reportVersion"
+      }) }}
+    </div>
+  </div>
+  {% endset %}
+
+  {% set reportDatasets %}
+      <table class="editTable" id="reportDatasets">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Query</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              {{ govukInput({
+                id: "datasetId0",
+                name: "datasetId0",
+                pattern: "[-a-z]*"
+              }) }}
+            </td>
+            <td>
+              {{ govukInput({
+                id: "datasetName0",
+                name: "datasetName0"
+              }) }}
+            </td>
+            <td>
+              {{ govukTextarea({
+                id: "datasetQuery0",
+                name: "datasetQuery0"
+              }) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      {{ govukButton({
+        id: "addDatasetButton",
+        text: "Add row"
+      }) }}
+
+  {% endset %}
+
+  {% set reportVariants %}
+      <table class="editTable" id="reportVariants">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Render</th>
+          <th>Dataset</th>
+          <th>Template</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr data-row-number="0">
+            <td>
+              {{ govukInput({
+                id: "variantId0",
+                name: "variantId0",
+                pattern: "[-a-z]*"
+              }) }}
+            </td>
+            <td>
+              {{ govukInput({
+                id: "variantName0",
+                name: "variantName0"
+              }) }}
+            </td>
+            <td>
+              {{ govukInput({
+                id: "variantDescription0",
+                name: "variantDescription0"
+              }) }}
+            </td>
+            <td>
+              {{ govukSelect({
+                id: "variantRender0",
+                name: "variantRender0",
+                items: [
+                  {
+                    value: "html",
+                    text: "HTML",
+                    selected: true
+                  }
+                ]
+              }) }}
+            </td>
+            <td>
+              {{ govukSelect({
+                id: "variantDataset0",
+                name: "variantDataset0",
+                items: [
+                  {
+                    value: "",
+                    text: "None defined"
+                  }
+                ]
+              }) }}
+            </td>
+            <td>
+              {{ govukSelect({
+                id: "variantTemplate0",
+                name: "variantTemplate0",
+                items: [
+                  {
+                    value: "list",
+                    text: "List",
+                    selected: true
+                  }
+                ]
+              }) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    {{ govukButton({
+      id: "addVariantButton",
+      text: "Add row"
+    }) }}
+
+  {% endset %}
+
+  {{ govukAccordion({
+    rememberExpanded: false,
+    items: [
+      {
+        heading: {
+          text: "Report details"
+        },
+        content: {
+          html: reportDetails
+        }
+      },
+      {
+        heading: {
+          text: "Datasets"
+        },
+        content: {
+          html: reportDatasets
+        }
+      },
+      {
+        heading: {
+          text: "Report variants"
+        },
+        content: {
+          html: reportVariants
+        }
+      }
+    ]
+  }) }}
+
+{% endblock %}
+
+{% block pageSpecificScripts %}
+  <script type="module" src="/assets/editDpd.js"></script>
+{% endblock %}

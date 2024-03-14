@@ -18,6 +18,7 @@ import setUpWebSession from './middleware/setUpWebSession'
 
 import routes from './routes'
 import previewRoutes from './routes/preview'
+import editRoutes from './routes/edit'
 import type { Services } from './services'
 import config from './config'
 
@@ -42,6 +43,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use(routes())
   app.use(previewRoutes(services.reportingClient, services.previewClient))
+  app.use(editRoutes())
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler())

@@ -10,3 +10,20 @@ $govuk-page-width: $moj-page-width;
 @import './components/header-bar';
 @import 'assets/scss/local';
 @import 'node_modules/@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/all';
+
+main.govuk-main-wrapper {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.editTable {
+  width: 100%;
+
+  th {
+    text-align: left;
+  }
+
+  td {
+    vertical-align: top;
+  }
+}
