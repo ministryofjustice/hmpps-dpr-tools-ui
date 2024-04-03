@@ -5,9 +5,9 @@ import config from '../config'
 import PreviewClient from '../data/previewClient'
 
 export const services = () => {
-  const { applicationInfo, hmppsAuthClient } = dataAccess()
+  const { applicationInfo, hmppsAuthClient, hmppsManageUsersClient } = dataAccess()
 
-  const userService = new UserService(hmppsAuthClient)
+  const userService = new UserService(hmppsManageUsersClient)
 
   const reportingClient = new ReportingClient({
     url: config.apis.report.url,
