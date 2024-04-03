@@ -1,16 +1,18 @@
 import { convertToTitleCase } from '../utils/utils'
-import type HmppsManageUsersClient from '../data/hmppsManageUsersClient'
-import type { User } from '../data/hmppsManageUsersClient'
+import type HmppsAuthClient from '../data/hmppsAuthClient'
+import type { User } from '../data/hmppsAuthClient'
+// import type HmppsManageUsersClient from '../data/hmppsManageUsersClient'
+// import type { User } from '../data/hmppsManageUsersClient'
 
 export interface UserDetails extends User {
   displayName: string
 }
 
 export default class UserService {
-  constructor(private readonly hmppsManageUsersClient: HmppsManageUsersClient) {}
+  constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
 
   async getUser(token: string): Promise<UserDetails> {
-    const user = await this.hmppsManageUsersClient.getUser(token)
+    const user = await this.hmppsAuthClient.getUser(token)
     return { ...user, displayName: convertToTitleCase(user.name) }
   }
 }

@@ -51,11 +51,11 @@ export default class HmppsManageUsersClient {
   constructor(private readonly tokenStore: TokenStore) {}
 
   private static restClient(token: string): RestClient {
-    return new RestClient('HMPPS Auth Client', config.apis.manageUsers, token)
+    return new RestClient('HMPPS Manage Users Client', config.apis.manageUsers, token)
   }
 
   getUser(token: string): Promise<User> {
-    logger.info('Getting user details: calling HMPPS Auth')
+    logger.info('Getting user details: calling HMPPS Manage Users')
     return HmppsManageUsersClient.restClient(token).get<User>({ path: '/users/me' })
   }
 
