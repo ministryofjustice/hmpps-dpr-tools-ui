@@ -7,7 +7,7 @@ generic-service:
   env:
     INGRESS_URL: 'https://dpr-tools-ui-test.hmpps.service.justice.gov.uk'
     HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
-    HMPPS_MANAGE_USERS_URL: 'https://manage-users-api-dev.hmpps.service.justice.gov.uk'
+    HMPPS_MANAGE_USERS_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
     API_URL: 'http://hmpps-dpr-tools-api-test.hmpps-dpr-tools-test.svc.cluster.local'
     TOKEN_VERIFICATION_ENABLED: true
