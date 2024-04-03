@@ -1,7 +1,6 @@
 import { Response } from 'superagent'
 
 import { stubFor } from './wiremock'
-import tokenVerification from './tokenVerification'
 
 const stubUser = (name: string) =>
   stubFor({
