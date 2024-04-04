@@ -6,10 +6,11 @@ generic-service:
     host: dpr-tools-ui-preprod.hmpps.service.justice.gov.uk
 
   env:
-    INGRESS_URL: "https://dpr-tools-ui-preprod.hmpps.service.justice.gov.uk"
-    HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
-    TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
-    API_URL: "http://hmpps-dpr-tools-api-preprod.hmpps-dpr-tools-preprod.svc.cluster.local"
+    INGRESS_URL: 'https://dpr-tools-ui-preprod.hmpps.service.justice.gov.uk'
+    HMPPS_AUTH_URL: 'https://sign-in-preprod.hmpps.service.justice.gov.uk/auth'
+    HMPPS_MANAGE_USERS_URL: 'https://manage-users-api-preprod.hmpps.service.justice.gov.uk'
+    TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-preprod.prison.service.justice.gov.uk'
+    API_URL: 'http://hmpps-dpr-tools-api-preprod.hmpps-dpr-tools-preprod.svc.cluster.local'
     TOKEN_VERIFICATION_ENABLED: true
 
 generic-prometheus-alerts:
