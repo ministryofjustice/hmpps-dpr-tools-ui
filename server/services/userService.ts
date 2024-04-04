@@ -1,6 +1,4 @@
 import { convertToTitleCase } from '../utils/utils'
-// import type HmppsAuthClient from '../data/hmppsAuthClient'
-// import type { User } from '../data/hmppsAuthClient'
 import type HmppsManageUsersClient from '../data/hmppsManageUsersClient'
 import type { User } from '../data/hmppsManageUsersClient'
 

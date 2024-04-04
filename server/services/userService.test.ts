@@ -1,5 +1,4 @@
 import UserService from './userService'
-// import HmppsManageUsersClient, { type User } from '../data/hmppsManageUsersClient'
 import HmppsManageUsersClient, { type User } from '../data/hmppsManageUsersClient'
 
 jest.mock('../data/hmppsManageUsersClient')
@@ -8,7 +7,6 @@ const token = 'some token'
 
 describe('User service', () => {
   let hmppsManageUsersClient: jest.Mocked<HmppsManageUsersClient>
-  // let hmppsAuthClient: jest.Mocked<HmppsAuthClient>
   let userService: UserService
 
   describe('getUser', () => {
