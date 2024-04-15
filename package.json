@@ -139,7 +139,7 @@
     "@types/passport-oauth2": "^1.4.13",
     "@types/querystringify": "^2.0.2",
     "@types/superagent": "^8.1.4",
-    "@types/supertest": "^2.0.14",
+    "@types/supertest": "^6.0.2",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "audit-ci": "^6.6.1",
