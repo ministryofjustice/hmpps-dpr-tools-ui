@@ -141,7 +141,7 @@
     "@types/superagent": "^8.1.4",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^9.0.8",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
     "audit-ci": "^6.6.1",
     "concurrently": "^8.2.1",
     "cookie-session": "^2.0.0",
