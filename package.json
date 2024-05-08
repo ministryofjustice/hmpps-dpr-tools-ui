@@ -136,7 +136,7 @@
     "@types/node": "^20.12.10",
     "@types/nunjucks": "^3.2.6",
     "@types/passport": "^1.0.16",
-    "@types/passport-oauth2": "^1.4.13",
+    "@types/passport-oauth2": "^1.4.16",
     "@types/querystringify": "^2.0.2",
     "@types/superagent": "^8.1.4",
     "@types/supertest": "^6.0.2",
