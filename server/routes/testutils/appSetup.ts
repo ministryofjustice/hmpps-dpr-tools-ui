@@ -10,6 +10,7 @@ import * as auth from '../../authentication/auth'
 import type { ApplicationInfo } from '../../applicationInfo'
 import previewRoutes from '../preview'
 import PreviewClient from '../../data/previewClient'
+import type { Services } from '../../services'
 
 const definitions = [
   {
@@ -105,7 +106,7 @@ function appSetup(production: boolean, userSupplier: () => Express.User): Expres
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(routes())
+  app.use(routes({} as Services))
   app.use(previewRoutes(reportingClient, previewClient))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler())

@@ -1,12 +1,20 @@
 import { RequestHandler } from 'express'
+import AsyncReportStoreService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/requestedReportsService'
+import RecentlyViewedStoreService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/recentlyViewedService'
 import logger from '../../logger'
 import UserService from '../services/userService'
 
-export default function populateCurrentUser(userService: UserService): RequestHandler {
+export default function populateCurrentUser(
+  userService: UserService,
+  asyncReportsStore: AsyncReportStoreService,
+  recentlyViewedStoreService: RecentlyViewedStoreService,
+): RequestHandler {
   return async (req, res, next) => {
     try {
       if (res.locals.user) {
         const user = res.locals.user && (await userService.getUser(res.locals.user.token))
+        asyncReportsStore.init(res.locals.user.name)
+        recentlyViewedStoreService.init(res.locals.user.name)
         if (user) {
           res.locals.user = { ...user, ...res.locals.user }
         } else {
