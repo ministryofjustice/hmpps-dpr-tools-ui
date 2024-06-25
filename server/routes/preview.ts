@@ -2,17 +2,17 @@ import { NextFunction, Request, type RequestHandler, Response, Router } from 'ex
 import multer from 'multer'
 import ReportListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/utils'
 import CardUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/card-group/utils'
-import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
+import AsyncReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/async-reports-list/utils'
 import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import PreviewClient from '../data/previewClient'
+import type { Services } from '../services'
 
-export default function routes(reportingClient: ReportingClient, previewClient: PreviewClient): Router {
+export default function routes(services: Services): Router {
   const router = Router()
 
   const populateDefinitions = (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(
-      reportingClient.getDefinitions(res.locals.user.token).then(definitions => {
+      services.reportingClient.getDefinitions(res.locals.user.token).then(definitions => {
         res.locals.reports = definitions
 
         if (req.params.definitionId) {
@@ -59,7 +59,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
     })
   })
 
-  get('/preview', (req, res) => {
+  get('/preview', async (req, res) => {
     const reportDefinitions: Array<components['schemas']['ReportDefinitionSummary']> = res.locals.reports
 
     res.render('pages/preview', {
@@ -72,6 +72,13 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
       errorSummary: req.query.errorSummary,
       errorMessage: req.query.errorMessage,
       breadCrumbList: [{ title: 'Home', href: '/' }],
+      ...(await AsyncReportslistUtils.renderList({
+        recentlyViewedStoreService: services.recentlyViewedStoreService,
+        asyncReportsStore: services.asyncReportsStore,
+        dataSources: services.reportingService,
+        res,
+        maxRows: 6,
+      })),
     })
   })
 
@@ -95,44 +102,46 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
   get('/preview/definitions/:definitionId/:variantId', (req, res, next) => {
     const { token } = res.locals.user
 
-    reportingClient.getDefinition(token, req.params.definitionId, req.params.variantId).then(reportDefinition => {
-      switch (reportDefinition.variant.specification.template) {
-        case 'list':
-          ReportListUtils.renderListWithData({
-            title: `${reportDefinition.name} - ${reportDefinition.variant.name}`,
-            variantDefinition: reportDefinition.variant,
-            request: req,
-            response: res,
-            next,
-            getListDataSources: reportQuery => ({
-              data: reportingClient.getList(reportDefinition.variant.resourceName, token, reportQuery),
-              count: reportingClient.getCount(reportDefinition.variant.resourceName, token, reportQuery),
-            }),
-            otherOptions: {
-              breadCrumbList: [
-                { title: 'Home', href: '/' },
-                { title: 'Preview reports', href: '/preview' },
-                { title: reportDefinition.name, href: `/preview/definitions/${reportDefinition.id}` },
-              ],
-            },
-            layoutTemplate: 'partials/layout.njk',
-            dynamicAutocompleteEndpoint: `/preview/values/${reportDefinition.id}/${reportDefinition.variant.id}/{fieldName}?prefix={prefix}`,
-          })
-          break
+    services.reportingClient
+      .getDefinition(token, req.params.definitionId, req.params.variantId)
+      .then(reportDefinition => {
+        switch (reportDefinition.variant.specification.template) {
+          case 'list':
+            ReportListUtils.renderListWithData({
+              title: `${reportDefinition.name} - ${reportDefinition.variant.name}`,
+              variantDefinition: reportDefinition.variant,
+              request: req,
+              response: res,
+              next,
+              getListDataSources: reportQuery => ({
+                data: services.reportingClient.getList(reportDefinition.variant.resourceName, token, reportQuery),
+                count: services.reportingClient.getCount(reportDefinition.variant.resourceName, token, reportQuery),
+              }),
+              otherOptions: {
+                breadCrumbList: [
+                  { title: 'Home', href: '/' },
+                  { title: 'Preview reports', href: '/preview' },
+                  { title: reportDefinition.name, href: `/preview/definitions/${reportDefinition.id}` },
+                ],
+              },
+              layoutTemplate: 'partials/layout.njk',
+              dynamicAutocompleteEndpoint: `/preview/values/${reportDefinition.id}/${reportDefinition.variant.id}/{fieldName}?prefix={prefix}`,
+            })
+            break
 
-        default:
-          next(
-            `Unrecognised template: '${reportDefinition.variant.specification.template}', currently only 'list' is supported.`,
-          )
-      }
-    })
+          default:
+            next(
+              `Unrecognised template: '${reportDefinition.variant.specification.template}', currently only 'list' is supported.`,
+            )
+        }
+      })
   })
 
   router.post('/preview/delete', (req, res) => {
     const deleteDefinitionId = req.body.deleteDefinition
     const { token } = res.locals.user
 
-    previewClient.deleteDefinition(deleteDefinitionId, token).then(() => {
+    services.previewClient.deleteDefinition(deleteDefinitionId, token).then(() => {
       res.redirect('/preview')
     })
   })
@@ -141,7 +150,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
     const downloadDefinitionId = req.body.downloadDefinition
     const { token } = res.locals.user
 
-    previewClient.downloadDefinition(downloadDefinitionId, token).then(result => {
+    services.previewClient.downloadDefinition(downloadDefinitionId, token).then(result => {
       res.setHeader('Content-Type', 'application/json')
       res.setHeader('Content-disposition', `attachment; filename=${downloadDefinitionId}.json`)
       res.end(result.text)
@@ -158,7 +167,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
     const definitionBody = definition.buffer.toString()
     const definitionId = JSON.parse(definitionBody).id
 
-    previewClient
+    services.previewClient
       .uploadDefinition(definitionId, definitionBody, token)
       .then(() => {
         res.redirect('/preview')
@@ -174,7 +183,7 @@ export default function routes(reportingClient: ReportingClient, previewClient: 
   })
 
   get('/preview/values/:definitionId/:variantId/:fieldName', (req, res, next) => {
-    reportingClient
+    services.reportingClient
       .getFieldValues({
         token: res.locals.user.token,
         definitionName: req.params.definitionId,

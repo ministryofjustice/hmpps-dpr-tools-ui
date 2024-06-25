@@ -4,6 +4,7 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "dpr/components/async-reports-list/view.njk" import dprAsyncReportsList %}
 
 {% extends "../partials/layout.njk" %}
 
@@ -72,24 +73,24 @@
   {% endset %}
 
   {% set downloadDefinition %}
-    <div class="govuk-grid-row">
-      <form action="/preview/download" method="post">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <div class="govuk-grid-column-one-third">
-          {{ govukSelect({
+  <div class="govuk-grid-row">
+    <form action="/preview/download" method="post">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <div class="govuk-grid-column-one-third">
+        {{ govukSelect({
             id: "downloadDefinition",
             name: "downloadDefinition",
             items: definitions
           }) }}
-        </div>
-        <div class="govuk-grid-column-one-third">
-          {{ govukButton({
+      </div>
+      <div class="govuk-grid-column-one-third">
+        {{ govukButton({
             text: "Download",
             type: "submit"
           }) }}
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
 
   {% endset %}
 
@@ -122,6 +123,8 @@
       }
     ]
   }) }}
+
+  {{ dprAsyncReportsList(requestedReports, viewedReports) }}
 
   <h2>Preview definitions</h2>
 
