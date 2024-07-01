@@ -89,7 +89,7 @@ export default function routes(services: Services): Router {
       title: reportDefinition.name,
       groups: [
         {
-          cards: { items: CardUtils.variantDefinitionsToCards(reportDefinition, '/preview/definitions'), variant: 1 },
+          cards: { items: CardUtils.variantDefinitionsToCards(reportDefinition, '/async-reports'), variant: 1 },
         },
       ],
       breadCrumbList: [

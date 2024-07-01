@@ -5,6 +5,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "dpr/components/async-reports-list/view.njk" import dprAsyncReportsList %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% extends "../partials/layout.njk" %}
 
@@ -94,34 +95,41 @@
 
   {% endset %}
 
+  {% set previewControlsHtml %}
   {{ govukAccordion({
-    rememberExpanded: false,
-    items: [
-      {
-        heading: {
-          text: "Upload definition"
+      rememberExpanded: false,
+      items: [
+        {
+          heading: {
+            text: "Upload definition"
+          },
+          content: {
+            html: uploadDefinition
+          }
         },
-        content: {
-          html: uploadDefinition
-        }
-      },
-      {
-        heading: {
-          text: "Delete definition"
+        {
+          heading: {
+            text: "Delete definition"
+          },
+          content: {
+            html: deleteDefinition
+          }
         },
-        content: {
-          html: deleteDefinition
+        {
+          heading: {
+            text: "Download definition"
+          },
+          content: {
+            html: downloadDefinition
+          }
         }
-      },
-      {
-        heading: {
-          text: "Download definition"
-        },
-        content: {
-          html: downloadDefinition
-        }
-      }
-    ]
+      ]
+    }) }}
+  {% endset %}
+
+  {{ govukDetails({
+    summaryText: "Preview Controls",
+    html: previewControlsHtml
   }) }}
 
   {{ dprAsyncReportsList(requestedReports, viewedReports) }}
