@@ -13,8 +13,6 @@ export default function routes(services: Services): Router {
   const populateDefinitions = (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(
       services.reportingClient.getDefinitions(res.locals.user.token).then(definitions => {
-        console.log('sdfsdfsdfsdfsdfsdfsdfsdf')
-        console.log(definitions)
         res.locals.reports = definitions
 
         if (req.params.definitionId) {
