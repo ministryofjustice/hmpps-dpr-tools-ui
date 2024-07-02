@@ -13,6 +13,30 @@ export default function setUpWebSecurity(): Router {
     res.locals.cspNonce = crypto.randomBytes(16).toString('hex')
     next()
   })
+
+  // This nonce allows us to use scripts with the use of the `cspNonce` local, e.g (in a Nunjucks template):
+  // <script nonce="{{ cspNonce }}">
+  // or
+  // <link href="http://example.com/" rel="stylesheet" nonce="{{ cspNonce }}">
+  // This ensures only scripts we trust are loaded, and not anything injected into the
+  // page by an attacker.
+  const scriptSrc = ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`]
+  const styleSrc = [
+    "'self'",
+    (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`,
+    'fonts.googleapis.com',
+  ]
+  const imgSrc = ["'self'", 'data:']
+  const fontSrc = ["'self'", 'fonts.gstatic.com']
+  const formAction = [`'self' ${config.apis.hmppsAuth.externalUrl} ${config.digitalPrisonServiceUrl}`]
+
+  if (config.apis.frontendComponents.url) {
+    scriptSrc.push(config.apis.frontendComponents.url)
+    styleSrc.push(config.apis.frontendComponents.url)
+    imgSrc.push(config.apis.frontendComponents.url)
+    fontSrc.push(config.apis.frontendComponents.url)
+  }
+
   router.use(
     helmet({
       contentSecurityPolicy: {
@@ -24,10 +48,11 @@ export default function setUpWebSecurity(): Router {
           // <link href="http://example.com/" rel="stylesheet" nonce="{{ cspNonce }}">
           // This ensures only scripts we trust are loaded, and not anything injected into the
           // page by an attacker.
-          scriptSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
-          styleSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
-          fontSrc: ["'self'"],
-          formAction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
+          scriptSrc,
+          styleSrc,
+          fontSrc,
+          imgSrc,
+          formAction,
         },
       },
       crossOriginEmbedderPolicy: true,

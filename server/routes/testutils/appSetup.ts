@@ -3,6 +3,7 @@ import cookieSession from 'cookie-session'
 import { NotFound } from 'http-errors'
 
 import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
+import AsyncReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/async-reports-list/utils'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -10,6 +11,7 @@ import * as auth from '../../authentication/auth'
 import type { ApplicationInfo } from '../../applicationInfo'
 import previewRoutes from '../preview'
 import PreviewClient from '../../data/previewClient'
+import type { Services } from '../../services'
 
 const definitions = [
   {
@@ -54,6 +56,8 @@ const reportingClient: ReportingClient = {
   getCount: () => Promise.resolve(123),
   getList: () => Promise.resolve([{ field: 'Value' }]),
 }
+
+AsyncReportslistUtils.renderList = jest.fn()
 
 // @ts-expect-error Incomplete value for testing
 const previewClient: PreviewClient = {
@@ -105,8 +109,8 @@ function appSetup(production: boolean, userSupplier: () => Express.User): Expres
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(routes())
-  app.use(previewRoutes(reportingClient, previewClient))
+  app.use(routes({} as Services))
+  app.use(previewRoutes({ reportingClient, previewClient } as Services))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler())
 

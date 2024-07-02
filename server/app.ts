@@ -40,8 +40,8 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
 
-  app.use(routes())
-  app.use(previewRoutes(services.reportingClient, services.previewClient))
+  app.use(routes(services))
+  app.use(previewRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler())
