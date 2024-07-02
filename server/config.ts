@@ -83,18 +83,10 @@ export default {
       url: get('API_URL', 'https://dpr-tools-api-dev.hmpps.service.justice.gov.uk', requiredInProduction),
       timeout: Number(get('API_TIMEOUT', 120000)),
     },
-    frontendComponents: {
-      url: get(
-        'DPS_COMPONENT_API_URL',
-        'https://frontend-components-dev.hmpps.service.justice.gov.uk',
-        requiredInProduction,
-      ),
-    },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
   authorisation: {
     roles: getAuthorisedRoles(),
   },
-  digitalPrisonServiceUrl: get('DPS_URL', 'http://localhost:3000', requiredInProduction),
 }
