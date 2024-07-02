@@ -5,6 +5,8 @@ export default class PreviewPage extends Page {
     super('Preview Reports')
   }
 
+  openControls = (): PageElement => cy.get('#previewControls')
+
   uploadDefinitionAccordionButton = (): PageElement => cy.get('button[aria-controls="-content-1"]')
 
   uploadDefinitionInput = (): PageElement => cy.get('#uploadDefinition')

@@ -23,6 +23,7 @@ context('Preview', () => {
     cy.signIn()
     cy.visit('/preview')
     const page = Page.verifyOnPage(PreviewPage)
+    page.openControls().click()
     page.uploadDefinitionAccordionButton().click()
     page.uploadDefinitionInput().selectFile({
       contents: Cypress.Buffer.from('{ "id": "success" }'),
@@ -38,6 +39,7 @@ context('Preview', () => {
     cy.signIn()
     cy.visit('/preview')
     const page = Page.verifyOnPage(PreviewPage)
+    page.openControls().click()
     page.uploadDefinitionAccordionButton().click()
     page.uploadDefinitionInput().selectFile({
       contents: Cypress.Buffer.from('{ "id": "timeout" }'),
