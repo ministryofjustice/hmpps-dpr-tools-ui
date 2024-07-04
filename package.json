@@ -116,7 +116,7 @@
     "passport": "^0.7.0",
     "passport-oauth2": "^1.7.0",
     "prom-client": "^15.1.2",
-    "redis": "^4.6.12",
+    "redis": "^4.6.15",
     "superagent": "^9.0.2",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.1"
