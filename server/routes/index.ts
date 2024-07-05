@@ -1,5 +1,7 @@
 import { type RequestHandler, Router } from 'express'
 import addAsyncReportingRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/asyncReports'
+import addRecentlyViewedRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/recentlyViewed'
+import addBookmarkingRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/bookmarks'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 
@@ -28,14 +30,16 @@ export default function routes(services: Services): Router {
     })
   })
 
-  addAsyncReportingRoutes({
+  const libRouteParams = {
     router,
-    asyncReportsStore: services.asyncReportsStore,
-    recentlyViewedStoreService: services.recentlyViewedStoreService,
-    dataSources: services.reportingService,
+    services,
     layoutPath: '../../../../../dist/server/views/partials/layout.njk',
     templatePath: 'dpr/views/',
-  })
+  }
+
+  addAsyncReportingRoutes(libRouteParams)
+  addRecentlyViewedRoutes(libRouteParams)
+  addBookmarkingRoutes(libRouteParams)
 
   return router
 }

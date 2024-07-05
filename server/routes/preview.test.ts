@@ -23,33 +23,6 @@ describe('GET /preview', () => {
         expect(res.text).toContain('Delete definition')
         expect(res.text).toContain('Preview definitions')
         expect(res.text).toContain('Test definition')
-        expect(res.text).toContain('This is a test definition')
-      })
-  })
-})
-
-describe('GET /preview/definitions', () => {
-  it('should render report preview page', () => {
-    return request(app)
-      .get('/preview/definitions/test')
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        expect(res.text).toContain('Test definition')
-        expect(res.text).toContain('Test variant')
-        expect(res.text).toContain('This is a test variant definition')
-      })
-  })
-})
-
-describe('GET /preview/definitions/list', () => {
-  it('should render report preview page', () => {
-    return request(app)
-      .get('/preview/definitions/test/testvariant')
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        expect(res.text).toContain('Test definition - Test variant')
-        expect(res.text).toContain('Field')
-        expect(res.text).toContain('Value')
       })
   })
 })
@@ -96,7 +69,6 @@ describe('POST /preview/upload', () => {
             expect(res.text).toContain('Preview Reports')
             expect(res.text).toContain('Preview definitions')
             expect(res.text).toContain('Uploaded definition')
-            expect(res.text).toContain('This is an uploaded definition')
           })
       })
   })

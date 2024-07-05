@@ -2,7 +2,10 @@ import { NextFunction, Request, type RequestHandler, Response, Router } from 'ex
 import multer from 'multer'
 import ReportListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/utils'
 import CardUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/card-group/utils'
-import AsyncReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/async-reports-list/utils'
+import AsyncReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/asyncReportsUtils'
+import RecentlyViewedCardGroupUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/recentlyViewedUtils'
+import BookmarklistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/bookmarkListUtils'
+import ReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/reports-list/utils'
 import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
@@ -61,6 +64,17 @@ export default function routes(services: Services): Router {
 
   get('/preview', async (req, res) => {
     const reportDefinitions: Array<components['schemas']['ReportDefinitionSummary']> = res.locals.reports
+    res.locals.definitions = reportDefinitions
+    res.locals.pathSuffix = ''
+
+    const utilsParams = { services, res }
+    const requestedReportsData = await AsyncReportslistUtils.renderAsyncReportsList({ ...utilsParams, maxRows: 6 })
+    const recentlyViewedData = await RecentlyViewedCardGroupUtils.renderRecentlyViewedList({
+      ...utilsParams,
+      maxRows: 6,
+    })
+    const bookmarksData = await BookmarklistUtils.renderBookmarkList({ ...utilsParams, maxRows: 6 })
+    const reportsData = ReportslistUtils.mapReportsList(res, services)
 
     res.render('pages/preview', {
       title: 'Preview Reports',
@@ -72,13 +86,10 @@ export default function routes(services: Services): Router {
       errorSummary: req.query.errorSummary,
       errorMessage: req.query.errorMessage,
       breadCrumbList: [{ title: 'Home', href: '/' }],
-      ...(await AsyncReportslistUtils.renderList({
-        recentlyViewedStoreService: services.recentlyViewedStoreService,
-        asyncReportsStore: services.asyncReportsStore,
-        dataSources: services.reportingService,
-        res,
-        maxRows: 6,
-      })),
+      requestedReports: requestedReportsData,
+      viewedReports: recentlyViewedData,
+      bookmarks: bookmarksData,
+      reports: reportsData,
     })
   })
 
