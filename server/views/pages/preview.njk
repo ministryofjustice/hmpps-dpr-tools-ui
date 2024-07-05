@@ -4,8 +4,8 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "dpr/components/async-reports-list/view.njk" import dprAsyncReportsList %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "dpr/components/table-card-group/view.njk" import dprTableCardGroup %}
 
 {% extends "../partials/layout.njk" %}
 
@@ -133,7 +133,26 @@
     html: previewControlsHtml
   }) }}
 
-  {{ dprAsyncReportsList(requestedReports, viewedReports) }}
+  {{ dprTableCardGroup(
+    requestedReports.head,
+    requestedReports.cardData, 
+    requestedReports.tableData,
+    requestedReports.total
+  )}}
+
+  {{ dprTableCardGroup(
+    viewedReports.head, 
+    viewedReports.cardData, 
+    viewedReports.tableData,
+    viewedReports.total
+  ) }}
+
+  {{ dprTableCardGroup(
+    bookmarks.head,
+    bookmarks.cardData, 
+    bookmarks.tableData,
+    bookmarks.total
+  )}}
 
   <h2>Preview definitions</h2>
 

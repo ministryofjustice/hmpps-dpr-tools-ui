@@ -1,6 +1,7 @@
 import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
 import AsyncReportStoreService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/requestedReportsService'
 import RecentlyViewedStoreService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/recentlyViewedService'
+import BookmarkService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/bookmarkService'
 import ReportingService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/reportingService'
 import { dataAccess } from '../data'
 import UserService from './userService'
@@ -29,6 +30,7 @@ export const services = () => {
   const reportingService = new ReportingService(reportingClient)
   const asyncReportsStore = new AsyncReportStoreService(userDataStore)
   const recentlyViewedStoreService = new RecentlyViewedStoreService(userDataStore)
+  const bookmarkService = new BookmarkService(userDataStore)
 
   return {
     applicationInfo,
@@ -38,6 +40,7 @@ export const services = () => {
     asyncReportsStore,
     recentlyViewedStoreService,
     reportingService,
+    bookmarkService,
   }
 }
 
