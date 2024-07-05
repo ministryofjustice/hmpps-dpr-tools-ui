@@ -6,6 +6,7 @@ import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-f
 import AsyncReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/asyncReportsUtils'
 import RecentlyViewedUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/recentlyViewedUtils'
 import BookmarkUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/bookmarkListUtils'
+import ReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/reports-list/utils'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -62,6 +63,8 @@ const reportingClient: ReportingClient = {
 AsyncReportslistUtils.renderAsyncReportsList = jest.fn()
 RecentlyViewedUtils.renderRecentlyViewedList = jest.fn()
 BookmarkUtils.renderBookmarkList = jest.fn()
+BookmarkUtils.renderBookmarkList = jest.fn()
+ReportslistUtils.mapReportsList = jest.fn()
 
 // @ts-expect-error Incomplete value for testing
 const previewClient: PreviewClient = {

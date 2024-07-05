@@ -6,6 +6,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "dpr/components/table-card-group/view.njk" import dprTableCardGroup %}
+{% from "dpr/components/reports-list/view.njk" import dprReportsList %}
 
 {% extends "../partials/layout.njk" %}
 
@@ -156,8 +157,8 @@
 
   <h2>Preview definitions</h2>
 
-  <div class="govuk-width-container ">
-    {{ dprCardGroup(cards.items, cards.variant) }}
+  <div class="govuk-width-container">
+    {{ dprReportsList(reports.head, reports.rows) }}
   </div>
 
 {% endblock %}
