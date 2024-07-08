@@ -15,11 +15,11 @@ export default function populateCurrentUser(
     try {
       if (res.locals.user) {
         const user = res.locals.user && (await userService.getUser(res.locals.user.token))
-        asyncReportsStore.init(res.locals.user.name)
-        recentlyViewedStoreService.init(res.locals.user.name)
-        bookmarkService.init(res.locals.user.name)
         if (user) {
           res.locals.user = { ...user, ...res.locals.user }
+          await asyncReportsStore.init(res.locals.user.uuid)
+          await recentlyViewedStoreService.init(res.locals.user.uuid)
+          await bookmarkService.init(res.locals.user.uuid)
         } else {
           logger.info('No user available')
         }
