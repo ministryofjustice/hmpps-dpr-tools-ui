@@ -2,8 +2,8 @@ import { NextFunction, Request, type RequestHandler, Response, Router } from 'ex
 import multer from 'multer'
 import ReportListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/utils'
 import CardUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/card-group/utils'
-import AsyncReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/asyncReportsUtils'
-import RecentlyViewedCardGroupUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/recentlyViewedUtils'
+import AsyncRequestlistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/async-request-list/utils'
+import RecentlyViewedUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/recently-viewed-list/utils'
 import BookmarklistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/bookmarkListUtils'
 import ReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/reports-list/utils'
 import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
@@ -68,8 +68,8 @@ export default function routes(services: Services): Router {
     res.locals.pathSuffix = ''
 
     const utilsParams = { services, res }
-    const requestedReportsData = await AsyncReportslistUtils.renderAsyncReportsList({ ...utilsParams, maxRows: 6 })
-    const recentlyViewedData = await RecentlyViewedCardGroupUtils.renderRecentlyViewedList({
+    const requestedReportsData = await AsyncRequestlistUtils.renderList({ ...utilsParams, maxRows: 6 })
+    const recentlyViewedData = await RecentlyViewedUtils.renderRecentlyViewedList({
       ...utilsParams,
       maxRows: 6,
     })

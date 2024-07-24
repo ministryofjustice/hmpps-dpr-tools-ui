@@ -3,8 +3,8 @@ import cookieSession from 'cookie-session'
 import { NotFound } from 'http-errors'
 
 import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
-import AsyncReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/asyncReportsUtils'
-import RecentlyViewedUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/recentlyViewedUtils'
+import AsyncRequestlistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/async-request-list/utils'
+import RecentlyViewedUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/recently-viewed-list/utils'
 import BookmarkUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/bookmarkListUtils'
 import ReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/reports-list/utils'
 import routes from '../index'
@@ -60,7 +60,7 @@ const reportingClient: ReportingClient = {
   getList: () => Promise.resolve([{ field: 'Value' }]),
 }
 
-AsyncReportslistUtils.renderAsyncReportsList = jest.fn()
+AsyncRequestlistUtils.renderList = jest.fn()
 RecentlyViewedUtils.renderRecentlyViewedList = jest.fn()
 BookmarkUtils.renderBookmarkList = jest.fn()
 BookmarkUtils.renderBookmarkList = jest.fn()
