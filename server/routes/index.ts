@@ -41,6 +41,5 @@ export default function routes(services: Services): Router {
   addRecentlyViewedRoutes(libRouteParams)
   addBookmarkingRoutes(libRouteParams)
 
-  // //
   return router
 }
