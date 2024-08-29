@@ -17,13 +17,15 @@ export default function populateCurrentUser(
         const user = res.locals.user && (await userService.getUser(res.locals.user.token))
         if (user) {
           res.locals.user = { ...user, ...res.locals.user }
-          await asyncReportsStore.init(res.locals.user.uuid)
-          await recentlyViewedStoreService.init(res.locals.user.uuid)
-          await bookmarkService.init(res.locals.user.uuid)
         } else {
           logger.info('No user available')
         }
       }
+
+      await asyncReportsStore.init(res.locals.user.uuid)
+      await recentlyViewedStoreService.init(res.locals.user.uuid)
+      await bookmarkService.init(res.locals.user.uuid)
+
       next()
     } catch (error) {
       logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.username}`)
