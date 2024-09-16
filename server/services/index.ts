@@ -5,14 +5,16 @@ import AsyncReportStoreService from '@ministryofjustice/hmpps-digital-prison-rep
 import RecentlyViewedStoreService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/recentlyViewedService'
 import BookmarkService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/bookmarkService'
 import ReportingService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/reportingService'
+import { Services as dprServices } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/Services'
 import DashboardService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/dashboardService'
 import MetricService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/metricsService'
 import { dataAccess } from '../data'
 import UserService from './userService'
 import config from '../config'
 import PreviewClient from '../data/previewClient'
+import { ApplicationInfo } from '../applicationInfo'
 
-export const services = () => {
+export const services = (): Services => {
   const { applicationInfo, hmppsManageUsersClient, userDataStore } = dataAccess()
 
   const userService = new UserService(hmppsManageUsersClient)
@@ -48,6 +50,11 @@ export const services = () => {
   }
 }
 
-export type Services = ReturnType<typeof services>
+export type Services = dprServices & {
+  applicationInfo: ApplicationInfo
+  userService: UserService
+  reportingClient: ReportingClient
+  previewClient: PreviewClient
+}
 
 export { UserService }
