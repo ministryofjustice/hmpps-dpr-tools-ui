@@ -1,4 +1,6 @@
 import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
+import MetricsClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/metricsClient'
+import DashboardClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/dashboardClient'
 import AsyncReportStoreService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/requestedReportsService'
 import RecentlyViewedStoreService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/recentlyViewedService'
 import BookmarkService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/bookmarkService'
@@ -16,29 +18,23 @@ export const services = (): Services => {
   const { applicationInfo, hmppsManageUsersClient, userDataStore } = dataAccess()
 
   const userService = new UserService(hmppsManageUsersClient)
-
-  const reportingClient = new ReportingClient({
+  const apiConfig = {
     url: config.apis.report.url,
     agent: {
       timeout: config.apis.report.timeout,
     },
-  })
-
-  const previewClient = new PreviewClient({
-    url: config.apis.report.url,
-    agent: {
-      timeout: config.apis.report.timeout,
-    },
-  })
+  }
+  const reportingClient = new ReportingClient(apiConfig)
+  const metricsClient = new MetricsClient(apiConfig)
+  const dashboardClient = new DashboardClient(apiConfig)
+  const previewClient = new PreviewClient(apiConfig)
 
   const reportingService = new ReportingService(reportingClient)
   const asyncReportsStore = new AsyncReportStoreService(userDataStore)
   const recentlyViewedStoreService = new RecentlyViewedStoreService(userDataStore)
   const bookmarkService = new BookmarkService(userDataStore)
-
-  // TODO: Plumb in real data clients.
-  const metricService = new MetricService(null)
-  const dashboardService = new DashboardService(null)
+  const metricService = new MetricService(metricsClient)
+  const dashboardService = new DashboardService(dashboardClient)
 
   return {
     applicationInfo,
