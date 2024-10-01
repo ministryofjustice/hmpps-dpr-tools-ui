@@ -45,6 +45,18 @@ export default function setUpStaticResources(): Router {
     express.static(path.join(process.cwd(), '/node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.js')),
   )
 
+  router.use(
+    '/assets/ext/chart.js',
+    express.static(path.join(process.cwd(), '/node_modules/chart.js/dist/chart.umd.js')),
+  )
+
+  router.use(
+    '/assets/ext/chartjs-datalabels.js',
+    express.static(
+      path.join(process.cwd(), '/node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js'),
+    ),
+  )
+
   // Don't cache dynamic resources
   router.use(noCache())
 
