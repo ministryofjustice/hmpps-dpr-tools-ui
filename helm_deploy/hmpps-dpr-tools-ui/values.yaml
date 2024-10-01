@@ -54,6 +54,7 @@ generic-service:
 
   # Group name source: https://github.com/ministryofjustice/hmpps-ip-allowlists/blob/main/ip-allowlist-groups.yaml
   allowlist:
+    consultant-ip: 217.155.59.198
     groups:
       - circleci
       - internal
