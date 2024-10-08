@@ -57,6 +57,13 @@ export default function setUpStaticResources(): Router {
     ),
   )
 
+  router.use('/assets/ext/day.js', express.static(path.join(process.cwd(), '/node_modules/dayjs/dayjs.min.js')))
+
+  router.use(
+    '/assets/ext/dayjs/plugin/customParseFormat.js',
+    express.static(path.join(process.cwd(), '/node_modules/dayjs/plugin/customParseFormat.js')),
+  )
+
   // Don't cache dynamic resources
   router.use(noCache())
 
