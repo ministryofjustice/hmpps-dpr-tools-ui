@@ -5,12 +5,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
-{% from "dpr/components/table-card-group/view.njk" import dprTableCardGroup %}
-{% from "dpr/components/async-request-list/view.njk" import dprAsyncRequestList %}
-{% from "dpr/components/recently-viewed-list/view.njk" import dprRecentlyViewedList %}
 {% from "dpr/components/reports-list/view.njk" import dprReportsList %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
-{% from "dpr/components/user-list-content/view.njk" import dprUserList %}
+{% from "dpr/components/user-reports/view.njk" import dprUserReports %}
 
 {% extends "../partials/layout.njk" %}
 
@@ -23,7 +20,7 @@
     <div class="govuk-width-container">
       <h1 class="govuk-heading-l govuk-!-margin-bottom-1">DPR: {{ title }}</h1>
       <p class="govuk-body">Upload and preview report definitions</p>
-      <a href='#reports-catalogue' class='govuk-body govuk-link govuk-link--no-visited-state'>Preview Definitions Catalogue</a>
+      <a href='#reports-catalogue' class='govuk-body govuk-link govuk-link--no-visited-state'>Preview definitions catalogue</a>
 
       {% if errorMessage %}
         {{ govukErrorSummary({
@@ -146,74 +143,24 @@
     </div>
   </div>
 
-  {% set requestedReportsHtml %}
-    {{ dprAsyncRequestList({
-      head: requestedReports.head,
-      tableData: requestedReports.tableData,
-      total: requestedReports.total,
-      meta: requestedReports.meta,
-      csrf: requestedReports.csrfToken
-    })}}
-  {% endset -%}
-
-  {% set recentlyViewedHtml %}
-    {{ dprRecentlyViewedList({
-      head: viewedReports.head,
-      tableData: viewedReports.tableData,
-      total: viewedReports.total,
-      meta: viewedReports.meta,
-      csrf: viewedReports.csrfToken
-    }) }}
-  {% endset -%}
-
-  {% set bookmarksHtml %}
-  <div id="dpr-bookmarks-list">
-    {{ dprUserList({
-      head: bookmarks.head,
-      tableData: bookmarks.tableData,
-      total: bookmarks.total
-    }) }}
-  </div>
-  {% endset -%}
-
   <div id="homepage-widget" class="dpr-reports-widget-wrapper">
     <div class="govuk-width-container">
-      <h2 class="govuk-heading-m">My Reports<h2>
-      {{ govukTabs({
-        items: [
-          {
-            label: "Requested (" + requestedReports.total.amount + ")",
-            id: "requested-reports-tab",
-            panel: {
-              html: requestedReportsHtml
-            }
-          },
-          {
-            label: "Viewed (" + viewedReports.total.amount + ")",
-            id: "recently-viewed-tab",
-            panel: {
-              html: recentlyViewedHtml
-            }
-          },
-          {
-            label: "Bookmarks (" + bookmarks.total.amount + ")",
-            id: "my-bookmarks-tab",
-            panel: {
-              html: bookmarksHtml
-            }
-          }
-        ]
-      }) }}
+      <h2 class="govuk-heading-m">My reports<h2>
+        {{ dprUserReports({
+          requestedReports: requestedReports,
+          viewedReports: viewedReports,
+          bookmarks: bookmarks
+        })}}
     </div>
   </div>
 
   <div id="reports-catalogue" class="dpr-reports-wrapper">
     <div class="govuk-width-container">
-      <h2 class="govuk-heading-l govuk-!-margin-bottom-2">Preview Definitions Catalogue</h2>
+      <h2 class="govuk-heading-l govuk-!-margin-bottom-2">Preview definitions catalogue</h2>
 
       {% set howToUseHtml %}
-        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Filtering the cataloge</h3>
-        <p class="govuk-body">Filter the report catalogue by typing in the filter input box below. The cataloge will show listings that match your filter by name, description, type and product</p>
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Filtering the catalogue</h3>
+        <p class="govuk-body">Filter the report catalogue by typing in the filter input box below. The catalogue will show listings that match your filter by name, description, type and product</p>
         
         <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Viewing a report</h3>
         <p class="govuk-body">Click on the name of the report to start a request to view a report</p>
