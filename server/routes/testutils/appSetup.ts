@@ -3,9 +3,8 @@ import cookieSession from 'cookie-session'
 import { NotFound } from 'http-errors'
 
 import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
-import AsyncRequestlistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/async-request-list/utils'
-import RecentlyViewedUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/recently-viewed-list/utils'
-import BookmarkUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/bookmarkListUtils'
+import UserListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/utils'
+import BookmarklistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports-bookmarks-list/utils'
 import ReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/reports-list/utils'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
@@ -60,10 +59,8 @@ const reportingClient: ReportingClient = {
   getList: () => Promise.resolve([{ field: 'Value' }]),
 }
 
-AsyncRequestlistUtils.renderList = jest.fn()
-RecentlyViewedUtils.renderRecentlyViewedList = jest.fn()
-BookmarkUtils.renderBookmarkList = jest.fn()
-BookmarkUtils.renderBookmarkList = jest.fn()
+UserListUtils.renderList = jest.fn()
+BookmarklistUtils.renderBookmarkList = jest.fn()
 ReportslistUtils.mapReportsList = jest.fn()
 
 // @ts-expect-error Incomplete value for testing

@@ -21,7 +21,7 @@ describe('GET /preview', () => {
         expect(res.text).toContain('Preview Reports')
         expect(res.text).toContain('Upload definition')
         expect(res.text).toContain('Delete definition')
-        expect(res.text).toContain('Preview Definitions Catalogue')
+        expect(res.text).toContain('Preview definitions catalogue')
         expect(res.text).toContain('Test definition')
       })
   })
@@ -42,7 +42,7 @@ describe('POST /preview/delete', () => {
           .expect('Content-Type', /html/)
           .expect(res => {
             expect(res.text).toContain('Preview Reports')
-            expect(res.text).toContain('Preview Definitions Catalogue')
+            expect(res.text).toContain('Preview definitions catalogue')
             expect(res.text).not.toContain('Test definition')
             expect(res.text).not.toContain('This is a test definition')
           })
@@ -67,7 +67,7 @@ describe('POST /preview/upload', () => {
           .expect('Content-Type', /html/)
           .expect(res => {
             expect(res.text).toContain('Preview Reports')
-            expect(res.text).toContain('Preview Definitions Catalogue')
+            expect(res.text).toContain('Preview definitions catalogue')
             expect(res.text).toContain('Uploaded definition')
           })
       })

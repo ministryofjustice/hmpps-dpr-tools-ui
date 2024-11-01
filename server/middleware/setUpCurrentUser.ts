@@ -6,12 +6,12 @@ import type { Services } from '../services'
 
 export default function setUpCurrentUser({
   userService,
-  asyncReportsStore,
-  recentlyViewedStoreService,
+  requestedReportService,
+  recentlyViewedService,
   bookmarkService,
 }: Services): Router {
   const router = Router({ mergeParams: true })
   router.use(auth.authenticationMiddleware(tokenVerifier))
-  router.use(populateCurrentUser(userService, asyncReportsStore, recentlyViewedStoreService, bookmarkService))
+  router.use(populateCurrentUser(userService, requestedReportService, recentlyViewedService, bookmarkService))
   return router
 }
