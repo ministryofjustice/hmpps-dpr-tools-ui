@@ -59,7 +59,7 @@ const reportingClient: ReportingClient = {
   getList: () => Promise.resolve([{ field: 'Value' }]),
 }
 
-UserListUtils.renderList = jest.fn()
+UserListUtils.initLists = jest.fn()
 BookmarklistUtils.renderBookmarkList = jest.fn()
 ReportslistUtils.mapReportsList = jest.fn()
 
