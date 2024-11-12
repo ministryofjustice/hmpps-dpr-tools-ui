@@ -3,9 +3,6 @@ import multer from 'multer'
 import ReportListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/utils'
 import CardUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/card-group/utils'
 import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/utils'
-import RecentlyViewedUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports-viewed-list/utils'
-import RequestedReportsUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports-request-list/utils'
-import BookmarklistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports-bookmarks-list/utils'
 import ReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/reports-list/utils'
 import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
 import asyncMiddleware from '../middleware/asyncMiddleware'
@@ -68,31 +65,6 @@ export default function routes(services: Services): Router {
     res.locals.definitions = reportDefinitions
     res.locals.pathSuffix = ''
 
-    const requestedReportsData = await UserReportsListUtils.renderList({
-      res,
-      storeService: services.requestedReportService,
-      maxRows: 6,
-      filterFunction: RequestedReportsUtils.filterReports,
-      type: 'requested',
-    })
-
-    const recentlyViewedData = await UserReportsListUtils.renderList({
-      res,
-      storeService: services.recentlyViewedService,
-      maxRows: 6,
-      filterFunction: RecentlyViewedUtils.filterReports,
-      type: 'requested',
-    })
-
-    const bookmarks = await BookmarklistUtils.renderBookmarkList({
-      res,
-      req,
-      services,
-      maxRows: 6,
-    })
-
-    const reportsData = await ReportslistUtils.mapReportsList(res, services)
-
     res.render('pages/preview', {
       title: 'Preview Reports',
       cards: { items: CardUtils.reportDefinitionsToCards(reportDefinitions, '/preview/definitions'), variant: 1 },
@@ -103,10 +75,8 @@ export default function routes(services: Services): Router {
       errorSummary: req.query.errorSummary,
       errorMessage: req.query.errorMessage,
       breadCrumbList: [{ title: 'Home', href: '/' }],
-      requestedReports: requestedReportsData,
-      viewedReports: recentlyViewedData,
-      bookmarks,
-      reports: reportsData,
+      ...(await UserReportsListUtils.initLists({ res, req, services })),
+      reports: await ReportslistUtils.mapReportsList(res, services),
     })
   })
 

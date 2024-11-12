@@ -1,14 +1,11 @@
 import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
 import MetricsClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/metricsClient'
 import DashboardClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/dashboardClient'
-import RequestedReportService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/requestedReportService'
-import RecentlyViewedStoreService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/recentlyViewedService'
-import DownloadPermissionService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/downloadPermissionService'
-import BookmarkService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/bookmarkService'
 import ReportingService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/reportingService'
 import { Services as dprServices } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/Services'
 import DashboardService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/dashboardService'
 import MetricService from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services/metricsService'
+import { createUserStoreServices } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/StoreServiceUtils'
 import { dataAccess } from '../data'
 import UserService from './userService'
 import config from '../config'
@@ -31,25 +28,20 @@ export const services = (): Services => {
   const previewClient = new PreviewClient(apiConfig)
 
   const reportingService = new ReportingService(reportingClient)
-  const requestedReportService = new RequestedReportService(userDataStore)
-  const recentlyViewedService = new RecentlyViewedStoreService(userDataStore)
-  const bookmarkService = new BookmarkService(userDataStore)
   const metricService = new MetricService(metricsClient)
   const dashboardService = new DashboardService(dashboardClient)
-  const downloadPermissionService = new DownloadPermissionService(userDataStore)
+
+  const userStoreServices = createUserStoreServices(userDataStore)
 
   return {
     applicationInfo,
     userService,
     reportingClient,
     previewClient,
-    requestedReportService,
-    recentlyViewedService,
     reportingService,
-    bookmarkService,
     metricService,
     dashboardService,
-    downloadPermissionService,
+    ...userStoreServices,
   }
 }
 
