@@ -56,6 +56,7 @@ const reportingClient: ReportingClient = {
   // @ts-expect-error Incomplete value for testing
   getDefinition: () => Promise.resolve(fullDefinition),
   getCount: () => Promise.resolve(123),
+  getAsyncInteractiveCount: () => Promise.resolve(123),
   getList: () => Promise.resolve([{ field: 'Value' }]),
 }
 
