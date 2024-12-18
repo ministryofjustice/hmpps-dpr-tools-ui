@@ -201,6 +201,28 @@ workflows:
           requires:
             - remember-version-for-preprod
           helm_timeout: 5m
+      - request-prod-approval:
+          type: approval
+          requires:
+            - deploy_preprod
+      - remember-app-version:
+          name: remember-version-for-prod
+          requires:
+            - request-prod-approval
+      - hmpps/deploy_env:
+          name: deploy_prod
+          env: "prod"
+          jira_update: true
+          jira_env_type: production
+          slack_notification: true
+          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+          release_name: PROJECT_NAME_ENV_NAME
+          context:
+            - hmpps-common-vars
+            - hmpps-dpr-tools-ui-prod
+          requires:
+            - remember-version-for-prod
+          helm_timeout: 5m
 
   security:
     triggers:
