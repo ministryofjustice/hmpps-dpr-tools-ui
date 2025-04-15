@@ -1,4 +1,4 @@
-import initAll from '../../../../../../../assets/dpr/all.js'
+import { initAll } from '../../../../../../../assets/dpr/all.mjs'
 
 initAll()
 
