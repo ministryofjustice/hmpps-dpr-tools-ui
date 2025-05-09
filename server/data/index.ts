@@ -20,7 +20,15 @@ import TokenStore from './tokenStore'
 
 type RestClientBuilder<T> = (token: string) => T
 
-const previewClient = new PreviewClient(config.apis.report)
+const apiConfig = {
+  url: config.apis.report.url,
+  agent: {
+    timeout: config.apis.report.timeout,
+  },
+}
+
+const previewClient = new PreviewClient(apiConfig)
+
 export const dataAccess = () => ({
   applicationInfo,
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
