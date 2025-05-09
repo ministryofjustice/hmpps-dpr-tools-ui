@@ -7,6 +7,7 @@ import initDprReportingClients from '@ministryofjustice/hmpps-digital-prison-rep
 import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
 import applicationInfoSupplier from '../applicationInfo'
 import config from '../config'
+import PreviewClient from './previewClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
@@ -19,10 +20,12 @@ import TokenStore from './tokenStore'
 
 type RestClientBuilder<T> = (token: string) => T
 
+const previewClient = new PreviewClient(config.apis.report)
 export const dataAccess = () => ({
   applicationInfo,
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
   hmppsManageUsersClient: new HmppsManageUsersClient(new TokenStore(createRedisClient())),
+  previewClient,
   ...initDprReportingClients(config.apis.report, createRedisClient()),
 })
 
