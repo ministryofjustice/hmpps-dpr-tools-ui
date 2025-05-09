@@ -70,14 +70,13 @@ export default function routes(services: Services): Router {
       value: definition.id,
       text: definition.name,
     }))
-    const { errorSummary, errorMessage } = req.query
 
     res.render('pages/preview', {
       title: 'Preview Reports',
       cards: { items: CardUtils.reportDefinitionsToCards(reportDefinitions, '/preview/definitions'), variant: 1 },
       definitions: toolDefinitions,
-      errorSummary,
-      errorMessage,
+      errorSummary: req.query.errorSummary,
+      errorMessage: req.query.errorMessage,
       breadCrumbList: [{ title: 'Home', href: '/' }],
       userReportsLists,
       catalogue,
