@@ -82,11 +82,15 @@ export default {
     report: {
       url: get('API_URL', 'https://dpr-tools-api-dev.hmpps.service.justice.gov.uk', requiredInProduction),
       timeout: Number(get('API_TIMEOUT', 120000)),
+      agent: new AgentConfig(Number(get('REPORTING_API_TIMEOUT_RESPONSE', 120000))),
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
   authorisation: {
     roles: getAuthorisedRoles(),
+  },
+  dpr: {
+    routePrefix: 'dpr',
   },
 }
