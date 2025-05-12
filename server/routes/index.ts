@@ -1,11 +1,8 @@
 import { type RequestHandler, Router } from 'express'
-import addAsyncReportingRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/asyncReports'
-import addSyncReportingRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/syncReports'
-import addRecentlyViewedRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/recentlyViewed'
-import addBookmarkingRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/bookmarks'
-import addDownloadRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/download'
+import DprEmbeddedAsyncReports from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/DprEmbeddedReports'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
+import config from '../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -32,18 +29,12 @@ export default function routes(services: Services): Router {
     })
   })
 
-  const libRouteParams = {
+  DprEmbeddedAsyncReports({
     router,
     services,
     layoutPath: '../../../../../dist/server/views/partials/layout.njk',
-    templatePath: 'dpr/views/',
-  }
-
-  addAsyncReportingRoutes(libRouteParams)
-  addRecentlyViewedRoutes(libRouteParams)
-  addBookmarkingRoutes(libRouteParams)
-  addDownloadRoutes(libRouteParams)
-  addSyncReportingRoutes(libRouteParams)
+    config: config.dpr,
+  })
 
   return router
 }
