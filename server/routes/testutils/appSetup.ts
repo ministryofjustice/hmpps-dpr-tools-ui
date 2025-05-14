@@ -5,7 +5,6 @@ import { NotFound } from 'http-errors'
 import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
 import UserListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/utils'
 import BookmarklistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/bookmarks/utils'
-import ReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/reports-list/utils'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -58,11 +57,11 @@ const reportingClient: ReportingClient = {
   getCount: () => Promise.resolve(123),
   getAsyncInteractiveCount: () => Promise.resolve(123),
   getList: () => Promise.resolve([{ field: 'Value' }]),
+  logInfo: jest.fn(),
 }
 
-UserListUtils.initLists = jest.fn()
+UserListUtils.init = jest.fn()
 BookmarklistUtils.renderBookmarkList = jest.fn()
-ReportslistUtils.mapReportsList = jest.fn()
 
 // @ts-expect-error Incomplete value for testing
 const previewClient: PreviewClient = {
