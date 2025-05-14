@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express'
-import { initUserStoreServices } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/StoreServiceUtils'
 import logger from '../../logger'
 import { Services } from '../services'
 
@@ -14,9 +13,6 @@ export default function populateCurrentUser(services: Services): RequestHandler 
           logger.info('No user available')
         }
       }
-
-      await initUserStoreServices(res.locals.user.uuid, services)
-
       next()
     } catch (error) {
       logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.username}`)

@@ -2,8 +2,8 @@ import { NextFunction, Request, type RequestHandler, Response, Router } from 'ex
 import multer from 'multer'
 import ReportListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/utils'
 import CardUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/card-group/utils'
+import CatalogueUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/_catalogue/catalogue/utils'
 import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/utils'
-import ReportslistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/reports-list/utils'
 import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
@@ -61,22 +61,26 @@ export default function routes(services: Services): Router {
   })
 
   get('/preview', async (req, res) => {
+    const catalogue = await CatalogueUtils.init({ res, services })
+    const userReportsLists = await UserReportsListUtils.init({ res, req, services })
+
+    // Preview tool component
     const reportDefinitions: Array<components['schemas']['ReportDefinitionSummary']> = res.locals.reports
-    res.locals.definitions = reportDefinitions
-    res.locals.pathSuffix = ''
+    const toolDefinitions = reportDefinitions.map(definition => ({
+      value: definition.id,
+      text: definition.name,
+    }))
+    const { errorSummary, errorMessage } = req.query
 
     res.render('pages/preview', {
       title: 'Preview Reports',
       cards: { items: CardUtils.reportDefinitionsToCards(reportDefinitions, '/preview/definitions'), variant: 1 },
-      definitions: reportDefinitions.map(definition => ({
-        value: definition.id,
-        text: definition.name,
-      })),
-      errorSummary: req.query.errorSummary,
-      errorMessage: req.query.errorMessage,
+      definitions: toolDefinitions,
+      errorSummary,
+      errorMessage,
       breadCrumbList: [{ title: 'Home', href: '/' }],
-      ...(await UserReportsListUtils.initLists({ res, req, services })),
-      reports: await ReportslistUtils.mapReportsList(res, services),
+      userReportsLists,
+      catalogue,
     })
   })
 
