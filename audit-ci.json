@@ -3,9 +3,9 @@
   "package-manager": "auto",
   "registry": "https://registry.npmjs.org",
   "allowlist": [
-    "GHSA-3xgq-45jj-v275", // cross-spawn: no fix
+    "GHSA-3xgq-45jj-v275", // cross-spawn -> audit-ci: using latest version, & eslint: goes away when move to bundler. Non issue according to community
     "GHSA-968p-4wvh-cqc8", // @babel/helpers -> Jest: using latest version
     "GHSA-76p7-773f-r4q5", // node_modules/serialize-javascript -> mocha -> mocha-junit-reporter: Using latest version
-    "GHSA-pxg6-pf52-xh8x" // low
+    "GHSA-pxg6-pf52-xh8x" // csurf low
   ]
 }
