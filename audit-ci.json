@@ -2,5 +2,10 @@
   "low": true,
   "package-manager": "auto",
   "registry": "https://registry.npmjs.org",
-  "allowlist": []
+  "allowlist": [
+    "GHSA-3xgq-45jj-v275", // cross-spawn: no fix
+    "GHSA-968p-4wvh-cqc8", // @babel/helpers -> Jest: using latest version
+    "GHSA-76p7-773f-r4q5", // node_modules/serialize-javascript -> mocha -> mocha-junit-reporter: Using latest version
+    "GHSA-pxg6-pf52-xh8x" // low
+  ]
 }
