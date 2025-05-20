@@ -17,6 +17,11 @@ export default function setUpCsrf(): Router {
           // eslint-disable-next-line no-underscore-dangle
           return req.body._csrf
         }
+
+        if (req.is('multipart/form-data')) {
+          return req.session.csrfToken
+        }
+
         // Otherwise use the header for all other request types
         return req.headers['csrf-token']
       },
