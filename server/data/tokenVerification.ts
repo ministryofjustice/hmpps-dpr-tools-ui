@@ -8,8 +8,9 @@ function getApiClientToken(token: string) {
   logger.debug(`Attempting to validate token ${token}`)
   return (
     superagent
-      // .post(`${config.apis.tokenVerification.url}/token/verify`)
-      .post(`${config.apis.tokenVerification.url}/introspect`)
+      // .post(`${config.apis.tokenVerification.url}/token/verify`) existing
+      // .post(`${config.apis.token.url}/introspect`) spike
+      .post(`${config.apis.tokenVerification.url}${config.apis.tokenVerification.verificationUri}`)
       .auth(token, { type: 'bearer' })
       .timeout(config.apis.tokenVerification.timeout)
       .then(response => Boolean(response.body && response.body.active))

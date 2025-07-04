@@ -64,14 +64,19 @@ export default {
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
       externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
+      authorizeUri: get('HMPPS_AUTHORISE_URI', '/authorize'),
+      tokenUri: get('TOKEN_URI', '/token'),
       ...apiCommonConfig,
     },
     manageUsers: {
       url: get('HMPPS_MANAGE_USERS_URL', 'http://localhost:9090/auth', requiredInProduction),
+      userInfoUri: get('HMPPS_USER_INFO_URI', '/users/me'),
+      userRoleUri: get('HMPPS_USER_ROLE_URI', '/users/me/roles'),
       ...apiCommonConfig,
     },
     tokenVerification: {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
+      verificationUri: get('TOKEN_VERIFICATION_URI', '/token/verify'),
       timeout: {
         response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
         deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
