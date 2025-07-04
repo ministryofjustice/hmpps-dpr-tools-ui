@@ -31,8 +31,10 @@ const authenticationMiddleware: AuthenticationMiddleware = verifyToken => {
 function init(): void {
   const strategy = new Strategy(
     {
-      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
-      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
+      // authorizationURL2: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
+      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/authorize`,
+      // tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
+      tokenURL: `${config.apis.hmppsAuth.url}/token`,
       clientID: config.apis.hmppsAuth.apiClientId,
       clientSecret: config.apis.hmppsAuth.apiClientSecret,
       callbackURL: `${config.domain}/sign-in/callback`,

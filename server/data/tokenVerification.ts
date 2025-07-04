@@ -5,14 +5,18 @@ import config from '../config'
 import logger from '../../logger'
 
 function getApiClientToken(token: string) {
-  return superagent
-    .post(`${config.apis.tokenVerification.url}/token/verify`)
-    .auth(token, { type: 'bearer' })
-    .timeout(config.apis.tokenVerification.timeout)
-    .then(response => Boolean(response.body && response.body.active))
-    .catch(error => {
-      logger.error(getSanitisedError(error), 'Error calling tokenVerificationApi')
-    })
+  logger.debug(`Attempting to validate token ${token}`)
+  return (
+    superagent
+      // .post(`${config.apis.tokenVerification.url}/token/verify`)
+      .post(`${config.apis.tokenVerification.url}/introspect`)
+      .auth(token, { type: 'bearer' })
+      .timeout(config.apis.tokenVerification.timeout)
+      .then(response => Boolean(response.body && response.body.active))
+      .catch(error => {
+        logger.error(getSanitisedError(error), 'Error calling tokenVerificationApi')
+      })
+  )
 }
 
 export type TokenVerifier = (request: Request) => Promise<boolean | void>
@@ -28,6 +32,8 @@ const tokenVerifier: TokenVerifier = async request => {
   if (verified) {
     return true
   }
+
+  logger.debug(`token request for user "${JSON.stringify(user)}'`)
 
   logger.debug(`token request for user "${user.username}'`)
 
