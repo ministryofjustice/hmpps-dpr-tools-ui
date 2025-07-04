@@ -55,14 +55,21 @@ export default class HmppsManageUsersClient {
   }
 
   getUser(token: string): Promise<User> {
-    logger.info('Getting user details: calling HMPPS Auth')
-    return HmppsManageUsersClient.restClient(token).get<User>({ path: '/users/me' })
+    logger.info('Getting user details: calling HMPPS Auth ')
+    // return HmppsManageUsersClient.restClient(token).get<User>({ path: '/users/me' })
+    // return HmppsManageUsersClient.restClient(token).get<User>({ path: '/userinfo' })
+    return HmppsManageUsersClient.restClient(token).get<User>({ path: config.apis.manageUsers.userInfoUri })
   }
 
   getUserRoles(token: string): Promise<string[]> {
-    return HmppsManageUsersClient.restClient(token)
-      .get<UserRole[]>({ path: '/users/me/roles' })
-      .then(roles => roles.map(role => role.roleCode))
+    logger.info('Getting user roles: calling HMPPS Auth ')
+    return (
+      HmppsManageUsersClient.restClient(token)
+        // .get<UserRole[]>({ path: '/userinfo' })
+        // .get<UserRole[]>({ path: '/users/me/roles' })
+        .get<UserRole[]>({ path: config.apis.manageUsers.userRoleUri })
+        .then(roles => roles.map(role => role.roleCode))
+    )
   }
 
   async getSystemClientToken(username?: string): Promise<string> {
