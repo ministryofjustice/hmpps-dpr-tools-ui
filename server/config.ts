@@ -64,8 +64,8 @@ export default {
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
       externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
-      authorizeUri: get('HMPPS_AUTHORISE_URI', '/authorize'),
-      tokenUri: get('TOKEN_URI', '/token'),
+      authorizeUri: get('HMPPS_AUTHORISE_URI', '/oauth/authorize'),
+      tokenUri: get('TOKEN_URI', '/oauth/token'),
       ...apiCommonConfig,
     },
     manageUsers: {
