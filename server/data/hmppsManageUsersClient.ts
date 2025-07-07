@@ -56,8 +56,6 @@ export default class HmppsManageUsersClient {
 
   getUser(token: string): Promise<User> {
     logger.info('Getting user details: calling HMPPS Auth ')
-    // return HmppsManageUsersClient.restClient(token).get<User>({ path: '/users/me' })
-    // return HmppsManageUsersClient.restClient(token).get<User>({ path: '/userinfo' })
     return HmppsManageUsersClient.restClient(token).get<User>({ path: config.apis.manageUsers.userInfoUri })
   }
 
@@ -65,8 +63,6 @@ export default class HmppsManageUsersClient {
     logger.info('Getting user roles: calling HMPPS Auth ')
     return (
       HmppsManageUsersClient.restClient(token)
-        // .get<UserRole[]>({ path: '/userinfo' })
-        // .get<UserRole[]>({ path: '/users/me/roles' })
         .get<UserRole[]>({ path: config.apis.manageUsers.userRoleUri })
         .then(roles => roles.map(role => role.roleCode))
     )
