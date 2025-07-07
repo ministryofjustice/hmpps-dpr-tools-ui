@@ -13,6 +13,7 @@ export default function populateCurrentUser(services: Services): RequestHandler 
           logger.info('No user available')
         }
       }
+
       next()
     } catch (error) {
       logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.username}`)
