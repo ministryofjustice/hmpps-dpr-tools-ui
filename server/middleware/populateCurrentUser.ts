@@ -8,7 +8,6 @@ export default function populateCurrentUser(services: Services): RequestHandler 
       if (res.locals.user) {
         const user = res.locals.user && (await services.userService.getUser(res.locals.user.token))
         if (user) {
-          console.log(`we have user ${JSON.stringify(user)}`)
           res.locals.user = { ...user, ...res.locals.user }
         } else {
           logger.info('No user available')
