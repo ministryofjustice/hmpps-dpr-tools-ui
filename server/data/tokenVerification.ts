@@ -8,8 +8,6 @@ function getApiClientToken(token: string) {
   logger.debug(`Attempting to validate token ${token}`)
   return (
     superagent
-      // .post(`${config.apis.tokenVerification.url}/token/verify`) existing
-      // .post(`${config.apis.token.url}/introspect`) spike
       .post(`${config.apis.tokenVerification.url}${config.apis.tokenVerification.verificationUri}`)
       .auth(token, { type: 'bearer' })
       .timeout(config.apis.tokenVerification.timeout)
@@ -33,8 +31,6 @@ const tokenVerifier: TokenVerifier = async request => {
   if (verified) {
     return true
   }
-
-  logger.debug(`token request for user "${JSON.stringify(user)}'`)
 
   logger.debug(`token request for user "${user.username}'`)
 
