@@ -61,11 +61,9 @@ export default class HmppsManageUsersClient {
 
   getUserRoles(token: string): Promise<string[]> {
     logger.info('Getting user roles: calling HMPPS Auth ')
-    return (
-      HmppsManageUsersClient.restClient(token)
-        .get<UserRole[]>({ path: config.apis.manageUsers.userRoleUri })
-        .then(roles => roles.map(role => role.roleCode))
-    )
+    return HmppsManageUsersClient.restClient(token)
+      .get<UserRole[]>({ path: config.apis.manageUsers.userRoleUri })
+      .then(roles => roles.map(role => role.roleCode))
   }
 
   async getSystemClientToken(username?: string): Promise<string> {
