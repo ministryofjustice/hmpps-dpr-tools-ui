@@ -106,7 +106,7 @@
     "csrf-sync": "^4.2.1",
     "dayjs": "^1.11.13",
     "express": "^5.1.0",
-    "express-prom-bundle": "^7.0.0",
+    "express-prom-bundle": "^7.0.2",
     "express-session": "^1.18.1",
     "govuk-frontend": "^5.8.0",
     "helmet": "^8.0.0",
