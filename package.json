@@ -98,7 +98,7 @@
     "applicationinsights": "^3.7.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
-    "chart.js": "^4.4.7",
+    "chart.js": "^4.5.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "compression": "^1.7.5",
     "connect-flash": "^0.1.1",
