@@ -92,7 +92,7 @@
     ]
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^3.3.1",
+    "@ministryofjustice/frontend": "^3.7.2",
     "@ministryofjustice/hmpps-digital-prison-reporting-frontend": "^4.6.4",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^3.7.0",
