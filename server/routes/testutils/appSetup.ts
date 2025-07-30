@@ -5,6 +5,7 @@ import { NotFound } from 'http-errors'
 import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
 import UserListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/utils'
 import BookmarklistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/bookmarks/utils'
+import type { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -14,7 +15,7 @@ import previewRoutes from '../preview'
 import PreviewClient from '../../data/previewClient'
 import type { Services } from '../../services'
 
-const definitions = [
+const definitions: Array<components['schemas']['ReportDefinitionSummary']> = [
   {
     id: 'test',
     name: 'Test definition',
@@ -24,8 +25,10 @@ const definitions = [
         id: 'testvariant',
         name: 'Test variant',
         description: 'This is a test variant definition',
+        isMissing: false,
       },
     ],
+    authorised: true,
   },
 ]
 
