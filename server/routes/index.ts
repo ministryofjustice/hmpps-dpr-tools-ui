@@ -2,7 +2,6 @@ import { type RequestHandler, Router } from 'express'
 import DprEmbeddedAsyncReports from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/DprEmbeddedReports'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import config from '../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
