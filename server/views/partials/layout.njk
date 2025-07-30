@@ -1,7 +1,7 @@
 {% extends "govuk/template.njk" %}
 
 {% block head %}
-  <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
+  <link href="{{ '/assets/css/application.css' | assetMap }}" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   {% if feComponents.jsIncludes %}
     {% for js in feComponents.jsIncludes %}
@@ -28,15 +28,5 @@
   {# Run JavaScript at end of the
   <body>, to avoid blocking the initial render. #}
 
-  {# Govuk #}
-  <script type="module" src="/assets/govuk/govuk-frontend.min.js"></script>
-  <script type="module" src="/assets/govukFrontendInit.js"></script>
-
-  {# MoJ #}
-  <script src="/assets/moj/all.js"></script>
-  <script type="module" src="/assets/mojFrontendInit.js"></script>
-
-  {# DPR #}
-  <script type="module" src="/assets/dpr/all.mjs"></script>
-  <script type="module" src="/assets/dprFrontendInit.js"></script>
+  <script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
 {% endblock %}
