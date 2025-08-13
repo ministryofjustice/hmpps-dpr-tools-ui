@@ -1,5 +1,5 @@
 import { type RequestHandler, Router } from 'express'
-import DprEmbeddedAsyncReports from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes/DprEmbeddedReports'
+import dprPlatformRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes'
 import process from 'process'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
@@ -30,11 +30,13 @@ export default function routes(services: Services): Router {
   })
 
   const cwd = process.cwd()
-  DprEmbeddedAsyncReports({
-    router,
-    services,
-    layoutPath: `${cwd}/dist/server/views/partials/layout.njk`,
-  })
+  router.use(
+    '/',
+    dprPlatformRoutes({
+      services,
+      layoutPath: `${cwd}/dist/server/views/partials/layout.njk`,
+    }),
+  )
 
   return router
 }
