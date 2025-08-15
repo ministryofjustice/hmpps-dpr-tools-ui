@@ -56,7 +56,20 @@ Or run tests with the cypress UI:
 
 `npm run int-test-ui`
 
+### Run the app locally with mock oauth server
+
+The oauth mock server implementation provides a fake user / caseload and token endpoints that can be used with the front end and back end.
+
+Use oauth2-mock.env as .env file
+
+run oauth-mock server using following commands
+
+`npm run start`
+
+This starts oauth server on port 8080 which is configured via the oauth2-mock.env config file
+
 ## Dependency Checks
 
 The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
 If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`
+
