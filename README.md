@@ -58,12 +58,13 @@ Or run tests with the cypress UI:
 
 ### Run the app locally with mock oauth server
 
-The oauth mock server implementation provides a fake user / caseload and token endpoints that can be used with the front end and back end.
+The oauth mock server implementation provides a fake user / caseload and token endpoints that can be used with the front end (hmpps-dpr-tools-ui ) and back end tools api(hmpps-dpr-tools-api )
 
 Use oauth2-mock.env as .env file
 
-run oauth-mock server using following commands
+run oauth-mock server using following commands from within the oauth-mock server directory
 
+`npm run i`
 `npm run start`
 
 This starts oauth server on port 8080 which is configured via the oauth2-mock.env config file
