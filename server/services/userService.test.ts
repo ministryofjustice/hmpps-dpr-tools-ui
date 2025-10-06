@@ -1,5 +1,5 @@
 import UserService from './userService'
-import HmppsManageUsersClient, { type User } from '../data/hmppsManageUsersClient'
+import HmppsManageUsersClient, { UserEmail, type User } from '../data/hmppsManageUsersClient'
 
 jest.mock('../data/hmppsManageUsersClient')
 
@@ -17,10 +17,12 @@ describe('User service', () => {
 
     it('Retrieves and formats user name', async () => {
       hmppsManageUsersClient.getUser.mockResolvedValue({ name: 'john smith' } as User)
+      hmppsManageUsersClient.getUserEmail.mockResolvedValue({ email: 'johnsmith@sdfsdfsd' } as UserEmail)
 
       const result = await userService.getUser(token)
 
       expect(result.displayName).toEqual('John Smith')
+      expect(result.email).toEqual('johnsmith@sdfsdfsd')
     })
 
     it('Propagates error', async () => {

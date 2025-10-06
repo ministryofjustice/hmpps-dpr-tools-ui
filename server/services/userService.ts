@@ -3,7 +3,10 @@ import type HmppsManageUsersClient from '../data/hmppsManageUsersClient'
 import type { User } from '../data/hmppsManageUsersClient'
 
 export interface UserDetails extends User {
+  name?: string
   displayName: string
+  uuid?: string
+  email: string
 }
 
 export default class UserService {
@@ -11,6 +14,7 @@ export default class UserService {
 
   async getUser(token: string): Promise<UserDetails> {
     const user = await this.hmppsManageUsersClient.getUser(token)
-    return { ...user, displayName: convertToTitleCase(user.name) }
+    const { email } = await this.hmppsManageUsersClient.getUserEmail(token)
+    return { ...user, email, displayName: convertToTitleCase(user.name) }
   }
 }
