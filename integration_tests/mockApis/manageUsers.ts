@@ -52,7 +52,7 @@ const stubUserEmail = () =>
     },
   })
 
-const stubActiveCaseload = () =>
+const stubUserCaseload = () =>
   stubFor({
     request: {
       method: 'GET',
@@ -68,6 +68,7 @@ const stubActiveCaseload = () =>
   })
 
 export default {
-  stubAuthUser: (name = 'john smith'): Promise<[Response, Response, Response, Response]> =>
-    Promise.all([stubUser(name), stubUserRoles(), stubUserEmail(), stubActiveCaseload()]),
+  stubUserCaseload,
+  stubAuthUser: (name = 'john smith'): Promise<[Response, Response, Response]> =>
+    Promise.all([stubUser(name), stubUserRoles(), stubUserEmail()]),
 }
