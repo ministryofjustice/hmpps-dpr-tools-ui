@@ -37,6 +37,37 @@ const stubUserRoles = () =>
     },
   })
 
+const stubUserEmail = () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/users/me/email',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: [{ email: 'SOME_USER_EMAIL' }],
+    },
+  })
+
+const stubActiveCaseload = () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/user/caseload/active',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: [{ activeCaseloadId: 'SOME_USER_CASELOAD_ID' }],
+    },
+  })
+
 export default {
-  stubAuthUser: (name = 'john smith'): Promise<[Response, Response]> => Promise.all([stubUser(name), stubUserRoles()]),
+  stubAuthUser: (name = 'john smith'): Promise<[Response, Response, Response, Response]> =>
+    Promise.all([stubUser(name), stubUserRoles(), stubUserEmail(), stubActiveCaseload()]),
 }
