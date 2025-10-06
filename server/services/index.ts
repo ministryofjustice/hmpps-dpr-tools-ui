@@ -8,11 +8,18 @@ import PreviewClient from '../data/previewClient'
 import { ApplicationInfo } from '../applicationInfo'
 
 export const services = (): Services => {
-  const { applicationInfo, hmppsManageUsersClient, reportDataStore, reportingClient, dashboardClient, previewClient } =
-    dataAccess()
+  const {
+    applicationInfo,
+    hmppsManageUsersClient,
+    reportDataStore,
+    reportingClient,
+    dashboardClient,
+    previewClient,
+    missingReportClient,
+  } = dataAccess()
 
   const userService = new UserService(hmppsManageUsersClient)
-  const dprServices = createDprServices({ reportingClient, dashboardClient, reportDataStore })
+  const dprServices = createDprServices({ reportingClient, dashboardClient, reportDataStore, missingReportClient })
 
   return {
     applicationInfo,

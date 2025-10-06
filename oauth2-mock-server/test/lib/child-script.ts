@@ -1,67 +1,67 @@
-import util from 'util';
+import util from 'util'
 
-import type { OAuth2Server } from '../../src';
+import type { OAuth2Server } from '../../src'
 
 interface Output {
-  result: OAuth2Server | null;
-  err?: unknown;
-  exitCode: number | undefined;
-  stdout: string;
-  stderr: string;
+  result: OAuth2Server | null
+  err?: unknown
+  exitCode: number | undefined
+  stdout: string
+  stderr: string
 }
 
-export async function exec(args: string[]): Promise<Output> {
-  process.argv = ['irrelevant', 'irrelevant as well', ...args];
+export default async function exec(args: string[]): Promise<Output> {
+  process.argv = ['irrelevant', 'irrelevant as well', ...args]
 
-  const log = ConsoleOutHook('log');
-  const error = ConsoleOutHook('error');
+  const log = ConsoleOutHook('log')
+  const error = ConsoleOutHook('error')
 
   const res: Output = {
     result: null,
     err: undefined,
     exitCode: 0,
     stdout: '',
-    stderr: ''
-  };
-
-  try {
-    const mod = await import('../../src/oauth2-mock-server');
-    res.result = await mod.default;
-  } catch (err) {
-    res.err = err;
-  } finally {
-    log.mockRestore();
-    error.mockRestore();
-    res.exitCode = process.exitCode;
-    process.exitCode = undefined;
+    stderr: '',
   }
 
-  res.stdout = log.output();
-  res.stderr = error.output();
+  try {
+    const mod = await import('../../src/oauth2-mock-server')
+    res.result = await mod.default
+  } catch (err) {
+    res.err = err
+  } finally {
+    log.mockRestore()
+    error.mockRestore()
+    res.exitCode = <number | undefined>process.exitCode
+    process.exitCode = undefined
+  }
 
-  return res;
+  res.stdout = log.output()
+  res.stderr = error.output()
+
+  return res
 }
 
 function ConsoleOutHook(method: 'log' | 'error') {
-  let entries: string[] = [];
+  let entries: string[] = []
 
-  const old = console[method];
+  const old = console[method]
   console[method] = function (msg?: unknown, ...args: unknown[]): void {
-    entries.push(util.format(msg, ...args));
-    entries.push('\n');
-  };
+    entries.push(util.format(msg, ...args))
+    entries.push('\n')
+  }
 
   return {
     mockClear: function mockClear() {
-      entries = [];
+      entries = []
     },
 
     mockRestore: function mockRestore() {
-      console[method] = old;
+      console[method] = old
     },
 
     output: function output() {
-      return entries.join('');
+      return entries.join('')
     },
-  };
+  }
 }
