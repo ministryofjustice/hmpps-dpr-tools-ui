@@ -43,6 +43,10 @@ export interface User {
   activeCaseLoadId?: string // deprecated, use user roles api
 }
 
+export interface UserEmail {
+  email: string
+}
+
 export interface UserRole {
   roleCode: string
 }
@@ -57,6 +61,20 @@ export default class HmppsManageUsersClient {
   getUser(token: string): Promise<User> {
     logger.info('Getting user details: calling HMPPS Auth ')
     return HmppsManageUsersClient.restClient(token).get<User>({ path: config.apis.manageUsers.userInfoUri })
+  }
+
+  getUserEmail(token: string): Promise<UserEmail> {
+    logger.info(`Getting current user details: calling HMPPS Auth`)
+    return HmppsManageUsersClient.restClient(token).get({ path: '/users/me/email' }) as Promise<UserEmail>
+  }
+
+  getActiveCaseload(token: string): Promise<string> {
+    logger.info(`User client: Get user's active caseload`)
+    return HmppsManageUsersClient.restClient(token)
+      .get({
+        path: `/user/caseload/active`,
+      })
+      .then(response => (<Array<string>>response)[0])
   }
 
   getUserRoles(token: string): Promise<string[]> {
