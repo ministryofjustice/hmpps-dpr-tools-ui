@@ -15,6 +15,7 @@ export default class UserService {
   async getUser(token: string): Promise<UserDetails> {
     const user = await this.hmppsManageUsersClient.getUser(token)
     const { email } = await this.hmppsManageUsersClient.getUserEmail(token)
-    return { ...user, email, displayName: convertToTitleCase(user.name) }
+    const activeCaseLoadId = await this.hmppsManageUsersClient.getActiveCaseload(token)
+    return { ...user, email, activeCaseLoadId, displayName: convertToTitleCase(user.name) }
   }
 }
