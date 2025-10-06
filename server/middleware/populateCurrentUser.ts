@@ -12,7 +12,6 @@ export default function populateCurrentUser(services: Services): RequestHandler 
           const dprUser = new DprUser()
           dprUser.token = res.locals.user.token
           dprUser.id = user.uuid
-          dprUser.activeCaseLoadId = user.activeCaseLoadId
           dprUser.emailAddress = user.email
           dprUser.displayName = user.displayName
           res.locals.user = { ...user, ...res.locals.user }

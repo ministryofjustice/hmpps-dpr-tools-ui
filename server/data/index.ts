@@ -8,7 +8,6 @@ import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureApp
 import applicationInfoSupplier from '../applicationInfo'
 import config from '../config'
 import PreviewClient from './previewClient'
-import UserClient from './userClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
@@ -35,7 +34,6 @@ export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
   hmppsManageUsersClient: new HmppsManageUsersClient(new TokenStore(createRedisClient())),
   previewClient,
-  userClient: new UserClient(config.apis.report),
   ...initDprReportingClients(config.apis.report, createRedisClient()),
 })
 

@@ -56,14 +56,14 @@ const stubUserCaseload = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/user/caseload/active',
+      urlPattern: '/reports/user/caseload/active',
     },
     response: {
       status: 200,
       headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
+        'Content-Type': 'application/json',
       },
-      jsonBody: [{ activeCaseloadId: 'SOME_USER_CASELOAD_ID' }],
+      body: '["ABC"]',
     },
   })
 

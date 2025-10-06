@@ -16,10 +16,9 @@ export const services = (): Services => {
     dashboardClient,
     previewClient,
     missingReportClient,
-    userClient,
   } = dataAccess()
 
-  const userService = new UserService(hmppsManageUsersClient, userClient)
+  const userService = new UserService(hmppsManageUsersClient)
   const dprServices = createDprServices({ reportingClient, dashboardClient, reportDataStore, missingReportClient })
 
   return {

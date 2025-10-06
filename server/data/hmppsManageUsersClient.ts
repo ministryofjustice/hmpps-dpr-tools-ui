@@ -68,15 +68,6 @@ export default class HmppsManageUsersClient {
     return HmppsManageUsersClient.restClient(token).get({ path: '/users/me/email' }) as Promise<UserEmail>
   }
 
-  getActiveCaseload(token: string): Promise<string> {
-    logger.info(`User client: Get user's active caseload`)
-    return HmppsManageUsersClient.restClient(token)
-      .get({
-        path: `/user/caseload/active`,
-      })
-      .then(response => (<Array<string>>response)[0])
-  }
-
   getUserRoles(token: string): Promise<string[]> {
     logger.info('Getting user roles: calling HMPPS Auth ')
     return HmppsManageUsersClient.restClient(token)
