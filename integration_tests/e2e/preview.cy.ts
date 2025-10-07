@@ -7,6 +7,7 @@ context('Preview', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    cy.task('stubUserCaseload')
     cy.task('stubDefinitions')
     cy.task('stubUploadDefinitionSuccess')
     cy.task('stubUploadDefinitionTimeout')

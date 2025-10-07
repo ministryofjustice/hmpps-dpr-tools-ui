@@ -1,3 +1,4 @@
+import jwtDecode from 'jwt-decode'
 import { convertToTitleCase } from '../utils/utils'
 import type HmppsManageUsersClient from '../data/hmppsManageUsersClient'
 import type { User } from '../data/hmppsManageUsersClient'
@@ -7,6 +8,7 @@ export interface UserDetails extends User {
   displayName: string
   uuid?: string
   email: string
+  roles: string[]
 }
 
 export default class UserService {
@@ -15,7 +17,7 @@ export default class UserService {
   async getUser(token: string): Promise<UserDetails> {
     const user = await this.hmppsManageUsersClient.getUser(token)
     const { email } = await this.hmppsManageUsersClient.getUserEmail(token)
-    const activeCaseLoadId = await this.hmppsManageUsersClient.getActiveCaseload(token)
-    return { ...user, email, activeCaseLoadId, displayName: convertToTitleCase(user.name) }
+    const { authorities: roles = [] } = jwtDecode(token) as { authorities?: string[] }
+    return { ...user, email, roles, displayName: convertToTitleCase(user.name) }
   }
 }

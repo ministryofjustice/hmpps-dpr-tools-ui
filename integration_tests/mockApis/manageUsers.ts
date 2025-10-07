@@ -52,22 +52,23 @@ const stubUserEmail = () =>
     },
   })
 
-const stubActiveCaseload = () =>
+const stubUserCaseload = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/user/caseload/active',
+      urlPattern: '/reports/user/caseload/active',
     },
     response: {
       status: 200,
       headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
+        'Content-Type': 'application/json',
       },
-      jsonBody: [{ activeCaseloadId: 'SOME_USER_CASELOAD_ID' }],
+      body: '["ABC"]',
     },
   })
 
 export default {
-  stubAuthUser: (name = 'john smith'): Promise<[Response, Response, Response, Response]> =>
-    Promise.all([stubUser(name), stubUserRoles(), stubUserEmail(), stubActiveCaseload()]),
+  stubUserCaseload,
+  stubAuthUser: (name = 'john smith'): Promise<[Response, Response, Response]> =>
+    Promise.all([stubUser(name), stubUserRoles(), stubUserEmail()]),
 }
