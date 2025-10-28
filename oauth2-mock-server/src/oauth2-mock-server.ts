@@ -15,13 +15,14 @@
  * limitations under the License.
  */
 
-import { writeFile } from 'node:fs/promises';
-import path from 'node:path';
+import { writeFile } from 'node:fs/promises'
+import path from 'node:path'
 
-import { assertIsString, readJsonFromFile, shift } from './lib/helpers';
-import type { JWK, Options } from './lib/types';
+import { assertIsString, readJsonFromFile, shift } from './lib/helpers'
+import type { JWK, Options } from './lib/types'
 
-import { OAuth2Server } from './index';
+import { OAuth2Server } from './index'
+import { config } from './config'
 
 /* eslint no-console: off */
 
@@ -29,65 +30,65 @@ const defaultOptions: Options = {
   port: 8080,
   keys: [],
   saveJWK: false,
-};
+}
 
 async function cli(args: string[]): Promise<OAuth2Server | null> {
-  let options;
+  let options
 
   try {
-    options = parseCliArgs(args);
+    options = parseCliArgs(args)
   } catch (err) {
-    console.error(err instanceof Error ? err.message : err);
-    process.exitCode = 1;
-    throw err;
+    console.error(err instanceof Error ? err.message : err)
+    process.exitCode = 1
+    throw err
   }
 
   if (options === null) {
-    showHelp();
-    return null;
+    showHelp()
+    return null
   }
 
-  return await startServer(options);
+  return await startServer(options)
 }
 
 function parseCliArgs(args: string[]): Options | null {
-  const opts = { ...defaultOptions };
+  const opts = { ...defaultOptions }
 
   while (args.length > 0) {
-    const arg = shift(args);
+    const arg = shift(args)
 
     switch (arg) {
       case '-h':
       case '--help':
-        return null;
+        return null
       case '-a':
-        opts.host = shift(args);
-        break;
+        opts.host = shift(args)
+        break
       case '-p':
-        opts.port = parsePort(shift(args));
-        break;
+        opts.port = parsePort(shift(args))
+        break
       case '-c':
-        opts.cert = shift(args);
-        break;
+        opts.cert = shift(args)
+        break
       case '-k':
-        opts.key = shift(args);
-        break;
+        opts.key = shift(args)
+        break
       case '--jwk':
-        opts.keys.push(readJsonFromFile(shift(args)));
-        break;
+        opts.keys.push(readJsonFromFile(shift(args)))
+        break
       case '--save-jwk':
-        opts.saveJWK = true;
-        break;
+        opts.saveJWK = true
+        break
       default:
-        throw new Error(`Unrecognized option '${arg}'.`);
+        throw new Error(`Unrecognized option '${arg}'.`)
     }
   }
 
-  return opts;
+  return opts
 }
 
 function showHelp() {
-  const scriptName = path.basename(__filename, '.ts');
+  const scriptName = path.basename(__filename, '.ts')
   console.log(`Usage: ${scriptName} [options]
        ${scriptName} -a localhost -p 8080
 
@@ -110,82 +111,81 @@ Options:
 
 If no keys are added via the --jwk option, a new random RSA key
 will be generated. This key can then be saved to disk with the --save-jwk
-for later reuse.`);
+for later reuse.`)
 }
 
 function parsePort(portStr: string) {
-  const port = parseInt(portStr, 10);
+  const port = parseInt(portStr, 10)
 
   if (Number.isNaN(port) || port < 0 || port > 65535) {
-    throw new Error('Invalid port number.');
+    throw new Error('Invalid port number.')
   }
 
-  return port;
+  return port
 }
 
 async function saveJWK(keys: JWK[]) {
   for (const key of keys) {
-    const filename = `${key.kid}.json`;
-    await writeFile(filename, JSON.stringify(key, null, 2));
-    console.log(`JSON web key written to file "${filename}".`);
+    const filename = `${key.kid}.json`
+    await writeFile(filename, JSON.stringify(key, null, 2))
+    console.log(`JSON web key written to file "${filename}".`)
   }
 }
 
 async function startServer(opts: Options) {
-  const server = new OAuth2Server(opts.key, opts.cert);
+  const server = new OAuth2Server(opts.key, opts.cert, config.oauth2Options)
 
   await Promise.all(
-    opts.keys.map(async (key) => {
-      const jwk = await server.issuer.keys.add(key);
+    opts.keys.map(async key => {
+      const jwk = await server.issuer.keys.add(key)
 
-      console.log(`Added key with kid "${jwk.kid}"`);
+      console.log(`Added key with kid "${jwk.kid}"`)
     }),
-  );
+  )
 
   if (opts.keys.length === 0) {
-    const jwk = await server.issuer.keys.generate('RS256');
-    console.log(`xxx Generated new RSA key with kid "${jwk.kid}"`);
+    const jwk = await server.issuer.keys.generate('RS256')
+    console.log(`xxx Generated new RSA key with kid "${jwk.kid}"`)
   }
 
   // Add the client ID to a token
   //const basicAuth = require('basic-auth');
   server.service.on('beforeTokenSigning', (token, req) => {
-    console.log(`attempting to add client id to token on req` + req);
-    token.payload.client_id = 'mock-oauth-clientId';
+    console.log(`attempting to add client id to token on req` + req)
+    token.payload.client_id = 'mock-oauth-clientId'
     token.payload.authorities = ['ROLE_PRISONS_REPORTING_TOOLS_USER', 'ROLE_PRISONS_REPORTING_USER']
-  });
+  })
 
   if (opts.saveJWK) {
-    await saveJWK(server.issuer.keys.toJSON(true));
+    await saveJWK(server.issuer.keys.toJSON(true))
   }
 
   //add roles endpoint
 
+  await server.start(opts.port, opts.host)
 
-  await server.start(opts.port, opts.host);
+  const addr = server.address()
+  const hostname = addr.family === 'IPv6' ? `[${addr.address}]` : addr.address
 
-  const addr = server.address();
-  const hostname = addr.family === 'IPv6' ? `[${addr.address}]` : addr.address;
-
-  console.log(`OAuth 2 server listening on http://${hostname}:${addr.port}`);
-  assertIsString(server.issuer.url, 'Empty host');
-  console.log(`OAuth 2 issuer url is ${server.issuer.url}`);
+  console.log(`OAuth 2 server listening on http://${hostname}:${addr.port}`)
+  assertIsString(server.issuer.url, 'Empty host')
+  console.log(`OAuth 2 issuer url is ${server.issuer.url}`)
 
   process.once('SIGINT', () => {
-    console.log('OAuth 2 server is stopping...');
+    console.log('OAuth 2 server is stopping...')
 
     const handler = async () => {
-      await server.stop();
-    };
+      await server.stop()
+    }
 
-    handler().catch((e) => {
-      throw e;
-    });
+    handler().catch(e => {
+      throw e
+    })
 
-    console.log('OAuth 2 server has been stopped.');
-  });
+    console.log('OAuth 2 server has been stopped.')
+  })
 
-  return server;
+  return server
 }
 
-export default cli(process.argv.slice(2));
+export default cli(process.argv.slice(2))

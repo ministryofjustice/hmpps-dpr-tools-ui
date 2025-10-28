@@ -226,7 +226,7 @@ Returns the [OpenID Provider Configuration Information](https://openid.net/specs
 
 Returns the JSON Web Key Set (JWKS) of all the keys configured in the server.
 
-### POST `/token`
+### POST `/oauth/token`
 
 Issues access tokens.
 
