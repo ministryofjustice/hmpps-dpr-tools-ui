@@ -161,7 +161,7 @@ workflows:
             - unit_test
             - integration_test
             - remember-version-for-dev
-          helm_timeout: 5m
+          helm_timeout: 10m
       - request-test-approval:
           type: approval
           requires:
@@ -180,7 +180,7 @@ workflows:
             - hmpps-dpr-tools-ui-test
           requires:
             - remember-version-for-test
-          helm_timeout: 5m
+          helm_timeout: 10m
       - request-preprod-approval:
           type: approval
           requires:
@@ -200,7 +200,7 @@ workflows:
             - hmpps-dpr-tools-ui-preprod
           requires:
             - remember-version-for-preprod
-          helm_timeout: 5m
+          helm_timeout: 10m
       - request-prod-approval:
           type: approval
           requires:
@@ -222,7 +222,7 @@ workflows:
             - hmpps-dpr-tools-ui-prod
           requires:
             - remember-version-for-prod
-          helm_timeout: 5m
+          helm_timeout: 10m
 
   security:
     triggers:
