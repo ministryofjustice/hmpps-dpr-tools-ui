@@ -109,14 +109,30 @@ jobs:
       - store_artifacts:
           path: integration_tests/screenshots
 
-  remember-app-version:
+  save-app-version:
     executor:
       name: hmpps/node
       tag: << pipeline.parameters.node-version >>
     steps:
+      - run:
+          name: Save APP_VERSION to file
+          command: |
+            echo "Build.${CIRCLE_WORKFLOW_ID}" > /tmp/app_version.txt
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - app_version.txt
+
+  restore-app-version:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    steps:
+      - attach_workspace:
+          at: /tmp
       - mem/remember:
           env_var: APP_VERSION
-          value: "Build.${CIRCLE_WORKFLOW_ID}"
+          value: $(cat /tmp/app_version.txt)
 
 workflows:
   version: 2
@@ -141,10 +157,14 @@ workflows:
             branches:
               only:
                 - main
-      - remember-app-version:
-          name: remember-version-for-dev
+      - save-app-version:
+          name: save-version
           requires:
             - build_docker
+      - restore-app-version:
+          name: remember-version-for-dev
+          requires:
+            - save-version
       - hmpps/deploy_env:
           name: deploy_dev
           jira_update: true
@@ -166,10 +186,11 @@ workflows:
           type: approval
           requires:
             - deploy_dev
-      - remember-app-version:
+      - restore-app-version:
           name: remember-version-for-test
           requires:
             - request-test-approval
+            - save-version
       - hmpps/deploy_env:
           name: deploy_test
           env: "test"
@@ -185,10 +206,11 @@ workflows:
           type: approval
           requires:
             - deploy_dev
-      - remember-app-version:
+      - restore-app-version:
           name: remember-version-for-preprod
           requires:
             - request-preprod-approval
+            - save-version
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
@@ -205,10 +227,11 @@ workflows:
           type: approval
           requires:
             - deploy_preprod
-      - remember-app-version:
+      - restore-app-version:
           name: remember-version-for-prod
           requires:
             - request-prod-approval
+            - save-version
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
