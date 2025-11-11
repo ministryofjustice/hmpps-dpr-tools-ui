@@ -130,9 +130,15 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp
+      - run:
+          name: Read APP_VERSION from file
+          command: |
+            APP_VERSION=$(cat /tmp/app_version.txt)
+            echo "Restored APP_VERSION: $APP_VERSION"
+            echo "export APP_VERSION='$APP_VERSION'" >> $BASH_ENV
       - mem/remember:
           env_var: APP_VERSION
-          value: $(cat /tmp/app_version.txt)
+          value: $APP_VERSION
 
 workflows:
   version: 2
@@ -153,10 +159,10 @@ workflows:
       - hmpps/build_docker:
           name: build_docker
           additional_docker_tag: "Build.${CIRCLE_WORKFLOW_ID}"
-          filters:
-            branches:
-              only:
-                - main
+       #    filters:
+       #      branches:
+       #        only:
+       #          - main
       - save-app-version:
           name: save-version
           requires:
@@ -172,10 +178,10 @@ workflows:
           context:
             - hmpps-common-vars
             - hmpps-dpr-tools-ui-dev
-          filters:
-            branches:
-              only:
-                - main
+      #   filters:
+       #      branches:
+       #        only:
+       #          - main
           requires:
             - helm_lint
             - unit_test
