@@ -23,7 +23,7 @@ export default function routes(services: Services): Router {
           }
           res.locals.report = definition
 
-          if (req.params.variantId) {
+          if (req.params.variantId && definition) {
             const variant = definition.variants.find(v => v.id === req.params.variantId)
             if (!variant) {
               next(`Variant ID not found: ${req.params.definitionId}`)
@@ -62,7 +62,7 @@ export default function routes(services: Services): Router {
 
   get('/preview', async (req, res) => {
     const catalogue = await CatalogueUtils.init({ res, services })
-    const userReportsLists = await UserReportsListUtils.init({ res, req, services })
+    const userReportsLists = await UserReportsListUtils.init({ res, services })
 
     // Preview tool component
     const reportDefinitions: Array<components['schemas']['ReportDefinitionSummary']> = res.locals.reports
@@ -107,7 +107,8 @@ export default function routes(services: Services): Router {
     services.reportingClient
       .getDefinition(token, req.params.definitionId, req.params.variantId)
       .then(reportDefinition => {
-        switch (reportDefinition.variant.specification.template) {
+        const template = reportDefinition.variant.specification?.template
+        switch (template) {
           case 'list':
             ReportListUtils.renderListWithData({
               title: `${reportDefinition.name} - ${reportDefinition.variant.name}`,
@@ -132,9 +133,7 @@ export default function routes(services: Services): Router {
             break
 
           default:
-            next(
-              `Unrecognised template: '${reportDefinition.variant.specification.template}', currently only 'list' is supported.`,
-            )
+            next(`Unrecognised template: '${template}', currently only 'list' is supported.`)
         }
       })
   })
@@ -166,7 +165,7 @@ export default function routes(services: Services): Router {
     const definition = req.file
     const { token } = res.locals.user
 
-    const definitionBody = definition.buffer.toString()
+    const definitionBody = definition ? definition.buffer.toString() : ''
     const definitionId = JSON.parse(definitionBody).id
 
     services.previewClient
@@ -191,7 +190,7 @@ export default function routes(services: Services): Router {
         definitionName: req.params.definitionId,
         variantName: req.params.variantId,
         fieldName: req.params.fieldName,
-        prefix: req.query.prefix.toString(),
+        prefix: req.query.prefix ? req.query.prefix.toString() : '',
       })
       .then(result => {
         res.setHeader('Content-Type', 'application/json')

@@ -64,7 +64,7 @@ describe('hmppsAuthClient', () => {
     })
 
     it('should return token from HMPPS Auth with username', async () => {
-      tokenStore.getToken.mockResolvedValue(null)
+      tokenStore.getToken.mockResolvedValue(undefined)
 
       fakeHmppsAuthApi
         .post('/oauth/token', 'grant_type=client_credentials&username=Bob')
@@ -79,7 +79,7 @@ describe('hmppsAuthClient', () => {
     })
 
     it('should return token from HMPPS Auth without username', async () => {
-      tokenStore.getToken.mockResolvedValue(null)
+      tokenStore.getToken.mockResolvedValue(undefined)
 
       fakeHmppsAuthApi
         .post('/oauth/token', 'grant_type=client_credentials')

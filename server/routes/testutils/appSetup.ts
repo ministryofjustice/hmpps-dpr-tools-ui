@@ -6,6 +6,7 @@ import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-f
 import UserListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/utils'
 import BookmarklistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/bookmarks/utils'
 import type { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
+import { DownloadPermissionService } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -78,6 +79,10 @@ const previewClient: PreviewClient = {
   },
 }
 
+const downloadPermissionService = {
+  enabled: true,
+} as unknown as DownloadPermissionService
+
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',
   buildNumber: '1',
@@ -116,7 +121,11 @@ function appSetup(production: boolean, userSupplier: () => Express.User): Expres
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(routes({} as Services))
+  app.use(
+    routes({
+      downloadPermissionService,
+    } as Services),
+  )
   app.use(previewRoutes({ reportingClient, previewClient } as Services))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler())

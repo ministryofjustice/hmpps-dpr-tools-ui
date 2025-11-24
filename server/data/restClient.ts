@@ -1,7 +1,7 @@
 import { Readable } from 'stream'
 
 import Agent, { HttpsAgent } from 'agentkeepalive'
-import superagent from 'superagent'
+import superagent, { ResponseError } from 'superagent'
 
 import type { ApiConfig } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/types'
 import logger from '../../logger'
@@ -23,7 +23,7 @@ interface RequestWithBody extends Request {
 }
 
 interface StreamRequest {
-  path?: string
+  path?: string | null
   headers?: Record<string, string>
   errorLogger?: (e: UnsanitisedError) => void
 }
@@ -72,7 +72,7 @@ export default class RestClient {
 
       return raw ? <Response>result : result.body
     } catch (error) {
-      const sanitisedError = sanitiseError(error)
+      const sanitisedError = sanitiseError(<ResponseError>error)
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'GET'`)
       throw sanitisedError
     }
@@ -103,7 +103,7 @@ export default class RestClient {
 
       return raw ? <Response>result : result.body
     } catch (error) {
-      const sanitisedError = sanitiseError(error)
+      const sanitisedError = sanitiseError(<ResponseError>error)
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: '${method.toUpperCase()}'`)
       throw sanitisedError
     }
@@ -146,7 +146,7 @@ export default class RestClient {
 
       return raw ? <Response>result : result.body
     } catch (error) {
-      const sanitisedError = sanitiseError(error)
+      const sanitisedError = sanitiseError(<ResponseError>error)
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'DELETE'`)
       throw sanitisedError
     }
@@ -172,7 +172,7 @@ export default class RestClient {
             reject(error)
           } else if (response) {
             const s = new Readable()
-            // eslint-disable-next-line no-underscore-dangle,@typescript-eslint/no-empty-function
+            // eslint-disable-next-line no-underscore-dangle
             s._read = () => {}
             s.push(response.body)
             s.push(null)

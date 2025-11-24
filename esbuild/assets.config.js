@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 const path = require('node:path')
 
 const { copy } = require('esbuild-plugin-copy')
