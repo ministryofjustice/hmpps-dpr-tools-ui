@@ -62,7 +62,7 @@ export default function routes(services: Services): Router {
 
   get('/preview', async (req, res) => {
     const catalogue = await CatalogueUtils.init({ res, services })
-    const userReportsLists = await UserReportsListUtils.init({ res, req, services })
+    const userReportsLists = await UserReportsListUtils.init({ res, services })
 
     // Preview tool component
     const reportDefinitions: Array<components['schemas']['ReportDefinitionSummary']> = res.locals.reports
