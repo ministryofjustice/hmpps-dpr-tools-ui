@@ -8,7 +8,7 @@ export default function populateCurrentUser(services: Services): RequestHandler 
     try {
       if (res.locals.user) {
         const user = res.locals.user && (await services.userService.getUser(res.locals.user.token))
-        if (user) {
+        if (user && user.uuid) {
           const dprUser = new DprUser()
           dprUser.token = res.locals.user.token
           dprUser.id = user.uuid

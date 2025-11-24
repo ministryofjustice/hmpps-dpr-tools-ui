@@ -45,7 +45,9 @@ export default function setUpAuth(): Router {
   })
 
   router.use((req, res, next) => {
-    res.locals.user = req.user
+    if (req.user) {
+      res.locals.user = req.user
+    }
     next()
   })
 

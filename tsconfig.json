@@ -1,20 +1,25 @@
 {
+  "extends": "@tsconfig/node22/tsconfig.json",
   "compileOnSave": true,
   "compilerOptions": {
+    "outDir": "./dist",
     "target": "es2018",
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./dist",
     "sourceMap": true,
     "skipLibCheck": true,
     "noEmit": false,
     "allowJs": true,
+    "strict": false,
     "checkJs": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
+    "ignoreDeprecations": "5.0",
+    "inlineSources": true,
+    "sourceRoot": "/",
     "typeRoots": ["./server/@types", "./node_modules/@types"]
   },
   "exclude": [
@@ -24,7 +29,8 @@
     "dist",
     "cypress.config.ts",
     "coverage",
-    "esbuild"
+    "esbuild",
+    "eslint.config.mjs"
   ],
   "include": ["**/*.js", "**/*.ts"]
 }

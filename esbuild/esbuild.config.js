@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 const { spawn } = require('node:child_process')
 const path = require('node:path')
 

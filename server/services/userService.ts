@@ -18,6 +18,7 @@ export default class UserService {
     const user = await this.hmppsManageUsersClient.getUser(token)
     const { email } = await this.hmppsManageUsersClient.getUserEmail(token)
     const { authorities: roles = [] } = jwtDecode(token) as { authorities?: string[] }
-    return { ...user, email, roles, displayName: convertToTitleCase(user.name) }
+    const displayName = user.name ? convertToTitleCase(user.name) : ''
+    return { ...user, email, roles, displayName }
   }
 }

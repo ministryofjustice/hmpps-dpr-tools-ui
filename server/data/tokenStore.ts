@@ -22,7 +22,7 @@ export default class TokenStore {
     await this.client.set(`${this.prefix}${key}`, token, { EX: durationSeconds })
   }
 
-  public async getToken(key: string): Promise<string> {
+  public async getToken(key: string): Promise<string | undefined> {
     await this.ensureConnected()
     const token = await this.client.get(`${this.prefix}${key}`)
     return token ? <string>token : undefined
