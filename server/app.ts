@@ -1,5 +1,5 @@
 import express from 'express'
-
+import process from 'process'
 import createError from 'http-errors'
 
 import setUpDprResources from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/middleware/setUpDprResources'
@@ -23,6 +23,8 @@ import type { Services } from './services'
 import config from './config'
 
 export default function createApp(services: Services): express.Application {
+  const cwd = process.cwd()
+  const layoutPath = `${cwd}/dist/server/views/partials/layout.njk`
   const app = express()
 
   app.set('json spaces', 2)
@@ -40,7 +42,7 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware(config.authorisation.roles))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
-  app.use(setUpDprResources(services, config.dpr))
+  app.use(setUpDprResources(services, layoutPath, config.dpr))
 
   app.use(routes(services))
   app.use(previewRoutes(services))
