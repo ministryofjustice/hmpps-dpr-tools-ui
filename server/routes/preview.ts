@@ -184,23 +184,5 @@ export default function routes(services: Services): Router {
       })
   })
 
-  get('/preview/values/:definitionId/:variantId/:fieldName', (req, res, next) => {
-    services.reportingClient
-      .getFieldValues({
-        token: res.locals.user.token,
-        definitionName: req.params.definitionId,
-        variantName: req.params.variantId,
-        fieldName: req.params.fieldName,
-        prefix: req.query.prefix.toString(),
-      })
-      .then(result => {
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(result))
-      })
-      .catch(err => {
-        next(err)
-      })
-  })
-
   return router
 }

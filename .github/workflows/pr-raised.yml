@@ -19,9 +19,9 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 24
+          node-version: 22
 
-      - run: npm ci --no-audit
+      - run: npm run setup
 
       - name: Add linting fixes
         run: npm run lint:fix
