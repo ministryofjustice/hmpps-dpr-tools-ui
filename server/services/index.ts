@@ -24,8 +24,6 @@ export const services = (): Services => {
   const serviceConfig = {
     bookmarking: true,
     download: true,
-    collections: true,
-    missingReports: true,
     saveDefaults: true,
   }
 
