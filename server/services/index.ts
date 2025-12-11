@@ -20,13 +20,23 @@ export const services = (): Services => {
   } = dataAccess()
 
   const userService = new UserService(hmppsManageUsersClient)
-  const dprServices = createDprServices({
-    reportingClient,
-    dashboardClient,
-    reportDataStore,
-    missingReportClient,
-    productCollectionClient,
-  })
+
+  const serviceConfig = {
+    bookmarking: true,
+    download: true,
+    saveDefaults: true,
+  }
+
+  const dprServices = createDprServices(
+    {
+      reportingClient,
+      dashboardClient,
+      reportDataStore,
+      missingReportClient,
+      productCollectionClient,
+    },
+    serviceConfig,
+  )
 
   return {
     applicationInfo,
