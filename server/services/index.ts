@@ -17,6 +17,7 @@ export const services = (): Services => {
     previewClient,
     missingReportClient,
     productCollectionClient,
+    featureFlagService,
   } = dataAccess()
 
   const userService = new UserService(hmppsManageUsersClient)
@@ -34,6 +35,7 @@ export const services = (): Services => {
       reportDataStore,
       missingReportClient,
       productCollectionClient,
+      featureFlagService,
     },
     serviceConfig,
   )
