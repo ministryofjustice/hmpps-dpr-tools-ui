@@ -109,7 +109,7 @@ function appSetup(production: boolean, userSupplier: () => Express.User): Expres
 
   app.set('view engine', 'njk')
 
-  const njkenv = nunjucksSetup(app, testAppInfo)
+  nunjucksSetup(app, testAppInfo)
   app.use(cookieSession({ keys: [''] }))
   app.use((req, res, next) => {
     req.user = userSupplier()
@@ -122,12 +122,9 @@ function appSetup(production: boolean, userSupplier: () => Express.User): Expres
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(
-    routes(
-      {
-        downloadPermissionService,
-      } as Services,
-      njkenv,
-    ),
+    routes({
+      downloadPermissionService,
+    } as Services),
   )
   app.use(previewRoutes({ reportingClient, previewClient } as Services))
   app.use((req, res, next) => next(new NotFound()))
