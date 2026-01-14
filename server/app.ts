@@ -45,7 +45,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCurrentUser(services))
   app.use(setUpDprResources(services, layoutPath, env, config.dpr))
 
-  app.use(routes(services, env))
+  app.use(routes(services))
   app.use(previewRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
