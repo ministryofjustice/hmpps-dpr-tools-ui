@@ -30,6 +30,7 @@ export default function createApp(services: Services): express.Application {
   app.set('json spaces', 2)
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
+  app.set('query parser', 'extended')
 
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks(services.applicationInfo))
@@ -44,7 +45,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCurrentUser(services))
   app.use(setUpDprResources(services, layoutPath, env, config.dpr))
 
-  app.use(routes(services))
+  app.use(routes(services, nunjucksEnvironment))
   app.use(previewRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))

@@ -1,10 +1,11 @@
 import { type RequestHandler, Router } from 'express'
 import dprPlatformRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes'
 import process from 'process'
+import { Environment as NunjucksEnvironment } from 'nunjucks'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 
-export default function routes(services: Services): Router {
+export default function routes(services: Services, nunjucksEnvironment: NunjucksEnvironment): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
