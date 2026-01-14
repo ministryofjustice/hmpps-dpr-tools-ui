@@ -89,6 +89,14 @@ export default {
       timeout: Number(get('API_TIMEOUT', 120000)),
       agent: new AgentConfig(Number(get('REPORTING_API_TIMEOUT_RESPONSE', 120000))),
     },
+    authoring: {
+      ...apiCommonConfig,
+      url: get('AUTHORING_API_URL', 'http://localhost:8082/api/v1', requiredInProduction),
+    },
+    authoringSupabase: {
+      url: get('SUPABASE_URL', 'http://localhost:54323', requiredInProduction),
+      anonKey: get('SUPABASE_ANON_KEY', '', requiredInProduction),
+    },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),

@@ -20,6 +20,7 @@ export default function routes(services: Services): Router {
           const definition = definitions.find(d => d.id === req.params.definitionId)
           if (!definition) {
             next(`Definition ID not found: ${req.params.definitionId}`)
+            return
           }
           res.locals.report = definition
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import path from 'path'
-import nunjucks, { Environment } from 'nunjucks'
+import nunjucks, { type Environment } from 'nunjucks'
 import express from 'express'
 import setUpNunjucksFilters from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/setUpNunjucksFilters'
 import fs from 'fs'
