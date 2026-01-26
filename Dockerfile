@@ -1,5 +1,5 @@
 # Stage: base image
-FROM node:22.12-bullseye-slim as base
+FROM node:24.12-bullseye-slim AS base
 
 ARG BUILD_NUMBER
 ARG GIT_REF

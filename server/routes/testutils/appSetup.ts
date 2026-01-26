@@ -62,6 +62,7 @@ const reportingClient: ReportingClient = {
   getAsyncInteractiveCount: () => Promise.resolve(123),
   getList: () => Promise.resolve([{ field: 'Value' }]),
   logInfo: jest.fn(),
+  downloadAsyncReport: jest.fn(),
 }
 
 const downloadPermissionService: DownloadPermissionService = {
