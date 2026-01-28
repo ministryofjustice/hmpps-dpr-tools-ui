@@ -11,6 +11,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
     API_URL: 'http://hmpps-dpr-tools-api-dev.hmpps-dpr-tools-dev.svc.cluster.local'
     TOKEN_VERIFICATION_ENABLED: true
+    STREAMING_DOWNLOAD_ENABLED: 'true'
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-reporting-dev
