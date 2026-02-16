@@ -38,8 +38,8 @@ const apiCommonConfig = {
   agent: new AgentConfig(Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000))),
   apiClientId: get('API_CLIENT_ID', 'clientid', requiredInProduction),
   apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
-  systemClientId: get('SYSTEM_CLIENT_ID', 'clientid', requiredInProduction),
-  systemClientSecret: get('SYSTEM_CLIENT_SECRET', 'clientsecret', requiredInProduction),
+  systemClientId: get('API_CLIENT_CREDENTIALS_ID', 'clientid', requiredInProduction),
+  systemClientSecret: get('API_CLIENT_CREDENTIALS_SECRET', 'clientsecret', requiredInProduction),
 }
 
 export default {
@@ -72,6 +72,7 @@ export default {
       url: get('HMPPS_MANAGE_USERS_URL', 'http://localhost:9090/auth', requiredInProduction),
       userInfoUri: get('HMPPS_USER_INFO_URI', '/users/me'),
       userRoleUri: get('HMPPS_USER_ROLE_URI', '/users/me/roles'),
+      userEmailUri: get('HMPPS_USER_EMAIL_URI', '/users/me/email'),
       ...apiCommonConfig,
     },
     tokenVerification: {
