@@ -6,11 +6,11 @@ export default function populateSystemToken(services: Services): RequestHandler 
   return async (req, res, next) => {
     try {
       if (res.locals.user) {
-        const user  = res.locals.user
+        const { user } = res.locals
         const systemToken = res.locals.user && (await services.systemTokenService.getSystemToken(user.sub))
         if (systemToken) {
-           res.locals.systemToken = systemToken
-        } 
+          res.locals.systemToken = systemToken
+        }
       }
 
       next()

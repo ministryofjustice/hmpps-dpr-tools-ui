@@ -19,7 +19,7 @@ export const services = (): Services => {
     missingReportClient,
     productCollectionClient,
     featureFlagService,
-    hmppsAuthClient
+    hmppsAuthClient,
   } = dataAccess()
 
   const userService = new UserService(hmppsManageUsersClient)
@@ -58,7 +58,7 @@ export type Services = dprServicesType & {
   applicationInfo: ApplicationInfo
   userService: UserService
   reportingClient: ReportingClient
-  previewClient: PreviewClient,
+  previewClient: PreviewClient
   systemTokenService: SystemTokenService
 }
 
