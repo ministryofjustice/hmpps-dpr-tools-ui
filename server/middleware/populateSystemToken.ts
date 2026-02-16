@@ -5,18 +5,12 @@ import { Services } from '../services'
 export default function populateSystemToken(services: Services): RequestHandler {
   return async (req, res, next) => {
     try {
-      if (res.locals.dprUser) {
-        const { dprUser } = res.locals
-       
-        const userName = dprUser.userName
-        const systemToken = res.locals.user && (await services.systemTokenService.getSystemToken(userName))
-        logger.info('got system token ' + systemToken)
+      if (res.locals.user) {
+        const user  = res.locals.user
+        const systemToken = res.locals.user && (await services.systemTokenService.getSystemToken(user.sub))
         if (systemToken) {
            res.locals.systemToken = systemToken
-           //set it on the dpr user ?
-          dprUser.systemToken = systemToken
-          res.locals.dprUser = dprUser
-        }
+        } 
       }
 
       next()
