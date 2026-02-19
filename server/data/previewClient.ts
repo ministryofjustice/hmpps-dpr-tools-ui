@@ -1,4 +1,4 @@
-import type { ApiConfig } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/types'
+import { ApiConfig } from '../config'
 import RestClient from './restClient'
 
 export default class PreviewClient {

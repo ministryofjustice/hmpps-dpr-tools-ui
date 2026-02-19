@@ -1,7 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
-import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/utils'
-import CatalogueUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/_catalogue/catalogue/utils'
+import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/userReportsListUtils'
+import CatalogueUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/catalogueUtils'
 import { appWithAllRoutes } from './testutils/appSetup'
 
 let app: Express
@@ -10,8 +10,8 @@ beforeEach(() => {
   app = appWithAllRoutes({})
 })
 
-UserReportsListUtils.init = jest.fn()
-CatalogueUtils.init = jest.fn()
+UserReportsListUtils.initUserReports = jest.fn()
+CatalogueUtils.initCatalogue = jest.fn()
 
 afterEach(() => {
   jest.resetAllMocks()

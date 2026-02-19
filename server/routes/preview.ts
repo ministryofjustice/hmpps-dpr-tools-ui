@@ -1,19 +1,21 @@
 import { NextFunction, Request, type RequestHandler, Response, Router } from 'express'
 import multer from 'multer'
-import ReportListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/report-list/utils'
-import CardUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/card-group/utils'
-import CatalogueUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/_catalogue/catalogue/utils'
-import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/utils'
-import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
+import CatalogueUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/catalogueUtils'
+import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/userReportsListUtils'
+import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/api'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
+import { reportDefinitionsToCards, variantDefinitionsToCards } from '../card-group/utils'
+
+CatalogueUtils.initCatalogue = jest.fn()
+UserReportsListUtils.initUserReports = jest.fn()
 
 export default function routes(services: Services): Router {
   const router = Router()
 
   const populateDefinitions = (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(
-      services.reportingClient.getDefinitions(res.locals.user.token).then(definitions => {
+      services.reportingService.getDefinitions(res.locals.user.token).then(definitions => {
         res.locals.reports = definitions
 
         if (req.params.definitionId) {
@@ -62,8 +64,8 @@ export default function routes(services: Services): Router {
   })
 
   get('/preview', async (req, res) => {
-    const catalogue = await CatalogueUtils.init({ res, services })
-    const userReportsLists = await UserReportsListUtils.init({ res, services })
+    const catalogue = await CatalogueUtils.initCatalogue({ res, services })
+    const userReportsLists = await UserReportsListUtils.initUserReports({ res, services })
 
     // Preview tool component
     const reportDefinitions: Array<components['schemas']['ReportDefinitionSummary']> = res.locals.reports
@@ -75,7 +77,7 @@ export default function routes(services: Services): Router {
 
     res.render('pages/preview', {
       title: 'Preview Reports',
-      cards: { items: CardUtils.reportDefinitionsToCards(reportDefinitions, '/preview/definitions'), variant: 1 },
+      cards: { items: reportDefinitionsToCards(reportDefinitions, '/preview/definitions'), variant: 1 },
       definitions: toolDefinitions,
       errorSummary,
       errorMessage,
@@ -92,7 +94,7 @@ export default function routes(services: Services): Router {
       title: reportDefinition.name,
       groups: [
         {
-          cards: { items: CardUtils.variantDefinitionsToCards(reportDefinition, '/async-reports'), variant: 1 },
+          cards: { items: variantDefinitionsToCards(reportDefinition, '/async-reports'), variant: 1 },
         },
       ],
       breadCrumbList: [
@@ -100,44 +102,6 @@ export default function routes(services: Services): Router {
         { title: 'Preview reports', href: '/preview' },
       ],
     })
-  })
-
-  get('/preview/definitions/:definitionId/:variantId', (req, res, next) => {
-    const { token } = res.locals.user
-
-    services.reportingClient
-      .getDefinition(token, req.params.definitionId, req.params.variantId)
-      .then(reportDefinition => {
-        switch (reportDefinition.variant.specification.template) {
-          case 'list':
-            ReportListUtils.renderListWithData({
-              title: `${reportDefinition.name} - ${reportDefinition.variant.name}`,
-              variantDefinition: reportDefinition.variant,
-              request: req,
-              response: res,
-              next,
-              getListDataSources: reportQuery => ({
-                data: services.reportingClient.getList(reportDefinition.variant.resourceName, token, reportQuery),
-                count: services.reportingClient.getCount(reportDefinition.variant.resourceName, token, reportQuery),
-              }),
-              otherOptions: {
-                breadCrumbList: [
-                  { title: 'Home', href: '/' },
-                  { title: 'Preview reports', href: '/preview' },
-                  { title: reportDefinition.name, href: `/preview/definitions/${reportDefinition.id}` },
-                ],
-              },
-              layoutTemplate: 'partials/layout.njk',
-              dynamicAutocompleteEndpoint: `/preview/values/${reportDefinition.id}/${reportDefinition.variant.id}/{fieldName}?prefix={prefix}`,
-            })
-            break
-
-          default:
-            next(
-              `Unrecognised template: '${reportDefinition.variant.specification.template}', currently only 'list' is supported.`,
-            )
-        }
-      })
   })
 
   router.post('/preview/delete', (req, res) => {

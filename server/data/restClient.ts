@@ -3,11 +3,11 @@ import { Readable } from 'stream'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 import superagent from 'superagent'
 
-import type { ApiConfig } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/types'
 import logger from '../../logger'
 import sanitiseError from '../sanitisedError'
 import type { UnsanitisedError } from '../sanitisedError'
 import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
+import { ApiConfig } from '../config'
 
 interface Request {
   path: string
