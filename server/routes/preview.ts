@@ -7,9 +7,6 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import { reportDefinitionsToCards, variantDefinitionsToCards } from '../card-group/utils'
 
-CatalogueUtils.initCatalogue = jest.fn()
-UserReportsListUtils.initUserReports = jest.fn()
-
 export default function routes(services: Services): Router {
   const router = Router()
 
