@@ -106,7 +106,7 @@
     "express-prom-bundle": "^7.0.0",
     "express-session": "^1.18.1",
     "govuk-frontend": "^5.8.0",
-    "helmet": "^8.0.0",
+    "helmet": "^8.1.0",
     "http-errors": "^2.0.0",
     "is-plain-object": "^5.0.0",
     "jose": "^6.1.0",
