@@ -1,6 +1,5 @@
-import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
-import { Services as dprServicesType } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/Services'
-import { createDprServices } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/utils/CreateDprServices'
+import { type dprServices as dprServicesType } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/createDprServices'
+import { createDprServices } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/createDprServices'
 
 import { dataAccess } from '../data'
 import UserService from './userService'
@@ -44,7 +43,6 @@ export const services = (): Services => {
     applicationInfo,
     userService,
     previewClient,
-    reportingClient,
     ...dprServices,
   }
 }
@@ -52,7 +50,6 @@ export const services = (): Services => {
 export type Services = dprServicesType & {
   applicationInfo: ApplicationInfo
   userService: UserService
-  reportingClient: ReportingClient
   previewClient: PreviewClient
 }
 

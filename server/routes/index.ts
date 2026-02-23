@@ -1,5 +1,5 @@
 import { type RequestHandler, Router } from 'express'
-import dprPlatformRoutes from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/routes'
+import { routes as dprPlatformRoutes } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/routes'
 import process from 'process'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'

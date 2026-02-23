@@ -30,6 +30,11 @@ function getAuthorisedRoles() {
   return []
 }
 
+export interface ApiConfig {
+  url: string
+  agent: AgentConfig
+}
+
 const apiCommonConfig = {
   timeout: {
     response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000)),
