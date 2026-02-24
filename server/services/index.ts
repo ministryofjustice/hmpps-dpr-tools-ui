@@ -7,6 +7,7 @@ import UserService from './userService'
 import PreviewClient from '../data/previewClient'
 import { ApplicationInfo } from '../applicationInfo'
 import SystemTokenService from './systemTokenService'
+import config from '../config'
 
 export const services = (): Services => {
   const {
@@ -27,7 +28,7 @@ export const services = (): Services => {
   const serviceConfig = {
     bookmarking: true,
     download: true,
-    saveDefaults: true,
+    saveDefaults: true
   }
 
   const dprServices = createDprServices(
@@ -42,7 +43,11 @@ export const services = (): Services => {
     serviceConfig,
   )
 
-  const systemTokenService = new SystemTokenService(hmppsAuthClient)
+  const systemTokenService = new SystemTokenService(
+    hmppsAuthClient, 
+    //config.apis.tokenVerification.enabled
+    config.systemTokenEnabled
+  )
 
   return {
     applicationInfo,

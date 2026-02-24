@@ -99,4 +99,5 @@ export default {
   dpr: {
     routePrefix: 'dpr',
   },
+  systemTokenEnabled: get('SYSTEM_TOKEN_ENABLED', 'false')  === 'true',
 }
