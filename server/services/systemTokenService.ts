@@ -1,23 +1,24 @@
-import logger from "../../logger";
-import HmppsAuthClient from "../data/hmppsAuthClient";
+import logger from '../../logger'
+import HmppsAuthClient from '../data/hmppsAuthClient'
 
 export default class SystemTokenService {
+  enabled: boolean
 
-    enabled: boolean
+  constructor(
+    private readonly hmppsAuthClient: HmppsAuthClient,
+    enabled: boolean,
+  ) {
+    this.enabled = enabled
+    logger.info(`systemTokenService: enabled=${enabled}`)
+  }
 
-    constructor(private readonly hmppsAuthClient: HmppsAuthClient, enabled: boolean) {
-        this.enabled = enabled
-        logger.info(`systemTokenService: enabled=` + enabled)  
+  async getSystemToken(userName: string): Promise<string> | undefined {
+    if (!this.enabled) {
+      logger.info(`systemToken: disabled`)
+      return undefined
     }
 
-    async getSystemToken(userName: string) : Promise<string> {
-
-        if (!this.enabled) {
-            logger.info(`systemToken: disabled`)  
-            return
-        }
-       
-        const token = this.hmppsAuthClient.getSystemClientToken(userName)
+    const token = this.hmppsAuthClient.getSystemClientToken(userName)
 
     return token
   }
