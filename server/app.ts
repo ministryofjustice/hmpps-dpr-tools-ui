@@ -2,7 +2,7 @@ import express from 'express'
 import process from 'process'
 import createError from 'http-errors'
 
-import setUpDprResources from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/middleware/setUpDprResources'
+import { setupResources } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/setUpDprResources'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
@@ -46,6 +46,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCurrentUser(services))
   app.use(setUpSystemToken(services))
   app.use(setUpDprResources(services, layoutPath, env, config.dpr))
+  app.use(setupResources(services, layoutPath, env, config.dpr))
 
   app.use(routes(services))
   app.use(previewRoutes(services))

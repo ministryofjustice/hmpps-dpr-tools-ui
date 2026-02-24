@@ -2,11 +2,8 @@ import express, { Express } from 'express'
 import cookieSession from 'cookie-session'
 import { NotFound } from 'http-errors'
 
-import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
-import UserListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/utils'
-import BookmarklistUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/components/user-reports/bookmarks/utils'
-import type { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/api'
-import { DownloadPermissionService } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/services'
+import type { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/api'
+import { dprServices } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/createDprServices'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -54,7 +51,7 @@ const fullDefinition = {
   },
 }
 
-const reportingClient: ReportingClient = {
+const reportingService: dprServices['reportingService'] = {
   getDefinitions: () => Promise.resolve(definitions),
   // @ts-expect-error Incomplete value for testing
   getDefinition: () => Promise.resolve(fullDefinition),
@@ -65,12 +62,9 @@ const reportingClient: ReportingClient = {
   downloadAsyncReport: jest.fn(),
 }
 
-const downloadPermissionService: DownloadPermissionService = {
+const downloadPermissionService: dprServices['downloadPermissionService'] = {
   enabled: true,
-} as unknown as DownloadPermissionService
-
-UserListUtils.init = jest.fn()
-BookmarklistUtils.renderBookmarkList = jest.fn()
+} as unknown as dprServices['downloadPermissionService']
 
 // @ts-expect-error Incomplete value for testing
 const previewClient: PreviewClient = {
@@ -105,7 +99,7 @@ export const user: Express.User = {
 
 export const flashProvider = jest.fn()
 
-function appSetup(production: boolean, userSupplier: () => Express.User): Express {
+function appSetup(_production: boolean, userSupplier: () => Express.User): Express {
   const app = express()
 
   app.set('view engine', 'njk')
@@ -127,8 +121,8 @@ function appSetup(production: boolean, userSupplier: () => Express.User): Expres
       downloadPermissionService,
     } as Services),
   )
-  app.use(previewRoutes({ reportingClient, previewClient } as Services))
-  app.use((req, res, next) => next(new NotFound()))
+  app.use(previewRoutes({ reportingService, previewClient } as Services))
+  app.use((_req, _res, next) => next(new NotFound()))
   app.use(errorHandler())
 
   return app

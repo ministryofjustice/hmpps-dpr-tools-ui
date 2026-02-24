@@ -377,7 +377,7 @@ export class OAuth2Service extends EventEmitter {
     return res.redirect(url.href)
   }
 
-  private caseloadHandler: RequestHandler = (req, res) => {
+  private caseloadHandler: RequestHandler = (_req, res) => {
     console.log('case load handler called')
 
     const caseLoadResponse: MutableResponse = {
