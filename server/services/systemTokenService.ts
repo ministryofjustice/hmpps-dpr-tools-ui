@@ -19,6 +19,6 @@ export default class SystemTokenService {
        
         const token = this.hmppsAuthClient.getSystemClientToken(userName)
 
-        return token
-    }
+    return token
+  }
 }
