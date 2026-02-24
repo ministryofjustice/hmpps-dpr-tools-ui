@@ -45,7 +45,6 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
   app.use(setUpSystemToken(services))
-  app.use(setUpDprResources(services, layoutPath, env, config.dpr))
   app.use(setupResources(services, layoutPath, env, config.dpr))
 
   app.use(routes(services))
