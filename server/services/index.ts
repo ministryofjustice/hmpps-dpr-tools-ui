@@ -27,7 +27,7 @@ export const services = (): Services => {
   const serviceConfig = {
     bookmarking: true,
     download: true,
-    saveDefaults: true
+    saveDefaults: true,
   }
 
   const dprServices = createDprServices(
@@ -42,10 +42,7 @@ export const services = (): Services => {
     serviceConfig,
   )
 
-  const systemTokenService = new SystemTokenService(
-    hmppsAuthClient,
-    config.systemTokenEnabled
-  )
+  const systemTokenService = new SystemTokenService(hmppsAuthClient, config.systemTokenEnabled)
 
   return {
     applicationInfo,
