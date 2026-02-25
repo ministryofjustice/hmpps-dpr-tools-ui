@@ -5,6 +5,8 @@ import { dataAccess } from '../data'
 import UserService from './userService'
 import PreviewClient from '../data/previewClient'
 import { ApplicationInfo } from '../applicationInfo'
+import SystemTokenService from './systemTokenService'
+import config from '../config'
 
 export const services = (): Services => {
   const {
@@ -17,6 +19,7 @@ export const services = (): Services => {
     missingReportClient,
     productCollectionClient,
     featureFlagService,
+    hmppsAuthClient,
   } = dataAccess()
 
   const userService = new UserService(hmppsManageUsersClient)
@@ -39,10 +42,13 @@ export const services = (): Services => {
     serviceConfig,
   )
 
+  const systemTokenService = new SystemTokenService(hmppsAuthClient, config.systemTokenEnabled)
+
   return {
     applicationInfo,
     userService,
     previewClient,
+    systemTokenService,
     ...dprServices,
   }
 }
@@ -51,6 +57,7 @@ export type Services = dprServicesType & {
   applicationInfo: ApplicationInfo
   userService: UserService
   previewClient: PreviewClient
+  systemTokenService: SystemTokenService
 }
 
 export { UserService }

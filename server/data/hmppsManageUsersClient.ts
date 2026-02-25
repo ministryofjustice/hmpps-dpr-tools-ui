@@ -65,7 +65,9 @@ export default class HmppsManageUsersClient {
 
   getUserEmail(token: string): Promise<UserEmail> {
     logger.info(`Getting current user details: calling HMPPS Auth`)
-    return HmppsManageUsersClient.restClient(token).get({ path: '/users/me/email' }) as Promise<UserEmail>
+    return HmppsManageUsersClient.restClient(token).get({
+      path: config.apis.manageUsers.userEmailUri,
+    }) as Promise<UserEmail>
   }
 
   getUserRoles(token: string): Promise<string[]> {

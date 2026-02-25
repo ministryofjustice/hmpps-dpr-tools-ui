@@ -52,12 +52,12 @@ describe('hmppsAuthClient', () => {
   })
 
   describe('getSystemClientToken', () => {
-    it('should instantiate the redis client', async () => {
+    it('should instantiate the auth client', async () => {
       tokenStore.getToken.mockResolvedValue(token.access_token)
       await hmppsAuthClient.getSystemClientToken(username)
     })
 
-    it('should return token from redis if one exists', async () => {
+    it('should return token from auth service if one exists', async () => {
       tokenStore.getToken.mockResolvedValue(token.access_token)
       const output = await hmppsAuthClient.getSystemClientToken(username)
       expect(output).toEqual(token.access_token)
