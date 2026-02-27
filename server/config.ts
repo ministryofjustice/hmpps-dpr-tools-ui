@@ -105,4 +105,9 @@ export default {
     routePrefix: 'dpr',
   },
   systemTokenEnabled: get('SYSTEM_TOKEN_ENABLED', 'false') === 'true',
+  featureFlagConfig: {
+    namespace: get('FLIPT_NAMESPACE', null, requiredInProduction),
+    token: get('FLIPT_API_KEY', null, requiredInProduction),
+    url: get('FLIPT_URL', 'http://localhost:9090/featureFlags', requiredInProduction),
+  },
 }
