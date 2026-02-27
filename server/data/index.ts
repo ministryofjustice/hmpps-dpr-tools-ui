@@ -34,7 +34,7 @@ export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
   hmppsManageUsersClient: new HmppsManageUsersClient(new TokenStore(createRedisClient())),
   previewClient,
-  ...initDprReportingClients(config.apis.report, createRedisClient()),
+  ...initDprReportingClients(config.apis.report, createRedisClient(), 'userConfig:', config.featureFlagConfig),
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
