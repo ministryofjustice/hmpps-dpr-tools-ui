@@ -12,7 +12,7 @@ export default function populateSystemToken(services: Services): RequestHandler 
       } else if (res.locals.user) {
         const { user } = res.locals
         const dprUser = res.locals
-        const systemToken = res.locals.user && (await systemTokenService.getSystemToken(user.sub))
+        const systemToken = res.locals.user && (await systemTokenService.getSystemToken(user.username))
         if (systemToken) {
           res.locals.systemToken = systemToken
           // override the token on the dpruser as this gets picked up by localsHelper.getValues
