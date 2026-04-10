@@ -149,7 +149,7 @@
     "@types/passport-oauth2": "^1.4.17",
     "@types/querystringify": "^2.0.2",
     "@types/superagent": "^8.1.9",
-    "@types/supertest": "^6.0.2",
+    "@types/supertest": "^7.2.0",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "audit-ci": "^7.1.0",
@@ -185,7 +185,7 @@
     "prettier": "^3.4.2",
     "prettier-plugin-jinja-template": "^2.0.0",
     "sass": "^1.81.0",
-    "supertest": "^7.0.0",
+    "supertest": "^7.2.2",
     "ts-jest": "^29.2.5",
     "typescript": "^5.9.3"
   }
