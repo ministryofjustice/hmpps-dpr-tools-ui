@@ -95,6 +95,10 @@ export default {
       timeout: Number(get('API_TIMEOUT', 120000)),
       agent: new AgentConfig(Number(get('REPORTING_API_TIMEOUT_RESPONSE', 120000))),
     },
+    authoring: {
+      ...apiCommonConfig,
+      url: get('AUTHORING_API_URL', 'http://localhost:8082', requiredInProduction),
+    },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),

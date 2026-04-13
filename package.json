@@ -89,6 +89,7 @@
   "dependencies": {
     "@ministryofjustice/frontend": "^3.3.1",
     "@ministryofjustice/hmpps-digital-prison-reporting-frontend": "^5.8.2",
+    "@modular-data/hmpps-authoring-lib-ui": "file:../../modular-data/hmpps-authoring-lib-ui/apps/hmpps-authoring-lib-ui",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.3",
     "basic-auth": "^2.0.1",

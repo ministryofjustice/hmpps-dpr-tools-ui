@@ -3,6 +3,7 @@ import process from 'process'
 import createError from 'http-errors'
 
 import { setupResources } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/setUpDprResources'
+import { createAuthoringAppHandler } from '@modular-data/hmpps-authoring-lib-ui'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
@@ -27,6 +28,7 @@ export default function createApp(services: Services): express.Application {
   const cwd = process.cwd()
   const layoutPath = `${cwd}/dist/server/views/partials/layout.njk`
   const app = express()
+  const webSecurityMiddleware = setUpWebSecurity()
 
   app.set('json spaces', 2)
   app.set('trust proxy', true)
@@ -35,16 +37,33 @@ export default function createApp(services: Services): express.Application {
 
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks(services.applicationInfo))
-  app.use(setUpWebSecurity())
+  app.use((req, res, next) => {
+    if (req.path === '/authoring' || req.path.startsWith('/authoring/')) {
+      return next()
+    }
+
+    return webSecurityMiddleware(req, res, next)
+  })
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   const env = nunjucksSetup(app, services.applicationInfo)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware(config.authorisation.roles))
-  app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
   app.use(setUpSystemToken(services))
+  app.use(setupResources(services, layoutPath, env, config.dpr))
+
+  if (process.env.NODE_ENV !== 'production') {
+    app.use(
+      '/authoring',
+      createAuthoringAppHandler({
+        services: services.authoringServices,
+      }),
+    )
+  }
+
+  app.use(setUpCsrf())
   app.use(setupResources(services, layoutPath, env, config.dpr))
 
   app.use(routes(services))

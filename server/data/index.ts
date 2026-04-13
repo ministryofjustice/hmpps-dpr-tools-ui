@@ -4,6 +4,7 @@
  * In particular, applicationinsights automatically collects bunyan logs
  */
 import { initDprReportingClients } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/initDprReportingClients'
+import { createDataAccess as createAuthoringDataAccess } from '@modular-data/hmpps-authoring-lib-ui'
 import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
 import applicationInfoSupplier from '../applicationInfo'
 import config from '../config'
@@ -29,13 +30,24 @@ const apiConfig = {
 
 const previewClient = new PreviewClient(apiConfig)
 
-export const dataAccess = () => ({
-  applicationInfo,
-  hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
-  hmppsManageUsersClient: new HmppsManageUsersClient(new TokenStore(createRedisClient())),
-  previewClient,
-  ...initDprReportingClients(config.apis.report, createRedisClient(), 'userConfig:', config.featureFlagConfig),
-})
+export const dataAccess = () => {
+  const tokenStore = new TokenStore(createRedisClient())
+
+  const authoringDataAccess = createAuthoringDataAccess({
+    coreApiConfig: config.apis.authoring,
+    authConfig: config.apis.hmppsAuth,
+    tokenStore,
+  })
+
+  return {
+    applicationInfo,
+    hmppsAuthClient: new HmppsAuthClient(tokenStore),
+    hmppsManageUsersClient: new HmppsManageUsersClient(tokenStore),
+    previewClient,
+    authoringDataAccess,
+    ...initDprReportingClients(config.apis.report, createRedisClient()),
+  }
+}
 
 export type DataAccess = ReturnType<typeof dataAccess>
 

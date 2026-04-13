@@ -21,6 +21,11 @@ export default function routes(services: Services): Router {
                 href: '/preview',
                 description: 'Preview report definitions',
               },
+              {
+                text: 'Authoring',
+                href: '/authoring',
+                description: 'Author Data Products',
+              },
             ],
             variant: 1,
           },

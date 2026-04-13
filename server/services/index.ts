@@ -1,5 +1,8 @@
 import { type dprServices as dprServicesType } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/createDprServices'
 import { createDprServices } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/createDprServices'
+import ReportingClient from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/data/reportingClient'
+import { Services as dprServicesType } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/dpr/types/Services'
+import { createServices as createAuthoringServices } from '@modular-data/hmpps-authoring-lib-ui'
 
 import { dataAccess } from '../data'
 import UserService from './userService'
@@ -19,6 +22,7 @@ export const services = (): Services => {
     missingReportClient,
     productCollectionClient,
     featureFlagService,
+    authoringDataAccess,
     hmppsAuthClient,
   } = dataAccess()
 
@@ -41,6 +45,7 @@ export const services = (): Services => {
     },
     serviceConfig,
   )
+  const authoringServices = createAuthoringServices(authoringDataAccess)
 
   const systemTokenService = new SystemTokenService(hmppsAuthClient, config.systemTokenEnabled)
 
@@ -49,6 +54,8 @@ export const services = (): Services => {
     userService,
     previewClient,
     systemTokenService,
+    reportingClient,
+    authoringServices,
     ...dprServices,
   }
 }
@@ -58,6 +65,7 @@ export type Services = dprServicesType & {
   userService: UserService
   previewClient: PreviewClient
   systemTokenService: SystemTokenService
+  authoringServices: ReturnType<typeof createAuthoringServices>
 }
 
 export { UserService }
