@@ -22,7 +22,7 @@ jobs:
           node-version: 24.x
 
       - name: SLSA - supply chain attack mitigation
-        uses: ministryofjustice/devsecops-actions/sca/slsa@e3c63a5986ea6e7d57d38b7f72e5b8cf08dc7020
+        uses: ministryofjustice/devsecops-actions/sca/slsa@1bbb075a85db86bf878878bd170f21a895896d9d
 
       - run: npm run setup
 
