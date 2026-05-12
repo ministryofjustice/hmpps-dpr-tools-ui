@@ -1,7 +1,7 @@
 import { NextFunction, Request, type RequestHandler, Response, Router } from 'express'
 import multer from 'multer'
 import CatalogueUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/catalogueUtils'
-import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/userReportsListUtils'
+import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/myReportsListUtils'
 import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/api'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
@@ -62,7 +62,7 @@ export default function routes(services: Services): Router {
 
   get('/preview', async (req, res) => {
     const catalogue = await CatalogueUtils.initCatalogue({ res, services })
-    const userReportsLists = await UserReportsListUtils.initUserReports({ res, services })
+    const myReportsData = await UserReportsListUtils.initMyReports(req, res, services, { maxRows: 10 })
 
     // Preview tool component
     const reportDefinitions: Array<components['schemas']['ReportDefinitionSummary']> = res.locals.reports
@@ -79,7 +79,7 @@ export default function routes(services: Services): Router {
       errorSummary,
       errorMessage,
       breadCrumbList: [{ title: 'Home', href: '/' }],
-      userReportsLists,
+      myReportsData,
       catalogue,
     })
   })

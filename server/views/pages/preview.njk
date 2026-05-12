@@ -6,10 +6,9 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
-{% from "dpr/components/user-reports/view.njk" import dprUserReports %}
 
 {% from "dpr/components/_catalogue/catalogue/view.njk" import dprCatalogue %}
-{% from "dpr/components/user-reports/view.njk" import dprUserReports %}
+{% from "dpr/components/my-reports/view.njk" import dprMyReports %}
 
 {% extends "../partials/layout.njk" %}
 
@@ -148,7 +147,7 @@
   <div id="homepage-widget" class="dpr-reports-widget-wrapper">
     <div class="govuk-width-container">
       <h2 class="govuk-heading-m">My reports<h2>
-        {{ dprUserReports(userReportsLists)}}
+        {{ dprMyReports(myReportsData)}}
     </div>
   </div>
   
