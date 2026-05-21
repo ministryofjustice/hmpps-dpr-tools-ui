@@ -3,8 +3,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '19 6 * * MON-FRI' # Every weekday
-  pull_request:
-    branches: ['**']
 
 jobs:
   security-npm-dependency-check:
