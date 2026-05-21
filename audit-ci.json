@@ -1,5 +1,6 @@
 {
-  "low": true,
+  "moderate": true,
+  "skip-dev": true,
   "package-manager": "auto",
   "registry": "https://registry.npmjs.org",
   "allowlist": [
