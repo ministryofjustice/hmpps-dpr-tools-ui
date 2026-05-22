@@ -1,7 +1,7 @@
 import type { ServerOptions } from 'node:https'
 
-import type { JWKWithKid } from './types-internals'
 import type { supportedPkceAlgorithms } from './helpers'
+import type { JWKWithKid } from './types-internals'
 
 export interface TokenRequest {
   scope?: string
