@@ -3,8 +3,5 @@
   "skip-dev": true,
   "package-manager": "auto",
   "registry": "https://registry.npmjs.org",
-  "allowlist": [
-    "GHSA-968p-4wvh-cqc8", // @babel/helpers -> Jest: using latest version
-    "GHSA-pxg6-pf52-xh8x" // csurf low
-  ]
+  "allowlist": ["GHSA-968p-4wvh-cqc8", "GHSA-pxg6-pf52-xh8x"]
 }

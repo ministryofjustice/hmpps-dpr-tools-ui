@@ -1,1 +1,7 @@
 # The Fingerprint of false positive alerts can be added here to be excluded from future scans.
+oauth2-mock-server/test/helpers.test.js:token:149
+oauth2-mock-server/test/helpers.test.js:token:164
+oauth2-mock-server/test/helpers.test.js:token:243
+oauth2-mock-server/test/helpers.test.js:token:261
+oauth2-mock-server/test/oauth2-service.test.js:generic-api-key:635
+oauth2-mock-server/test/oauth2-service.test.js:generic-api-key:686
