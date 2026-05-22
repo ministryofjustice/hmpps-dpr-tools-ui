@@ -79,3 +79,110 @@ This starts oauth server on port 8080 which is configured via the oauth2-mock.en
 
 The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
 If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`
+
+## Developer Onboarding (Fresh Clone)
+
+Run the following commands to enable the local pre-commit hooks.
+
+---
+
+### Step 1 — Clone the Repository
+
+```bash
+git clone <repo-url>
+cd hmpps-dpr-tools-ui
+```
+
+---
+
+### Step 2 — Use the Correct Node Version
+
+Run:
+
+```bash
+nvm use
+```
+
+Verify the versions:
+
+```bash
+node -v
+npm -v
+```
+
+Expected:
+
+- Node `22.x` or `24.x`
+- npm `10.x` or `11.x`
+
+---
+
+### Step 3 — Install Dependencies
+
+Run:
+
+```bash
+npm install
+```
+
+or:
+
+```bash
+npm ci
+```
+
+---
+
+### Step 4 — Register the Git Pre-Commit Hook Locally
+
+Run:
+
+```bash
+npm run prepare
+```
+
+Expected output:
+
+```bash
+Initialising prek hooks on this repo
+prek installed at`.git/hooks/pre-commit` ✅
+```
+
+Hooks are now active locally.
+
+---
+
+### Step 5 — Verify the Setup
+
+Run:
+
+```bash
+prek run --all-files
+```
+
+This validates:
+
+- secret scanning (`gitleaks`)
+- lint checks
+- type checks
+- tests
+- JSON/YAML validation
+
+If all hooks pass, your local setup is complete.
+
+---
+
+## Quick Setup Summary
+
+```bash
+git clone <repo-url>
+cd hmpps-dpr-tools-ui
+
+nvm use
+
+npm install
+
+npm run prepare
+
+prek run --all-files
+```
