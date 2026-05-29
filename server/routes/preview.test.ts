@@ -1,6 +1,6 @@
 import type { Express } from 'express'
 import request from 'supertest'
-import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/userReportsListUtils'
+import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/myReportsListUtils'
 import CatalogueUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/catalogueUtils'
 import { appWithAllRoutes } from './testutils/appSetup'
 
@@ -10,7 +10,7 @@ beforeEach(() => {
   app = appWithAllRoutes({})
 })
 
-UserReportsListUtils.initUserReports = jest.fn()
+UserReportsListUtils.initMyReports = jest.fn()
 CatalogueUtils.initCatalogue = jest.fn()
 
 afterEach(() => {

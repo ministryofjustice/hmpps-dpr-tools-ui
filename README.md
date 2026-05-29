@@ -1,28 +1,32 @@
 # HMPPS DPR Tools UI
-[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-dpr-tools-ui)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-dpr-tools-ui "Link to report")
+
+[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-dpr-tools-ui)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-dpr-tools-ui 'Link to report')
 [![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-dpr-tools-ui/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-dpr-tools-ui)
 
 Template github repo used for new Typescript based projects.
 
 ## Running the app
-The easiest way to run the app is to use docker compose to create the service and all dependencies. 
+
+The easiest way to run the app is to use docker compose to create the service and all dependencies.
 
 `docker compose pull`
 
 `docker compose up`
 
 ### Dependencies
-The app requires: 
-* hmpps-auth - for authentication
-* redis - session store and token caching
+
+The app requires:
+
+- hmpps-auth - for authentication
+- redis - session store and token caching
 
 ### Running the app for development
 
-To start the main services excluding the example typescript template app: 
+To start the main services excluding the example typescript template app:
 
 `docker compose up --scale=app=0`
 
-Install dependencies using `npm install`, ensuring you are using `node v18.x` and `npm v9.x`
+Install dependencies using `npm install`, ensuring you are using `node v24.x` and `npm v11.x`
 
 Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json` and the CircleCI build config.
 
@@ -51,7 +55,7 @@ Then run the server in test mode by:
 And then either, run tests in headless mode with:
 
 `npm run int-test`
- 
+
 Or run tests with the cypress UI:
 
 `npm run int-test-ui`
@@ -76,3 +80,109 @@ This starts oauth server on port 8080 which is configured via the oauth2-mock.en
 The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
 If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`
 
+## Developer Onboarding (Fresh Clone)
+
+Run the following commands to enable the local pre-commit hooks.
+
+---
+
+### Step 1 — Clone the Repository
+
+```bash
+git clone <repo-url>
+cd hmpps-dpr-tools-ui
+```
+
+---
+
+### Step 2 — Use the Correct Node Version
+
+Run:
+
+```bash
+nvm use
+```
+
+Verify the versions:
+
+```bash
+node -v
+npm -v
+```
+
+Expected:
+
+- Node `22.x` or `24.x`
+- npm `10.x` or `11.x`
+
+---
+
+### Step 3 — Install Dependencies
+
+Run:
+
+```bash
+npm install
+```
+
+or:
+
+```bash
+npm ci
+```
+
+---
+
+### Step 4 — Register the Git Pre-Commit Hook Locally
+
+Run:
+
+```bash
+npm run prepare
+```
+
+Expected output:
+
+```bash
+Initialising prek hooks on this repo
+prek installed at`.git/hooks/pre-commit` ✅
+```
+
+Hooks are now active locally.
+
+---
+
+### Step 5 — Verify the Setup
+
+Run:
+
+```bash
+prek run --all-files
+```
+
+This validates:
+
+- secret scanning (`gitleaks`)
+- lint checks
+- type checks
+- tests
+- JSON/YAML validation
+
+If all hooks pass, your local setup is complete.
+
+---
+
+## Quick Setup Summary
+
+```bash
+git clone <repo-url>
+cd hmpps-dpr-tools-ui
+
+nvm use
+
+npm install
+
+npm run prepare
+
+prek run --all-files
+```
