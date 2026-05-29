@@ -18,22 +18,22 @@
  * @module lib/http-server
  */
 
-import type { Server, RequestListener } from 'node:http';
-import { createServer } from 'node:http';
-import { createServer as createHttpsServer } from 'node:https';
-import type { AddressInfo } from 'node:net';
-import { isIP } from 'node:net';
-import { URL } from 'node:url';
+import type { RequestListener, Server } from 'node:http'
+import { createServer } from 'node:http'
+import { createServer as createHttpsServer } from 'node:https'
+import type { AddressInfo } from 'node:net'
+import { isIP } from 'node:net'
+import { URL } from 'node:url'
 
-import { assertIsAddressInfo } from './helpers';
-import type { HttpServerOptions } from './types';
+import { assertIsAddressInfo } from './helpers'
+import type { HttpServerOptions } from './types'
 
 /**
  * Provides a restartable wrapper for http.CreateServer().
  */
 export class HttpServer {
-  #server: Server;
-  #isSecured: boolean;
+  #server: Server
+  #isSecured: boolean
 
   /**
    * Creates a new instance of HttpServer.
@@ -41,13 +41,13 @@ export class HttpServer {
    * @param {HttpServerOptions} options Optional HttpServerOptions to start the server with https.
    */
   constructor(requestListener: RequestListener, options?: HttpServerOptions) {
-    this.#isSecured = false;
+    this.#isSecured = false
 
     if (options?.key && options?.cert) {
-      this.#server = createHttpsServer(options, requestListener);
-      this.#isSecured = true;
+      this.#server = createHttpsServer(options, requestListener)
+      this.#isSecured = true
     } else {
-      this.#server = createServer(requestListener);
+      this.#server = createServer(requestListener)
     }
   }
 
@@ -56,7 +56,7 @@ export class HttpServer {
    * @type {boolean}
    */
   get listening(): boolean {
-    return this.#server.listening;
+    return this.#server.listening
   }
 
   /**
@@ -66,14 +66,14 @@ export class HttpServer {
    */
   address(): AddressInfo {
     if (!this.listening) {
-      throw new Error('Server is not started.');
+      throw new Error('Server is not started.')
     }
 
-    const address = this.#server.address();
+    const address = this.#server.address()
 
-    assertIsAddressInfo(address);
+    assertIsAddressInfo(address)
 
-    return address;
+    return address
   }
 
   /**
@@ -84,15 +84,12 @@ export class HttpServer {
    */
   async start(port?: number, host?: string): Promise<Server> {
     if (this.listening) {
-      throw new Error('Server has already been started.');
+      throw new Error('Server has already been started.')
     }
 
     return new Promise((resolve, reject) => {
-      this.#server
-        .listen(port, host)
-        .on('listening', resolve)
-        .on('error', reject);
-    });
+      this.#server.listen(port, host).on('listening', resolve).on('error', reject)
+    })
   }
 
   /**
@@ -101,40 +98,38 @@ export class HttpServer {
    */
   async stop(): Promise<void> {
     if (!this.listening) {
-      throw new Error('Server is not started.');
+      throw new Error('Server is not started.')
     }
 
     return new Promise((resolve, reject) => {
-      this.#server.close((err) => {
+      this.#server.close(err => {
         if (err) {
-          return reject(err);
+          return reject(err)
         }
 
-        return resolve();
-      });
-    });
+        return resolve()
+      })
+    })
   }
 
   protected buildIssuerUrl(host: string | undefined, port: number): string {
-    const url = new URL(
-      `${this.#isSecured ? 'https' : 'http'}://localhost:${port}`,
-    );
+    const url = new URL(`${this.#isSecured ? 'https' : 'http'}://localhost:${port}`)
 
     if (host && !coversLocalhost(host)) {
-      url.hostname = host.includes(':') ? `[${host}]` : host;
+      url.hostname = host.includes(':') ? `[${host}]` : host
     }
 
-    return url.origin;
+    return url.origin
   }
 }
 
 const coversLocalhost = (address: string) => {
   switch (isIP(address)) {
     case 4:
-      return address === '0.0.0.0' || address.startsWith('127.');
+      return address === '0.0.0.0' || address.startsWith('127.')
     case 6:
-      return address === '::' || address === '::1';
+      return address === '::' || address === '::1'
     default:
-      return false;
+      return false
   }
-};
+}
