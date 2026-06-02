@@ -121,7 +121,7 @@
     "superagent": "^10.2.1",
     "url-value-parser": "^2.2.0",
     "uuid": "^11.1.0",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.0"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
