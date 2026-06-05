@@ -13,8 +13,8 @@ The purpose of this package is to provide an easily configurable OAuth 2 server,
 
 ## Development prerequisites
 
-- [Node.js 18+](https://nodejs.org/)
-- [Yarn 1.15.2+](https://classic.yarnpkg.com/lang/en/)
+- [Node.js 22+](https://nodejs.org/)
+- [npm 11+](https://www.npmjs.com/)
 
 ## How to use
 
@@ -22,10 +22,10 @@ The purpose of this package is to provide an easily configurable OAuth 2 server,
 
 Add it to your Node.js project as a development dependency:
 
-With yarn...
+With npm...
 
 ```shell
-yarn add -D oauth2-mock-server
+npm i -D oauth2-mock-server
 ```
 
 ...or with npm

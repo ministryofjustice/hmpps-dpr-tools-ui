@@ -15,29 +15,33 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: 24
+          node-version: 24.x
 
-      - run: npm ci --no-audit
-
-      - name: Add linting fixes
-        run: npm run lint:fix
-
-      - name: Commit linting fixes
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: SLSA - supply chain attack mitigation
+        uses: ministryofjustice/devsecops-actions/sca/slsa@7dc13c20e2bf541b8a77fa1320a04983b18846f6 #v1.6.0
         with:
-          commit_message: Linting fixes
+          security-patch-package-exclusion: '@ministryofjustice/hmpps-digital-prison-reporting-frontend'
+
+      - run: npm run setup --no-audit
+
+      - name: Setup Python
+        uses: actions/setup-python@c8813ba1bc76ebf779b911ad8ffccbf2e449cb48
+        with:
+          python-version: '3.x'
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit checks
+        run: pre-commit run --all-files
 
       - name: Calculate test coverage
         run: |
           npm run test > logs.txt
-          grep '% Stmts' logs.txt -A2 > message.txt
-
-      - name: PR comment
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          comment_tag: coverage
-          filePath: message.txt
+          gh pr comment ${{ github.event.pull_request.number }} --body "$(grep '% Stmts' logs.txt -A2)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -9,6 +9,7 @@ export interface UserDetails extends User {
   uuid?: string
   email: string
   roles: string[]
+  sub?: string
 }
 
 export default class UserService {

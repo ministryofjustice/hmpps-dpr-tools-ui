@@ -18,50 +18,50 @@
  * @module lib/jwk-store
  */
 
-import { KeyObject, randomBytes } from 'node:crypto';
-import { AssertionError } from 'node:assert';
+import { AssertionError } from 'node:assert'
+import { KeyObject, randomBytes } from 'node:crypto'
 
-import type { GenerateKeyPairOptions } from 'jose';
-import { exportJWK, importJWK, generateKeyPair } from 'jose';
+import type { GenerateKeyPairOptions } from 'jose'
+import { exportJWK, generateKeyPair, importJWK } from 'jose'
 
-import type { JWK } from './types';
-import type { JWKWithKid } from './types-internals';
-import { assertIsPlainObject } from './helpers';
+import { assertIsPlainObject } from './helpers'
+import type { JWK } from './types'
+import type { JWKWithKid } from './types-internals'
 
 const generateRandomKid = () => {
-  return randomBytes(40).toString('hex');
-};
+  return randomBytes(40).toString('hex')
+}
 
-type JwkTransformer = (jwk: JWK) => JWK;
+type JwkTransformer = (jwk: JWK) => JWK
 
-const RsaPrivateFieldsRemover: JwkTransformer = (jwk) => {
-  const x = { ...jwk };
+const RsaPrivateFieldsRemover: JwkTransformer = jwk => {
+  const x = { ...jwk }
 
-  delete x.d;
-  delete x.p;
-  delete x.q;
-  delete x.dp;
-  delete x.dq;
-  delete x.qi;
+  delete x.d
+  delete x.p
+  delete x.q
+  delete x.dp
+  delete x.dq
+  delete x.qi
 
-  return x;
-};
+  return x
+}
 
-const EcdsaPrivateFieldsRemover: JwkTransformer = (jwk) => {
-  const x = { ...jwk };
+const EcdsaPrivateFieldsRemover: JwkTransformer = jwk => {
+  const x = { ...jwk }
 
-  delete x.d;
+  delete x.d
 
-  return x;
-};
+  return x
+}
 
-const EddsaPrivateFieldsRemover: JwkTransformer = (jwk) => {
-  const x = { ...jwk };
+const EddsaPrivateFieldsRemover: JwkTransformer = jwk => {
+  const x = { ...jwk }
 
-  delete x.d;
+  delete x.d
 
-  return x;
-};
+  return x
+}
 
 const privateToPublicTransformerMap: Record<string, JwkTransformer> = {
   // RSASSA-PKCS1-v1_5
@@ -82,24 +82,21 @@ const privateToPublicTransformerMap: Record<string, JwkTransformer> = {
 
   // Edwards-curve DSA
   EdDSA: EddsaPrivateFieldsRemover,
-};
+}
 
-const supportedAlgs = Object.keys(privateToPublicTransformerMap);
+const supportedAlgs = Object.keys(privateToPublicTransformerMap)
 
-function normalizeKeyKid(
-  jwk: unknown,
-  opts?: { kid?: string },
-): asserts jwk is JWKWithKid {
-  assertIsPlainObject(jwk, 'Invalid jwk format');
+function normalizeKeyKid(jwk: unknown, opts?: { kid?: string }): asserts jwk is JWKWithKid {
+  assertIsPlainObject(jwk, 'Invalid jwk format')
 
   if (jwk['kid'] !== undefined) {
-    return;
+    return
   }
 
   if (opts !== undefined && opts.kid !== undefined) {
-    jwk['kid'] = opts.kid;
+    jwk['kid'] = opts.kid
   } else {
-    jwk['kid'] = generateRandomKid();
+    jwk['kid'] = generateRandomKid()
   }
 }
 
@@ -107,13 +104,13 @@ function normalizeKeyKid(
  * Simple JWK store
  */
 export class JWKStore {
-  #keyRotator: KeyRotator;
+  #keyRotator: KeyRotator
 
   /**
    * Creates a new instance of the keystore.
    */
   constructor() {
-    this.#keyRotator = new KeyRotator();
+    this.#keyRotator = new KeyRotator()
   }
 
   /**
@@ -124,22 +121,18 @@ export class JWKStore {
    * @param {string} [opts.crv] The OKP "crv" to be used for "EdDSA" algorithm.
    * @returns {Promise<JWK>} The promise for the generated key.
    */
-  async generate(
-    alg: string,
-    opts?: { kid?: string; crv?: string },
-  ): Promise<JWK> {
-    const generateOpts: GenerateKeyPairOptions =
-      opts !== undefined && opts.crv !== undefined ? { crv: opts.crv } : {};
+  async generate(alg: string, opts?: { kid?: string; crv?: string }): Promise<JWK> {
+    const generateOpts: GenerateKeyPairOptions = opts !== undefined && opts.crv !== undefined ? { crv: opts.crv } : {}
 
-    const pair = await generateKeyPair(alg, generateOpts);
-    const joseJwk = await exportJWK(pair.privateKey);
+    const pair = await generateKeyPair(alg, generateOpts)
+    const joseJwk = await exportJWK(pair.privateKey)
 
-    normalizeKeyKid(joseJwk, opts);
-    joseJwk.alg = alg;
+    normalizeKeyKid(joseJwk, opts)
+    joseJwk.alg = alg
 
-    const jwk = joseJwk as JWK;
-    this.#keyRotator.add(jwk);
-    return jwk;
+    const jwk = joseJwk as JWK
+    this.#keyRotator.add(jwk)
+    return jwk
   }
 
   /**
@@ -148,31 +141,29 @@ export class JWKStore {
    * @returns {Promise<JWK>} The promise for the added key.
    */
   async add(maybeJwk: Record<string, unknown>): Promise<JWK> {
-    const tempJwk = { ...maybeJwk };
+    const tempJwk = { ...maybeJwk }
 
-    normalizeKeyKid(tempJwk);
+    normalizeKeyKid(tempJwk)
 
     if (tempJwk.alg === undefined) {
-      throw new Error('Unspecified JWK "alg" property');
+      throw new Error('Unspecified JWK "alg" property')
     }
 
     if (!supportedAlgs.includes(tempJwk.alg)) {
-      throw new Error(`Unsupported JWK "alg" value ("${tempJwk.alg}")`);
+      throw new Error(`Unsupported JWK "alg" value ("${tempJwk.alg}")`)
     }
 
-    const jwk = tempJwk as JWK;
+    const jwk = tempJwk as JWK
 
-    const privateKey = await importJWK(jwk);
+    const privateKey = await importJWK(jwk)
 
     if (!(privateKey instanceof KeyObject) || privateKey.type !== 'private') {
-      throw new Error(
-        `Invalid JWK type. No "private" key related data has been found.`,
-      );
+      throw new Error(`Invalid JWK type. No "private" key related data has been found.`)
     }
 
-    this.#keyRotator.add(jwk);
+    this.#keyRotator.add(jwk)
 
-    return jwk;
+    return jwk
   }
 
   /**
@@ -182,7 +173,7 @@ export class JWKStore {
    * @returns {JWK.Key | null} The retrieved key.
    */
   get(kid?: string): JWK | undefined {
-    return this.#keyRotator.next(kid);
+    return this.#keyRotator.next(kid)
   }
 
   /**
@@ -193,77 +184,77 @@ export class JWKStore {
    * @returns {JWK[]} The JSON representation of this keystore.
    */
   toJSON(includePrivateFields = false): JWK[] {
-    return this.#keyRotator.toJSON(includePrivateFields);
+    return this.#keyRotator.toJSON(includePrivateFields)
   }
 }
 
 class KeyRotator {
-  #keys: JWK[] = [];
+  #keys: JWK[] = []
 
   add(key: JWK): void {
-    const pos = this.findNext(key.kid);
+    const pos = this.findNext(key.kid)
 
     if (pos > -1) {
-      this.#keys.splice(pos, 1);
+      this.#keys.splice(pos, 1)
     }
 
-    this.#keys.push(key);
+    this.#keys.push(key)
   }
 
   next(kid?: string): JWK | undefined {
-    const i = this.findNext(kid);
+    const i = this.findNext(kid)
 
     if (i === -1) {
-      return undefined;
+      return undefined
     }
 
-    return this.moveToTheEnd(i);
+    return this.moveToTheEnd(i)
   }
 
   toJSON(includePrivateFields: boolean): JWK[] {
-    const keys: JWK[] = [];
+    const keys: JWK[] = []
 
     for (const key of this.#keys) {
       if (includePrivateFields) {
-        keys.push({ ...key });
-        continue;
+        keys.push({ ...key })
+        continue
       }
 
-      const cleaner = privateToPublicTransformerMap[key.alg];
+      const cleaner = privateToPublicTransformerMap[key.alg]
 
       if (cleaner === undefined) {
-        throw new Error(`Unsupported algo '{key.alg}'`);
+        throw new Error(`Unsupported algo '{key.alg}'`)
       }
 
-      keys.push(cleaner(key));
+      keys.push(cleaner(key))
     }
 
-    return keys;
+    return keys
   }
 
   private findNext(kid?: string): number {
     if (this.#keys.length === 0) {
-      return -1;
+      return -1
     }
 
     if (kid === undefined) {
-      return 0;
+      return 0
     }
 
-    return this.#keys.findIndex((x) => x.kid === kid);
+    return this.#keys.findIndex(x => x.kid === kid)
   }
 
   private moveToTheEnd(i: number): JWK {
-    const [key] = this.#keys.splice(i, 1);
+    const [key] = this.#keys.splice(i, 1)
 
     if (key === undefined) {
       throw new AssertionError({
         message: 'Unexpected error. key is supposed to exist',
-      });
+      })
     }
 
-    this.#keys.push(key);
+    this.#keys.push(key)
 
-    return key;
+    return key
   }
 }

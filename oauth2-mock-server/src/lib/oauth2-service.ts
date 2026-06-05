@@ -18,17 +18,16 @@
  * @module lib/oauth2-service
  */
 
-import type { IncomingMessage, RequestListener } from 'node:http'
-import { URL } from 'node:url'
+import { AssertionError } from 'node:assert'
 import { randomUUID } from 'node:crypto'
 import { EventEmitter } from 'node:events'
-import { AssertionError } from 'node:assert'
+import type { IncomingMessage, RequestListener } from 'node:http'
+import { URL } from 'node:url'
 
-import express, { type RequestHandler } from 'express'
-import cors from 'cors'
 import basicAuth from 'basic-auth'
+import cors from 'cors'
+import express, { type RequestHandler } from 'express'
 
-import type { OAuth2Issuer } from './oauth2-issuer'
 import {
   assertIsString,
   assertIsStringOrUndefined,
@@ -38,6 +37,7 @@ import {
   pkceVerifierMatchesChallenge,
   supportedPkceAlgorithms,
 } from './helpers'
+import type { OAuth2Issuer } from './oauth2-issuer'
 import type {
   CodeChallenge,
   JwtTransform,
@@ -377,7 +377,7 @@ export class OAuth2Service extends EventEmitter {
     return res.redirect(url.href)
   }
 
-  private caseloadHandler: RequestHandler = (req, res) => {
+  private caseloadHandler: RequestHandler = (_req, res) => {
     console.log('case load handler called')
 
     const caseLoadResponse: MutableResponse = {

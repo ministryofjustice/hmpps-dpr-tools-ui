@@ -19,7 +19,7 @@ parameters:
 
   node-version:
     type: string
-    default: 22.12-browsers
+    default: 24.12-browsers
 
 jobs:
   build:
@@ -35,7 +35,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
-          command: npm ci --no-audit
+          command: npm run setup
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
