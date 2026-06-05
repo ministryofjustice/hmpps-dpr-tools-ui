@@ -21,7 +21,7 @@
     "int-test": "cypress run --config video=false",
     "int-test-ui": "cypress open",
     "clean": "rm -rf dist build node_modules stylesheets",
-    "setup": "npm ci --include=optional && hmpps-npm-script-run-allowlist"
+    "setup": "npm ci --omit=optional && hmpps-npm-script-run-allowlist"
   },
   "engines": {
     "node": "^22 || ^24",
