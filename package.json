@@ -87,7 +87,13 @@
     ]
   },
   "overrides": {
-    "serialize-javascript": "^7.0.5"
+    "serialize-javascript": "^7.0.5",
+    "mocha": {
+      "glob": "^10.4.6"
+    },
+    "eslint": {
+      "ajv": "^6.14.0"
+    }
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^3.3.1",
