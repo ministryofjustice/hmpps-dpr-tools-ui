@@ -18,14 +18,14 @@
  * @module lib/oauth2-issuer
  */
 
-import { EventEmitter } from 'node:events';
+import { EventEmitter } from 'node:events'
 
-import { importJWK, SignJWT } from 'jose';
+import { importJWK, SignJWT } from 'jose'
 
-import { JWKStore } from './jwk-store';
-import { assertIsString, defaultTokenTtl } from './helpers';
-import type { Header, MutableToken, Payload, TokenBuildOptions } from './types';
-import { InternalEvents } from './types-internals';
+import { assertIsString, defaultTokenTtl } from './helpers'
+import { JWKStore } from './jwk-store'
+import type { Header, MutableToken, Payload, TokenBuildOptions } from './types'
+import { InternalEvents } from './types-internals'
 
 /**
  * Represents an OAuth 2 issuer.
@@ -35,18 +35,18 @@ export class OAuth2Issuer extends EventEmitter {
    * Sets or returns the issuer URL.
    * @type {string}
    */
-  url: string | undefined;
+  url: string | undefined
 
-  #keys: JWKStore;
+  #keys: JWKStore
 
   /**
    * Creates a new instance of HttpServer.
    */
   constructor() {
-    super();
-    this.url = undefined;
+    super()
+    this.url = undefined
 
-    this.#keys = new JWKStore();
+    this.#keys = new JWKStore()
   }
 
   /**
@@ -54,7 +54,7 @@ export class OAuth2Issuer extends EventEmitter {
    * @type {JWKStore}
    */
   get keys(): JWKStore {
-    return this.#keys;
+    return this.#keys
   }
 
   /**
@@ -64,59 +64,59 @@ export class OAuth2Issuer extends EventEmitter {
    * @fires OAuth2Issuer#beforeSigning
    */
   async buildToken(opts?: TokenBuildOptions): Promise<string> {
-    const key = this.keys.get(opts?.kid);
+    const key = this.keys.get(opts?.kid)
 
     if (key === undefined) {
-      throw new Error('Cannot build token: Unknown key.');
+      throw new Error('Cannot build token: Unknown key.')
     }
 
-    const timestamp = Math.floor(Date.now() / 1000);
+    const timestamp = Math.floor(Date.now() / 1000)
 
     const header: Header = {
       kid: key.kid,
-    };
+    }
 
-    assertIsString(this.url, 'Unknown issuer url');
+    assertIsString(this.url, 'Unknown issuer url')
 
     const payload: Payload = {
       iss: this.url,
       iat: timestamp,
       exp: timestamp + (opts?.expiresIn ?? defaultTokenTtl),
       nbf: timestamp - 10,
-    };
+    }
 
     if (opts?.scopesOrTransform !== undefined) {
-      const scopesOrTransform = opts.scopesOrTransform;
+      const scopesOrTransform = opts.scopesOrTransform
 
       if (typeof scopesOrTransform === 'string') {
-        payload['scope'] = scopesOrTransform;
+        payload['scope'] = scopesOrTransform
       } else if (Array.isArray(scopesOrTransform)) {
-        payload['scope'] = scopesOrTransform.join(' ');
+        payload['scope'] = scopesOrTransform.join(' ')
       } else if (typeof scopesOrTransform === 'function') {
-        scopesOrTransform(header, payload);
+        scopesOrTransform(header, payload)
       }
     }
 
     const token: MutableToken = {
       header,
       payload,
-    };
+    }
 
     /**
      * Before signing event.
      * @event OAuth2Issuer#beforeSigning
      * @param {MutableToken} token The JWT header and payload.
      */
-    this.emit(InternalEvents.BeforeSigning, token);
+    this.emit(InternalEvents.BeforeSigning, token)
 
-    const privateKey = await importJWK(key);
+    const privateKey = await importJWK(key)
 
     const jwt = await new SignJWT(token.payload)
       .setProtectedHeader({ ...token.header, typ: 'JWT', alg: key.alg })
-      .sign(privateKey);
+      .sign(privateKey)
 
     console.log('built jwt ', jwt)
 
-    return jwt;
+    return jwt
   }
 }

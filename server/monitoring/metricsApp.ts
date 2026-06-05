@@ -25,4 +25,4 @@ function createMetricsApp(): express.Application {
   return metricsApp
 }
 
-export { metricsMiddleware, createMetricsApp }
+export { createMetricsApp, metricsMiddleware }
