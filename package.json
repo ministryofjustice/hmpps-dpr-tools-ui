@@ -93,8 +93,7 @@
     },
     "eslint": {
       "ajv": "^6.14.0"
-    },
-    "@rolldown/binding-wasm32-wasi": "npm:empty-package@1.0.0"
+    }
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^8.0.1",
