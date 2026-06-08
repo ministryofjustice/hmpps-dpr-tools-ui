@@ -5,14 +5,8 @@ export default configureAllowedScripts({
     'node_modules/cypress@15.16.0': 'ALLOW',
     'node_modules/dtrace-provider@0.8.8': 'FORBID',
     'node_modules/fsevents@2.3.3': 'FORBID',
-    'node_modules/esbuild@0.25.8': 'ALLOW',
-    'node_modules/vite/node_modules/esbuild@0.27.7': 'ALLOW'
+    'node_modules/esbuild@0.27.7': 'ALLOW',
+    'node_modules/@parcel/watcher@2.5.6': 'FORBID',
+    'node_modules/unrs-resolver@1.12.2': 'FORBID'
   },
 })
-
-// 'node_modules/cypress@15.16.0': 'ALLOW',
-//   'node_modules/dtrace-provider@0.8.8': 'FORBID',
-//     'node_modules/fsevents@2.3.3': 'FORBID',
-//       'node_modules/esbuild@0.27.7': 'ALLOW',
-//         'node_modules/@parcel/watcher@2.5.6': 'FORBID',
-//           'node_modules/unrs-resolver@1.12.2': 'FORBID',
