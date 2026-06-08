@@ -1,18 +1,19 @@
+// @ts-nocheck
 import { writeFile } from 'fs/promises'
 
-import { afterEach, describe, it, expect, vi } from 'vitest'
+import { afterEach, describe, expect, it, jest } from '@jest/globals'
 
 import exec from './lib/child-script'
 
-vi.mock('fs/promises', () => ({
-  writeFile: vi.fn().mockImplementation(() => ''),
+jest.mock('fs/promises', () => ({
+  writeFile: jest.fn().mockImplementation(() => ''),
 }))
 
-const mockWriteFileAsync = vi.mocked(writeFile)
+const mockWriteFileAsync = jest.mocked(writeFile)
 
 describe('CLI', () => {
   afterEach(() => {
-    vi.resetModules()
+    jest.resetModules()
   })
 
   it.each([['-h'], ['--help']])('should be able to print out usage information (%s)', async arg => {
@@ -69,6 +70,7 @@ describe('CLI', () => {
     expect(res.stdout).toMatch(/^Added key with kid "test-eddsa-key"$/m)
 
     expect(res.result).not.toBeNull()
+
     const { keys } = res.result!.issuer
 
     expect(keys.get('test-rs256-key')).toBeDefined()
@@ -81,7 +83,7 @@ describe('CLI', () => {
 
     mockWriteFileAsync.mockImplementation(p => {
       if (typeof p !== 'string') {
-        throw new Error('Unepextected path type.')
+        throw new Error('Unexpected path type.')
       }
 
       generatedPath = p
@@ -92,6 +94,7 @@ describe('CLI', () => {
     const res = await executeCli('--save-jwk', '-p', '0')
 
     expect(res.result).not.toBeNull()
+
     const key = res.result!.issuer.keys.get()
 
     expect(key).toBeDefined()
@@ -100,6 +103,7 @@ describe('CLI', () => {
     expect(generatedPath).toBe(`${key!.kid}.json`)
 
     expect(res.stdout).toMatch(/^Generated new RSA key with kid "[\w-]+"$/m)
+
     expect(res.stdout).toMatch(/^JSON web key written to file "[\w-]+\.json"\.$/m)
   })
 })
