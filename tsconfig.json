@@ -26,5 +26,5 @@
     "esbuild",
     "oauth2-mock-server"
   ],
-  "include": ["**/*.js", "**/*.ts"]
+  "include": ["**/*.js", "**/*.ts", "oauth2-mock-server/jest.config.cjs"]
 }
