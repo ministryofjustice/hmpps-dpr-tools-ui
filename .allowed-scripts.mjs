@@ -6,6 +6,5 @@ export default configureAllowedScripts({
     'node_modules/dtrace-provider@0.8.8': 'FORBID',
     'node_modules/fsevents@2.3.3': 'FORBID',
     'node_modules/esbuild@0.25.8': 'ALLOW',
-    'node_modules/vite/node_modules/esbuild@0.27.7': 'ALLOW'
   },
 })
