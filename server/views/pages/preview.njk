@@ -6,155 +6,171 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
-
 {% from "dpr/components/_catalogue/catalogue/view.njk" import dprCatalogue %}
 {% from "dpr/components/my-reports/view.njk" import dprMyReports %}
-
 {% extends "../partials/layout.njk" %}
-
 {% set pageTitle = applicationName + " - " + title %}
 
 {% block main %}
+  <main class="app-container govuk-body dpr-home-wrapper" id="main-content">
+    <div class="dpr-heading-wrapper">
+      <div class="govuk-width-container">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-1">DPR: {{ title }}</h1>
+        <p class="govuk-body">Upload and preview report definitions</p>
+        <a href="#reports-catalogue" class="govuk-body govuk-link govuk-link--no-visited-state"
+          >Preview definitions catalogue</a
+        >
 
-<main class="app-container govuk-body dpr-home-wrapper"  id="main-content">
-  <div class="dpr-heading-wrapper">
-    <div class="govuk-width-container">
-      <h1 class="govuk-heading-l govuk-!-margin-bottom-1">DPR: {{ title }}</h1>
-      <p class="govuk-body">Upload and preview report definitions</p>
-      <a href='#reports-catalogue' class='govuk-body govuk-link govuk-link--no-visited-state'>Preview definitions catalogue</a>
+        {% if errorMessage %}
+          {{
+            govukErrorSummary({
+              titleText: errorSummary,
+              errorList: [
+                {
+                  text: errorMessage
+                }
+              ]
+            })
+          }}
+        {% endif %}
 
-      {% if errorMessage %}
-        {{ govukErrorSummary({
-          titleText: errorSummary,
-          errorList: [
-            {
-              text: errorMessage
-            }
-          ]
-        }) }}
-      {% endif %}
+        {% set uploadDefinition %}
+          <div class="govuk-grid-row">
+            <form
+              id="upload-definition-form"
+              action="/preview/upload?_csrf={{ csrfToken }}"
+              method="post"
+              enctype="multipart/form-data"
+            >
+              <div class="govuk-grid-column-one-third">
+                {{
+                  govukInput({
+                    id: "uploadDefinition",
+                    name: "uploadDefinition",
+                    type: "file",
+                    attributes: {
+                      accept: "application/json"
+                    }
+                  })
+                }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{
+                  govukButton({
+                    id: "upload-definition-form-submit",
+                    text: "Upload",
+                    type: "submit"
+                  })
+                }}
+              </div>
+            </form>
+          </div>
+        {% endset %}
 
-  {% set uploadDefinition %}
-  <div class="govuk-grid-row">
-    <form id="upload-definition-form" action="/preview/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
-      <div class="govuk-grid-column-one-third">
-        {{ govukInput({
-            id: "uploadDefinition",
-            name: "uploadDefinition",
-            type: "file",
-            attributes: {
-              accept: "application/json"
-            }
-          }) }}
+        {% set deleteDefinition %}
+          <div class="govuk-grid-row">
+            <form action="/preview/delete" method="post">
+              <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+              <div class="govuk-grid-column-one-third">
+                {{
+                  govukSelect({
+                    id: "deleteDefinition",
+                    name: "deleteDefinition",
+                    items: definitions
+                  })
+                }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{
+                  govukButton({
+                    text: "Delete",
+                    type: "submit"
+                  })
+                }}
+              </div>
+            </form>
+          </div>
+        {% endset %}
+
+        {% set downloadDefinition %}
+          <div class="govuk-grid-row">
+            <form action="/preview/download" method="post">
+              <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+              <div class="govuk-grid-column-one-third">
+                {{
+                  govukSelect({
+                    id: "downloadDefinition",
+                    name: "downloadDefinition",
+                    items: definitions
+                  })
+                }}
+              </div>
+              <div class="govuk-grid-column-one-third">
+                {{
+                  govukButton({
+                    text: "Download",
+                    type: "submit"
+                  })
+                }}
+              </div>
+            </form>
+          </div>
+        {% endset %}
+
+        {% set previewControlsHtml %}
+          {{
+            govukAccordion({
+              rememberExpanded: false,
+              items: [
+                {
+                  heading: {
+                    text: "Upload definition"
+                  },
+                  content: {
+                    html: uploadDefinition
+                  }
+                },
+                {
+                  heading: {
+                    text: "Delete definition"
+                  },
+                  content: {
+                    html: deleteDefinition
+                  }
+                },
+                {
+                  heading: {
+                    text: "Download definition"
+                  },
+                  content: {
+                    html: downloadDefinition
+                  }
+                }
+              ]
+            })
+          }}
+        {% endset %}
+
+        {{
+          govukDetails({
+            id: 'previewControls',
+            summaryText: "Preview Controls",
+            html: previewControlsHtml,
+            classes: 'govuk-!-margin-top-3 govuk-!-margin-bottom-0'
+          })
+        }}
       </div>
-      <div class="govuk-grid-column-one-third">
-        {{ govukButton({
-            id: "upload-definition-form-submit",
-            text: "Upload",
-            type: "submit"
-          }) }}
-      </div>
-    </form>
-  </div>
-  {% endset %}
-
-  {% set deleteDefinition %}
-  <div class="govuk-grid-row">
-    <form action="/preview/delete" method="post">
-      <input type="hidden" name="_csrf" value="{{csrfToken}}">
-      <div class="govuk-grid-column-one-third">
-        {{ govukSelect({
-            id: "deleteDefinition",
-            name: "deleteDefinition",
-            items: definitions
-          }) }}
-      </div>
-      <div class="govuk-grid-column-one-third">
-        {{ govukButton({
-            text: "Delete",
-            type: "submit"
-          }) }}
-      </div>
-    </form>
-  </div>
-
-  {% endset %}
-
-  {% set downloadDefinition %}
-  <div class="govuk-grid-row">
-    <form action="/preview/download" method="post">
-      <input type="hidden" name="_csrf" value="{{csrfToken}}">
-      <div class="govuk-grid-column-one-third">
-        {{ govukSelect({
-            id: "downloadDefinition",
-            name: "downloadDefinition",
-            items: definitions
-          }) }}
-      </div>
-      <div class="govuk-grid-column-one-third">
-        {{ govukButton({
-            text: "Download",
-            type: "submit"
-          }) }}
-      </div>
-    </form>
-  </div>
-
-  {% endset %}
-
-  {% set previewControlsHtml %}
-  {{ govukAccordion({
-      rememberExpanded: false,
-      items: [
-        {
-          heading: {
-            text: "Upload definition"
-          },
-          content: {
-            html: uploadDefinition
-          }
-        },
-        {
-          heading: {
-            text: "Delete definition"
-          },
-          content: {
-            html: deleteDefinition
-          }
-        },
-        {
-          heading: {
-            text: "Download definition"
-          },
-          content: {
-            html: downloadDefinition
-          }
-        }
-      ]
-    }) }}
-  {% endset %}
-
-    {{ govukDetails({
-      id: 'previewControls',
-      summaryText: "Preview Controls",
-      html: previewControlsHtml,
-      classes: 'govuk-!-margin-top-3 govuk-!-margin-bottom-0'
-    }) }}
-
     </div>
-  </div>
 
-  <div id="homepage-widget" class="dpr-reports-widget-wrapper">
-    <div class="govuk-width-container">
-      <h2 class="govuk-heading-m">My reports<h2>
-        {{ dprMyReports(myReportsData)}}
+    <div id="homepage-widget" class="dpr-reports-widget-wrapper">
+      <div class="govuk-width-container">
+        <h2 class="govuk-heading-m">My reports</h2>
+        {{ dprMyReports(myReportsData) }}
+      </div>
     </div>
-  </div>
 
-
-  <div id="reports-catalogue-section" class="govuk-width-container govuk-!-padding-top-7">
-    {{ dprCatalogue(catalogue) }}
-  <div>
-</main>
-
+    <div id="reports-catalogue-section" class="govuk-width-container govuk-!-padding-top-7">
+      {{ dprCatalogue(catalogue) }}
+    </div>
+  </main>
 {% endblock %}

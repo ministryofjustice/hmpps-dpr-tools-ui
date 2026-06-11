@@ -39,22 +39,22 @@ npm install --save-dev oauth2-mock-server
 Here is an example for creating and running a server instance with a single random RSA key:
 
 ```js
-const { OAuth2Server } = require('oauth2-mock-server');
+const { OAuth2Server } = require('oauth2-mock-server')
 
-let server = new OAuth2Server();
+let server = new OAuth2Server()
 
 // Generate a new RSA key and add it to the keystore
-await server.issuer.keys.generate('RS256');
+await server.issuer.keys.generate('RS256')
 
 // Start the server
-await server.start(8080, 'localhost');
-console.log('Issuer URL:', server.issuer.url); // -> http://localhost:8080
+await server.start(8080, 'localhost')
+console.log('Issuer URL:', server.issuer.url) // -> http://localhost:8080
 
 // Do some work with the server
 // ...
 
 // Stop the server
-await server.stop();
+await server.stop()
 ```
 
 Any number of existing JSON-formatted keys can be added to the keystore.
@@ -66,25 +66,21 @@ await server.issuer.keys.add({
   alg: 'RS256',
   kty: 'RSA',
   // ...
-});
+})
 ```
 
 JSON Web Tokens (JWT) can be built programmatically:
 
 ```js
-const request = require('request');
+const request = require('request')
 
 // Build a new token
-let token = await server.issuer.buildToken();
+let token = await server.issuer.buildToken()
 
 // Call a remote API with the token
-request.get(
-  'https://server.example.com/api/endpoint',
-  { auth: { bearer: token } },
-  function callback(err, res, body) {
-    /* ... */
-  }
-);
+request.get('https://server.example.com/api/endpoint', { auth: { bearer: token } }, function callback(err, res, body) {
+  /* ... */
+})
 ```
 
 ### Supported grant types
@@ -113,19 +109,19 @@ It also provides a convenient way, through event emitters, to programmatically c
   ```js
   // Modify the expiration time on next token produced
   service.once('beforeTokenSigning', (token, req) => {
-    const timestamp = Math.floor(Date.now() / 1000);
-    token.payload.exp = timestamp + 400;
-  });
+    const timestamp = Math.floor(Date.now() / 1000)
+    token.payload.exp = timestamp + 400
+  })
   ```
 
   ```js
   // Add the client ID to a token
-  const basicAuth = require('basic-auth');
+  const basicAuth = require('basic-auth')
   service.once('beforeTokenSigning', (token, req) => {
-    const credentials = basicAuth(req);
-    const clientId = credentials ? credentials.name : req.body.client_id;
-    token.payload.client_id = clientId;
-  });
+    const credentials = basicAuth(req)
+    const clientId = credentials ? credentials.name : req.body.client_id
+    token.payload.client_id = clientId
+  })
   ```
 
 - The token endpoint response body and status
@@ -136,9 +132,9 @@ It also provides a convenient way, through event emitters, to programmatically c
   service.once('beforeResponse', (tokenEndpointResponse, req) => {
     tokenEndpointResponse.body = {
       error: 'invalid_grant',
-    };
-    tokenEndpointResponse.statusCode = 400;
-  });
+    }
+    tokenEndpointResponse.statusCode = 400
+  })
   ```
 
 - The userinfo endpoint response body and status
@@ -150,9 +146,9 @@ It also provides a convenient way, through event emitters, to programmatically c
     userInfoResponse.body = {
       error: 'invalid_token',
       error_message: 'token is expired',
-    };
-    userInfoResponse.statusCode = 401;
-  });
+    }
+    userInfoResponse.statusCode = 401
+  })
   ```
 
 - The revoke endpoint response body and status
@@ -162,8 +158,8 @@ It also provides a convenient way, through event emitters, to programmatically c
   service.once('beforeRevoke', (revokeResponse, req) => {
     revokeResponse.body = {
       result: 'revoked',
-    };
-  });
+    }
+  })
   ```
 
 - The authorization endpoint redirect uri and query parameters
@@ -172,8 +168,8 @@ It also provides a convenient way, through event emitters, to programmatically c
   // Modify the uri and query parameters
   // before the authorization redirect
   service.once('beforeAuthorizeRedirect', (authorizeRedirectUri, req) => {
-    authorizeRedirectUri.url.searchParams.set('foo', 'bar');
-  });
+    authorizeRedirectUri.url.searchParams.set('foo', 'bar')
+  })
   ```
 
 - The end session endpoint post logout redirect uri
@@ -182,8 +178,8 @@ It also provides a convenient way, through event emitters, to programmatically c
   // Modify the uri and query parameters
   // before the post_logout_redirect_uri redirect
   service.once('beforePostLogoutRedirect', (postLogoutRedirectUri, req) => {
-    postLogoutRedirectUri.url.searchParams.set('foo', 'bar');
-  });
+    postLogoutRedirectUri.url.searchParams.set('foo', 'bar')
+  })
   ```
 
 - The introspect endpoint response body
@@ -197,8 +193,8 @@ It also provides a convenient way, through event emitters, to programmatically c
       client_id: '<client_id>',
       username: 'dummy',
       exp: 1643712575,
-    };
-  });
+    }
+  })
   ```
 
 ### HTTPS support
@@ -208,10 +204,7 @@ It also provides basic HTTPS support, an optional cert and key can be supplied t
 We recommend using a package to create a locally trusted certificate, like [mkcert](https://github.com/FiloSottile/mkcert).
 
 ```js
-let server = new OAuth2Server(
-  'test-assets/mock-auth/key.pem',
-  'test-assets/mock-auth/cert.pem'
-);
+let server = new OAuth2Server('test-assets/mock-auth/key.pem', 'test-assets/mock-auth/cert.pem')
 ```
 
 NOTE: Enabling HTTPS will also update the issuer URL to reflect the current protocol.
