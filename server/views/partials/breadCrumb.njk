@@ -1,23 +1,24 @@
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
 
 {% macro breadCrumb(pageTitle, breadCrumbList) %}
-
-  {% set rows = [
-    {
-      text: "Digital Prison Services",
-      href: 'https://dps-dev.prison.service.justice.gov.uk/'
-    }
-  ]
- %}
+  {%
+    set rows = [
+      {
+        text: "Digital Prison Services",
+        href: 'https://dps-dev.prison.service.justice.gov.uk/'
+      }
+    ]
+  %}
 
   {% for item in breadCrumbList %}
     {% set rows = (rows.push({text: item.title, href: item.href}), rows) %}
   {% endfor %}
 
-  {{ govukBreadcrumbs({
-  collapseOnMobile: true,
-  items: completedRows,
-  classes: "govuk-!-display-none-print"
-}) }}
-
+  {{
+    govukBreadcrumbs({
+      collapseOnMobile: true,
+      items: completedRows,
+      classes: "govuk-!-display-none-print"
+    })
+  }}
 {% endmacro %}
