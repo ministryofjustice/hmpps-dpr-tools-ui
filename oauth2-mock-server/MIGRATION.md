@@ -56,14 +56,14 @@ the pull request mentioned above.
   from the root. This means that you can safely turn those lines
 
   ```ts
-  import { OAuth2Server } from 'oauth2-mock-server';
-  import { Payload } from 'oauth2-mock-server/dist/lib/types';
+  import { OAuth2Server } from 'oauth2-mock-server'
+  import { Payload } from 'oauth2-mock-server/dist/lib/types'
   ```
 
   into
 
   ```ts
-  import { OAuth2Server, Payload } from 'oauth2-mock-server';
+  import { OAuth2Server, Payload } from 'oauth2-mock-server'
   ```
 
 - Type `MutableAuthorizeRedirectUri` has been renamed into `MutableRedirectUri`
