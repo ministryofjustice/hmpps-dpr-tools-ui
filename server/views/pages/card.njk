@@ -1,12 +1,9 @@
 {% from "dpr/components/card-group/view.njk" import dprCardGroup %}
-
 {% extends "../partials/layout.njk" %}
-
 {% set pageTitle = applicationName + " - " + title %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-
   <h1>{{ title }}</h1>
 
   {% for group in groups %}
@@ -14,9 +11,6 @@
       <h2>{{ group.title }}</h2>
     {% endif %}
     {% set cards = group.cards %}
-    <div class="govuk-width-container ">
-      {{ dprCardGroup(cards.items, cards.variant) }}
-    </div>
+    <div class="govuk-width-container ">{{ dprCardGroup(cards.items, cards.variant) }}</div>
   {% endfor %}
-
 {% endblock %}
