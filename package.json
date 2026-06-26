@@ -19,7 +19,7 @@
     "test:ci": "jest --runInBand",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --config video=false",
-    "int-test-ui": "cypress open",
+    "int-test-ui": "cypress open --e2e --browser electron",
     "clean": "rm -rf dist build node_modules stylesheets",
     "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
@@ -96,8 +96,8 @@
     }
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^8.0.1",
-    "@ministryofjustice/hmpps-digital-prison-reporting-frontend": "6.8.3",
+    "@ministryofjustice/frontend": "9.0.0",
+    "@ministryofjustice/hmpps-digital-prison-reporting-frontend": "7.0.0",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.3",
     "basic-auth": "^2.0.1",
@@ -114,7 +114,7 @@
     "express": "^5.2.1",
     "express-prom-bundle": "^8.0.0",
     "express-session": "^1.18.1",
-    "govuk-frontend": "^5.8.0",
+    "govuk-frontend": "6.2.0",
     "helmet": "^8.1.0",
     "http-errors": "^2.0.1",
     "is-plain-object": "^5.0.0",
