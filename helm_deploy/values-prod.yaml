@@ -14,4 +14,4 @@ generic-service:
     SYSTEM_TOKEN_ENABLED: true
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-dpr-tools-authoring-api-prod
+  alertSeverity: digital-prison-reporting-prod
