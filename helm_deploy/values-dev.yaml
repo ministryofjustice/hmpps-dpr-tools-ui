@@ -19,4 +19,5 @@ generic-service:
     shutdown: '20 20 * * 1-5' # Stop at 8.20pm UTC Monday-Friday
 
 generic-prometheus-alerts:
+  businessHoursOnly: true
   alertSeverity: digital-prison-reporting-dev
