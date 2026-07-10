@@ -52,8 +52,6 @@ generic-service:
       API_CLIENT_SECRET: 'api_client_secret'
       SYSTEM_CLIENT_ID: 'system_client_id'
       SYSTEM_CLIENT_SECRET: 'system_client_secret'
-      API_CLIENT_CREDENTIALS_ID: 'api_client_credentials_id'
-      API_CLIENT_CREDENTIALS_SECRET: 'api_client_credentials_secret'
     flipt:
       FLIPT_API_KEY: 'API_KEY'
       FLIPT_NAMESPACE: 'NAMESPACE'
