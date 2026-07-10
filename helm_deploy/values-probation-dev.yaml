@@ -2,15 +2,16 @@
 
 generic-service:
   ingress:
-    host: dpr-tools-ui-dev.hmpps.service.justice.gov.uk
+    host: dpr-tools-dev.probation.hmpps.service.justice.gov.uk
 
   env:
-    INGRESS_URL: 'https://dpr-tools-ui-dev.hmpps.service.justice.gov.uk'
+    INGRESS_URL: 'https://dpr-tools-dev.probation.hmpps.service.justice.gov.uk'
     HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
     HMPPS_MANAGE_USERS_URL: 'https://manage-users-api-dev.hmpps.service.justice.gov.uk'
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
-    API_URL: 'http://hmpps-dpr-tools-api-dev.hmpps-dpr-tools-dev.svc.cluster.local'
+    API_URL: 'http://hmpps-dpr-tools-api-dev.probation.hmpps.service.justice.gov.uk'
     TOKEN_VERIFICATION_ENABLED: true
+    AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
 
   scheduledDowntime:
     enabled: true
@@ -19,4 +20,4 @@ generic-service:
 
 generic-prometheus-alerts:
   businessHoursOnly: true
-  alertSeverity: digital-prison-reporting-dev
+  alertSeverity: probation-frontend-alerts-dev
