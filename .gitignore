@@ -110,8 +110,8 @@ assets/stylesheets/*.css
 .vscode
 dist/
 test_results/
-integration_tests/videos/
-integration_tests/screenshots/
+cypress-tests/videos/
+cypress-tests/screenshots/
 */*.iml
 **/Chart.lock
 wiremock.jar
