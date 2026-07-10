@@ -3,8 +3,9 @@ import { Response } from 'superagent'
 
 import { stubFor, getMatchingRequests } from './wiremock'
 import tokenVerification from './tokenVerification'
+import { AuthSource } from './manageUsers'
 
-const createToken = (authSource: 'nomis' | 'delius' = 'nomis') => {
+const createToken = (authSource: AuthSource = 'nomis') => {
   const payload = {
     user_name: 'USER1',
     scope: ['read'],

@@ -2,7 +2,7 @@ import { Response } from 'superagent'
 
 import { stubFor } from './wiremock'
 
-type AuthSource = 'nomis' | 'delius'
+export type AuthSource = 'nomis' | 'delius'
 
 type StubAuthUserOptions = {
   name?: string
