@@ -1,6 +1,5 @@
 generic-service:
-  nameOverride: hmpps-dpr-tools-ui
-  productId: 'UNASSIGNED' # productId for the product that this belongs too, i.e. DPS001, see README.md for details
+  nameOverride: hmpps-dpr-tools-ui-probation
 
   replicaCount: 2
 
@@ -11,7 +10,23 @@ generic-service:
 
   ingress:
     enabled: true
-    tlsSecretName: hmpps-dpr-tools-cert
+    host: app-hostname.local # override per environment
+    tlsSecretName: dpr-tools-cert
+    modsecurity_enabled: true
+    modsecurity_audit_enabled: false
+    modsecurity_snippet: |
+      SecRuleEngine On
+      SecAction "id:900200,phase:1,nolog,pass,t:none,setvar:tx.allowed_methods=GET POST OPTIONS"
+      SecDefaultAction "phase:2,pass,log,tag:github_team=hmpps-digital-prison-reporting"
+      SecDefaultAction "phase:4,pass,log,tag:github_team=hmpps-digital-prison-reporting"
+      SecRuleRemoveById 932110
+      SecRuleUpdateActionById 949110 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
+      SecRuleUpdateActionById 959100 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-read-timeout: '360'
+      nginx.ingress.kubernetes.io/proxy-body-size: 100m
+      nginx.ingress.kubernetes.io/server-snippet: |
+        client_max_body_size 100m;
 
   livenessProbe:
     httpGet:
@@ -21,12 +36,6 @@ generic-service:
     httpGet:
       path: /ping
 
-  custommetrics:
-    enabled: true
-    scrapeInterval: 15s
-    metricsPath: /metrics
-    metricsPort: 3001
-
   # Environment variables to load into the deployment
   env:
     NODE_ENV: 'production'
@@ -35,8 +44,7 @@ generic-service:
     APPLICATIONINSIGHTS_CONNECTION_STRING: 'InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/'
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
-    INGRESS_URL: dpr-tools-ui-dev.hmpps.service.justice.gov.uk
-    AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
+    INGRESS_URL: dpr-tools.probation.hmpps.service.justice.gov.uk
     SYSTEM_TOKEN_ENABLED: true
 
   namespace_secrets:
@@ -52,8 +60,6 @@ generic-service:
       API_CLIENT_SECRET: 'api_client_secret'
       SYSTEM_CLIENT_ID: 'system_client_id'
       SYSTEM_CLIENT_SECRET: 'system_client_secret'
-      API_CLIENT_CREDENTIALS_ID: 'api_client_credentials_id'
-      API_CLIENT_CREDENTIALS_SECRET: 'api_client_credentials_secret'
     flipt:
       FLIPT_API_KEY: 'API_KEY'
       FLIPT_NAMESPACE: 'NAMESPACE'
@@ -61,11 +67,9 @@ generic-service:
 
   # Group name source: https://github.com/ministryofjustice/hmpps-ip-allowlists/blob/main/ip-allowlist-groups.yaml
   allowlist:
-    consultant-ip: 217.155.59.198
     groups:
       - circleci
       - internal
-      - prisons
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-dpr-tools-ui
+  targetApplication: hmpps-dpr-tools-ui-probation

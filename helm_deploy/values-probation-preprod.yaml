@@ -1,0 +1,23 @@
+# Per environment values which override defaults in hmpps-dpr-tools-ui/values.yaml
+
+generic-service:
+  ingress:
+    host: dpr-tools-preprod.probation.hmpps.service.justice.gov.uk
+
+  env:
+    INGRESS_URL: 'https://dpr-tools-preprod.probation.hmpps.service.justice.gov.uk'
+    HMPPS_AUTH_URL: 'https://sign-in-preprod.hmpps.service.justice.gov.uk/auth'
+    HMPPS_MANAGE_USERS_URL: 'https://manage-users-api-preprod.hmpps.service.justice.gov.uk'
+    TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-preprod.prison.service.justice.gov.uk'
+    API_URL: 'http://hmpps-dpr-tools-api-preprod.probation.hmpps.service.justice.gov.uk'
+    TOKEN_VERIFICATION_ENABLED: true
+    AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
+
+  scheduledDowntime:
+    enabled: true
+    startup: '40 7 * * 1-5' # Start at 7.40am UTC Monday-Friday
+    shutdown: '20 20 * * 1-5' # Stop at 8.20pm UTC Monday-Friday
+
+generic-prometheus-alerts:
+  businessHoursOnly: true
+  alertSeverity: probation-frontend-alerts-test

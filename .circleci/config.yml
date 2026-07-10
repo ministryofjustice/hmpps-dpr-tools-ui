@@ -1,21 +1,18 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7
-  slack: circleci/slack@4.12.5
+  hmpps: ministryofjustice/hmpps@11
+  slack: circleci/slack@4.12.1
   mem: circleci/rememborb@0.0.2
 
 parameters:
   alerts-slack-channel:
     type: string
-    # Normally team specific alert channel e.g. hmpps_tech_alerts, syscon-alerts, dps_sed_alerts
-    # This is to avoid a general alert dumping ground that no-one then monitors
     default: dpr_cicd_alerts
 
   releases-slack-channel:
     type: string
-    # Normally dps-releases for most teams / projects
-    default: dpr_cicd_alerts
+    default: dpr_cicd_approvals
 
   node-version:
     type: string
@@ -28,32 +25,36 @@ jobs:
       tag: << pipeline.parameters.node-version >>
     steps:
       - checkout
-      - run:
-          name: Update npm
-          command: 'sudo npm install -g npm@11'
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
-          command: npm run setup
+          command: npm run setup --no-audit
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
             - ~/.cache
       - run:
+          name: Build
           command: |
+            export GIT_REF="$CIRCLE_SHA1"
             npm run build
-      - run: # Run linter after build because the integration test code depend on compiled typescript...
+            DATE=$(date '+%Y-%m-%d')
+            export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
+            npm run record-build-info
+      - run:
+          # Run linter after build because the integration test code depend on compiled typescript...
           name: Linter check
           command: npm run lint
       - persist_to_workspace:
           root: .
           paths:
             - node_modules
+            - build-info.json
             - build
             - dist
-            - assets/stylesheets
+            - .cache/Cypress
 
   unit_test:
     executor:
@@ -93,52 +94,65 @@ jobs:
           command: java -jar wiremock.jar --port 9091
           background: true
       - run:
-          name: Run the node app.
+          name: Run the node (prisons) app.
           command: npm run start-feature
+          background: true
+      - run:
+          name: Run the node (probation) app.
+          command: npm run start-feature:probation
           background: true
       - run:
           name: Wait for node app to start
           command: sleep 5
+      - run:
+          name: Check typescript build
+          command: npm run typecheck
       - run:
           name: integration tests
           command: npm run int-test
       - store_test_results:
           path: test_results
       - store_artifacts:
-          path: integration_tests/videos
+          path: cypress-tests/integration-tests/videos
       - store_artifacts:
-          path: integration_tests/screenshots
+          path: cypress-tests/integration-tests/screenshots
 
-  save-app-version:
+  acceptance_test:
     executor:
-      name: hmpps/node
-      tag: << pipeline.parameters.node-version >>
+      name: hmpps/node_redis
+      node_tag: << pipeline.parameters.node-version >>
+      redis_tag: '7.0'
+    circleci_ip_ranges: true
     steps:
-      - run:
-          name: Save APP_VERSION to file
-          command: |
-            echo "Build.${CIRCLE_WORKFLOW_ID}" > /tmp/app_version.txt
-      - persist_to_workspace:
-          root: /tmp
-          paths:
-            - app_version.txt
-
-  restore-app-version:
-    executor:
-      name: hmpps/node
-      tag: << pipeline.parameters.node-version >>
-    steps:
+      - checkout
       - attach_workspace:
-          at: /tmp
+          at: ~/app
       - run:
-          name: Read APP_VERSION from file
-          command: |
-            APP_VERSION=$(cat /tmp/app_version.txt)
-            echo "Restored APP_VERSION: $APP_VERSION"
-            echo "export APP_VERSION='$APP_VERSION'" >> $BASH_ENV
+          name: Install missing OS dependency
+          command: sudo apt-get install libxss1
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Ensure old pods have spun down
+          command: sleep 30
+      - run:
+          name: acceptance tests
+          command: npm run acceptance-test
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: cypress-tests/acceptance-tests/videos
+      - store_artifacts:
+          path: cypress-tests/acceptance-tests/screenshots
+
+  remember-app-version:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    steps:
       - mem/remember:
           env_var: APP_VERSION
-          value: $APP_VERSION
+          value: 'Build.${CIRCLE_SHA1}'
 
 workflows:
   version: 2
@@ -155,24 +169,48 @@ workflows:
           requires:
             - build
       - hmpps/helm_lint:
-          name: helm_lint
+          name: helm_lint_dev
+      - hmpps/helm_lint:
+          name: helm_lint_test
+          env: test
+      - hmpps/helm_lint:
+          name: helm_lint_preprod
+          env: preprod
+      - hmpps/helm_lint:
+          name: helm_lint_prod
+          env: prod
+      - hmpps/helm_lint:
+          name: helm_lint_probation_dev
+          chart_name: hmpps-dpr-tools-ui-probation
+          env: probation-dev
+      - hmpps/helm_lint:
+          name: helm_lint_probation_test
+          chart_name: hmpps-dpr-tools-ui-probation
+          env: probation-test
+      - hmpps/helm_lint:
+          name: helm_lint_probation_preprod
+          chart_name: hmpps-dpr-tools-ui-probation
+          env: probation-preprod
+      - hmpps/helm_lint:
+          name: helm_lint_probation_prod
+          chart_name: hmpps-dpr-tools-ui-probation
+          env: probation-prod
       - hmpps/build_docker:
           name: build_docker
-          additional_docker_tag: 'Build.${CIRCLE_WORKFLOW_ID}'
+          additional_docker_tag: 'Build.${CIRCLE_SHA1}'
+          additional_docker_build_args: --build-arg GIT_REF=${CIRCLE_SHA1} --progress=plain
           filters:
             branches:
               only:
                 - main
-      - save-app-version:
-          name: save-version
-          requires:
-            - build_docker
-      - restore-app-version:
+                - tools-ui-probation
+      - remember-app-version:
           name: remember-version-for-dev
           requires:
-            - save-version
+            - build_docker
       - hmpps/deploy_env:
           name: deploy_dev
+          env: 'dev'
           jira_update: true
           release_name: PROJECT_NAME_ENV_NAME
           context:
@@ -182,21 +220,64 @@ workflows:
             branches:
               only:
                 - main
+                - tools-ui-probation
           requires:
-            - helm_lint
+            - helm_lint_dev
+            - helm_lint_test
+            - helm_lint_preprod
+            - helm_lint_prod
             - unit_test
             - integration_test
             - remember-version-for-dev
-          helm_timeout: 10m
+          helm_timeout: 5m
+      - remember-app-version:
+          name: remember-version-for-probation-dev
+          requires:
+            - build_docker
+      - hmpps/deploy_env:
+          name: deploy_probation_dev
+          env: 'probation-dev'
+          release_name: hmpps-dpr-tools-ui-probation
+          chart_name: hmpps-dpr-tools-ui-probation
+          jira_update: true
+          context:
+            - hmpps-common-vars
+            - hmpps-dpr-tools-ui-probation-dev
+          filters:
+            branches:
+              only:
+                - main
+                - tools-ui-probation
+          requires:
+            - helm_lint_probation_dev
+            - helm_lint_probation_test
+            - helm_lint_probation_preprod
+            - helm_lint_probation_prod
+            - unit_test
+            - integration_test
+            - remember-version-for-probation-dev
+          helm_timeout: 5m
+      - acceptance_test:
+          requires:
+            - deploy_dev
+          context:
+            - hmpps-digital-prison-reporting-mi-auth
       - request-test-approval:
           type: approval
           requires:
-            - deploy_dev
-      - restore-app-version:
+            - acceptance_test
+      - request-probation-test-approval:
+          type: approval
+          requires:
+            - acceptance_test
+      - remember-app-version:
           name: remember-version-for-test
           requires:
             - request-test-approval
-            - save-version
+      - remember-app-version:
+          name: remember-version-for-probation-test
+          requires:
+            - request-probation-test-approval
       - hmpps/deploy_env:
           name: deploy_test
           env: 'test'
@@ -207,16 +288,36 @@ workflows:
             - hmpps-dpr-tools-ui-test
           requires:
             - remember-version-for-test
-          helm_timeout: 10m
+          helm_timeout: 5m
+      - hmpps/deploy_env:
+          name: deploy_probation_test
+          env: 'probation-test'
+          jira_update: true
+          release_name: hmpps-dpr-tools-ui-probation
+          chart_name: hmpps-dpr-tools-ui-probation
+          context:
+            - hmpps-common-vars
+            - hmpps-dpr-tools-ui-probation-test
+          requires:
+            - helm_lint_probation_test
+            - remember-version-for-probation-test
+          helm_timeout: 5m
       - request-preprod-approval:
           type: approval
           requires:
-            - deploy_dev
-      - restore-app-version:
+            - acceptance_test
+      - request-probation-preprod-approval:
+          type: approval
+          requires:
+            - acceptance_test
+      - remember-app-version:
           name: remember-version-for-preprod
           requires:
             - request-preprod-approval
-            - save-version
+      - remember-app-version:
+          name: remember-version-for-probation-preprod
+          requires:
+            - request-probation-preprod-approval
       - hmpps/deploy_env:
           name: deploy_preprod
           env: 'preprod'
@@ -228,16 +329,37 @@ workflows:
             - hmpps-dpr-tools-ui-preprod
           requires:
             - remember-version-for-preprod
-          helm_timeout: 10m
+          helm_timeout: 5m
+      - hmpps/deploy_env:
+          name: deploy_probation_preprod
+          env: 'probation-preprod'
+          jira_update: true
+          jira_env_type: staging
+          release_name: hmpps-dpr-tools-ui-probation
+          chart_name: hmpps-dpr-tools-ui-probation
+          context:
+            - hmpps-common-vars
+            - hmpps-dpr-tools-ui-probation-preprod
+          requires:
+            - helm_lint_probation_preprod
+            - remember-version-for-probation-preprod
+          helm_timeout: 5m
       - request-prod-approval:
           type: approval
           requires:
             - deploy_preprod
-      - restore-app-version:
+      - request-probation-prod-approval:
+          type: approval
+          requires:
+            - deploy_probation_preprod
+      - remember-app-version:
           name: remember-version-for-prod
           requires:
             - request-prod-approval
-            - save-version
+      - remember-app-version:
+          name: remember-version-for-probation-prod
+          requires:
+            - request-probation-prod-approval
       - hmpps/deploy_env:
           name: deploy_prod
           env: 'prod'
@@ -251,46 +373,20 @@ workflows:
             - hmpps-dpr-tools-ui-prod
           requires:
             - remember-version-for-prod
-          helm_timeout: 10m
-
-  security:
-    triggers:
-      - schedule:
-          cron: '30 5 * * 1-5'
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - hmpps/npm_outdated:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          dependencies_to_check: typescript
+          helm_timeout: 5m
+      - hmpps/deploy_env:
+          name: deploy_probation_prod
+          env: 'probation-prod'
+          jira_update: true
+          jira_env_type: production
+          slack_notification: true
+          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+          release_name: hmpps-dpr-tools-ui-probation
+          chart_name: hmpps-dpr-tools-ui-probation
           context:
             - hmpps-common-vars
-      - hmpps/npm_security_audit:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - hmpps-common-vars
-      - hmpps/trivy_latest_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - hmpps-common-vars
-      - hmpps/veracode_pipeline_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - veracode-credentials
-            - hmpps-common-vars
-  security-weekly:
-    triggers:
-      - schedule:
-          cron: '0 5 * * 1'
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - hmpps/veracode_policy_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - veracode-credentials
-            - hmpps-common-vars
+            - hmpps-dpr-tools-ui-probation-prod
+          requires:
+            - helm_lint_probation_prod
+            - remember-version-for-probation-prod
+          helm_timeout: 5m
