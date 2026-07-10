@@ -1,7 +1,6 @@
 import IndexPage from '../../common/pages'
 import AuthSignInPage from '../../common/pages/authSignIn'
 import Page from '../../common/pages/page'
-import RequestPage from '../../common/pages/requestPage'
 
 context('report navigation smoke tests', () => {
   it('should have a breadcrumb on the list page back to the home page', () => {
