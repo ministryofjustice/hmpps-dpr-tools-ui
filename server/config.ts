@@ -47,6 +47,21 @@ const apiCommonConfig = {
   systemClientSecret: get('SYSTEM_CLIENT_SECRET', 'clientsecret', requiredInProduction),
 }
 
+const validAuthSources = ['nomis', 'delius', 'auth', 'none'] as const
+export type AuthSource = (typeof validAuthSources)[number]
+const getRequiredAuthSources = (): AuthSource[] => {
+  const authSources = String(get('REQUIRED_AUTH_SOURCES', 'nomis', requiredInProduction))
+    .split(',')
+    .map(authSource => authSource.trim().toLowerCase())
+    .filter(Boolean)
+
+  if (authSources.some(authSource => !validAuthSources.includes(authSource as AuthSource))) {
+    throw new Error(`REQUIRED_AUTH_SOURCES must contain only: ${validAuthSources.join(', ')}`)
+  }
+
+  return authSources as AuthSource[]
+}
+
 export default {
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
   productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
@@ -101,6 +116,8 @@ export default {
   authorisation: {
     roles: getAuthorisedRoles(),
   },
+  requiredAuthSources: getRequiredAuthSources(),
+  digitalPrisonServiceUrl: get('DPS_URL', 'http://localhost:3000', requiredInProduction),
   dpr: {
     routePrefix: 'dpr',
   },

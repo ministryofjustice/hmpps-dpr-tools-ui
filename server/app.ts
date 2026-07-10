@@ -22,6 +22,7 @@ import routes from './routes'
 import previewRoutes from './routes/preview'
 import type { Services } from './services'
 import config from './config'
+import authoriseAuthSource from './middleware/authoriseAuthSource'
 
 export default function createApp(services: Services): express.Application {
   const cwd = process.cwd()
@@ -44,6 +45,7 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware(config.authorisation.roles))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
+  app.use(authoriseAuthSource(layoutPath))
   app.use(setUpSystemToken(services))
   app.use(setupResources(services, layoutPath, env, config.dpr))
 
