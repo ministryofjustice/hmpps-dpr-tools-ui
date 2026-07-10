@@ -12,6 +12,7 @@
     "start-feature": "export $(cat feature.env) && node $NODE_DEBUG_OPTION dist/server.js | bunyan -o short",
     "start-feature:probation": "export $(cat feature-probation.env) && node $NODE_DEBUG_OPTION dist/server.js | bunyan -o short",
     "start-feature:dev": "export $(cat feature.env) && concurrently -k -p \"[{name}]\" -n \"ESBuild,Node\" -c \"yellow.bold,cyan.bold\" \"node esbuild/esbuild.config.js --build --watch\" \"node esbuild/esbuild.config.js --dev-test-server\"",
+    "record-build-info": "node ./bin/record-build-info",
     "lint": "eslint . --cache --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc && tsc -p integration_tests && tsc -p oauth2-mock-server",
