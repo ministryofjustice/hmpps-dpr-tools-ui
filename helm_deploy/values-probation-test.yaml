@@ -12,6 +12,7 @@ generic-service:
     API_URL: 'http://hmpps-dpr-tools-api-test.probation.hmpps.service.justice.gov.uk'
     TOKEN_VERIFICATION_ENABLED: true
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
+    DPS_URL: 'https://dps-dev.prison.service.justice.gov.uk'
     REQUIRED_AUTH_SOURCES: 'delius'
 
   scheduledDowntime:
