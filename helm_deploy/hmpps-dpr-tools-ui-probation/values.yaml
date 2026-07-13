@@ -1,5 +1,6 @@
 generic-service:
   nameOverride: hmpps-dpr-tools-ui-probation
+  productId: 'UNASSIGNED' # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
   replicaCount: 2
 
