@@ -339,10 +339,10 @@ workflows:
           chart_name: hmpps-dpr-tools-ui-probation
           context:
             - hmpps-common-vars
-            - hmpps-dpr-tools-ui-probation-preprod
+            - hmpps-dpr-tools-ui-preprod-probation
           requires:
             - helm_lint_probation_preprod
-            - remember-version-for-preprod-probation
+            - remember-version-for-probation-preprod
           helm_timeout: 5m
       - request-prod-approval:
           type: approval
@@ -385,8 +385,8 @@ workflows:
           chart_name: hmpps-dpr-tools-ui-probation
           context:
             - hmpps-common-vars
-            - hmpps-dpr-tools-ui-probation-prod
+            - hmpps-dpr-tools-ui-prod-probation
           requires:
             - helm_lint_probation_prod
-            - remember-version-for-prod-probation
+            - remember-version-for-probation-prod
           helm_timeout: 5m
