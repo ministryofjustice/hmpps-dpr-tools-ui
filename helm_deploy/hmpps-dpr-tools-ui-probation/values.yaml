@@ -50,7 +50,7 @@ generic-service:
   namespace_secrets:
     hmpps-dpr-tools-ui:
       APPINSIGHTS_INSTRUMENTATIONKEY: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-    hmpps-dpr-tools-ui-ec-cluster-output:
+    hmpps-dpr-tools-probation-ec-cluster-output:
       REDIS_HOST: 'primary_endpoint_address'
       REDIS_AUTH_TOKEN: 'auth_token'
     ui-session-secret:
