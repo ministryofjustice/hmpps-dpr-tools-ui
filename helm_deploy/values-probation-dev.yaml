@@ -9,7 +9,7 @@ generic-service:
     HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
     HMPPS_MANAGE_USERS_URL: 'https://manage-users-api-dev.hmpps.service.justice.gov.uk'
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
-    API_URL: 'http://hmpps-dpr-tools-api-dev.probation.hmpps.service.justice.gov.uk'
+    API_URL: 'http://dpr-tools-api-dev.probation.hmpps.service.justice.gov.uk'
     TOKEN_VERIFICATION_ENABLED: true
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     DPS_URL: 'https://dps-dev.prison.service.justice.gov.uk'
