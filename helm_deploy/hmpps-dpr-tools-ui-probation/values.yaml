@@ -45,7 +45,7 @@ generic-service:
     APPLICATIONINSIGHTS_CONNECTION_STRING: 'InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/'
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
-    INGRESS_URL: dpr-tools.probation.hmpps.service.justice.gov.uk
+    INGRESS_URL: dpr-tools.probation.service.justice.gov.uk
     SYSTEM_TOKEN_ENABLED: true
 
   namespace_secrets:
