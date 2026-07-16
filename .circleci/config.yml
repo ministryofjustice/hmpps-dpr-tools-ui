@@ -230,7 +230,10 @@ workflows:
           name: save-version
           requires:
             - build_docker
-      
+      - restore-app-version:
+          name: remember-version-for-dev
+          requires:
+            - save-version
       - hmpps/deploy_env:
           name: deploy_dev
           env: 'dev'
