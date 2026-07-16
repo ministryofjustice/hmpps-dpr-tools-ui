@@ -325,7 +325,7 @@ workflows:
             - hmpps-dpr-tools-ui-test-probation
           requires:
             - helm_lint_probation_test
-            - remember-version-for-probation-test
+            - remember-version-for-test-probation
           helm_timeout: 5m
       - request-preprod-approval:
           type: approval
@@ -369,7 +369,7 @@ workflows:
             - hmpps-dpr-tools-ui-preprod-probation
           requires:
             - helm_lint_probation_preprod
-            - remember-version-for-probation-preprod
+            - remember-version-for-preprod-probation
           helm_timeout: 5m
       - request-prod-approval:
           type: approval
@@ -417,5 +417,5 @@ workflows:
             - hmpps-dpr-tools-ui-prod-probation
           requires:
             - helm_lint_probation_prod
-            - remember-version-for-probation-prod
+            - remember-version-for-prod-probation
           helm_timeout: 5m
