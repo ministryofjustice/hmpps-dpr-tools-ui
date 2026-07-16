@@ -145,14 +145,36 @@ jobs:
       - store_artifacts:
           path: cypress-tests/acceptance-tests/screenshots
 
-  remember-app-version:
+  save-app-version:
     executor:
       name: hmpps/node
       tag: << pipeline.parameters.node-version >>
     steps:
+      - run:
+          name: Save APP_VERSION to file
+          command: |
+            echo "Build.${CIRCLE_WORKFLOW_ID}" > /tmp/app_version.txt
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - app_version.txt
+
+  restore-app-version:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Read APP_VERSION from file
+          command: |
+            APP_VERSION=$(cat /tmp/app_version.txt)
+            echo "Restored APP_VERSION: $APP_VERSION"
+            echo "export APP_VERSION='$APP_VERSION'" >> $BASH_ENV
       - mem/remember:
           env_var: APP_VERSION
-          value: 'Build.${CIRCLE_SHA1}'
+          value: $APP_VERSION
 
 workflows:
   version: 2
@@ -204,10 +226,11 @@ workflows:
               only:
                 - main
                 - tools-ui-probation
-      - remember-app-version:
-          name: remember-version-for-dev
+      - save-app-version:
+          name: save-version
           requires:
             - build_docker
+      
       - hmpps/deploy_env:
           name: deploy_dev
           env: 'dev'
@@ -230,10 +253,6 @@ workflows:
             - integration_test
             - remember-version-for-dev
           helm_timeout: 5m
-      - remember-app-version:
-          name: remember-version-for-probation-dev
-          requires:
-            - build_docker
       - hmpps/deploy_env:
           name: deploy_probation_dev
           env: 'probation-dev'
@@ -271,14 +290,16 @@ workflows:
           type: approval
           requires:
             - acceptance_test
-      - remember-app-version:
+      - restore-app-version:
           name: remember-version-for-test
           requires:
             - request-test-approval
-      - remember-app-version:
-          name: remember-version-for-probation-test
+            - save-version
+      - restore-app-version:
+          name: remember-version-for-test-probation
           requires:
             - request-probation-test-approval
+            - save-version
       - hmpps/deploy_env:
           name: deploy_test
           env: 'test'
@@ -311,14 +332,16 @@ workflows:
           type: approval
           requires:
             - acceptance_test
-      - remember-app-version:
+      - restore-app-version:
           name: remember-version-for-preprod
           requires:
             - request-preprod-approval
-      - remember-app-version:
-          name: remember-version-for-probation-preprod
+            - save-version
+      - restore-app-version:
+          name: remember-version-for-preprod-probation
           requires:
             - request-probation-preprod-approval
+            - save-version
       - hmpps/deploy_env:
           name: deploy_preprod
           env: 'preprod'
@@ -353,14 +376,16 @@ workflows:
           type: approval
           requires:
             - deploy_probation_preprod
-      - remember-app-version:
+      - restore-app-version:
           name: remember-version-for-prod
           requires:
             - request-prod-approval
-      - remember-app-version:
-          name: remember-version-for-probation-prod
+            - save-version
+      - restore-app-version:
+          name: remember-version-for-prod-probation
           requires:
             - request-probation-prod-approval
+            - save-version
       - hmpps/deploy_env:
           name: deploy_prod
           env: 'prod'
