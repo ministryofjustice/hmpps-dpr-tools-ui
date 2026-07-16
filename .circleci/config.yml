@@ -277,7 +277,7 @@ workflows:
             - helm_lint_probation_prod
             - unit_test
             - integration_test
-            - remember-version-for-probation-dev
+            - remember-version-for-dev
           helm_timeout: 5m
       - acceptance_test:
           requires:
