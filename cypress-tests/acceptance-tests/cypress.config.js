@@ -28,6 +28,6 @@ module.exports = defineConfig({
     PROBATION_PASSWORD: 'Populated from CYPRESS_PROBATION_PASSWORD env var',
     SIGN_IN_URL: 'sign-in-dev.hmpps.service.justice.gov.uk',
     API_BASE_URL: 'https://dpr-tools-ui-dev.hmpps.service.justice.gov.uk',
-    PROBATION_BASE_URL: 'https://dpr-tools-dev.probation.hmpps.service.justice.gov.uk/',
+    PROBATION_BASE_URL: 'https://dpr-tools-dev.probation.service.justice.gov.uk/',
   },
 })

@@ -18,9 +18,11 @@ passport.deserializeUser((user, done) => {
 
 export type AuthenticationMiddleware = (tokenVerifier: TokenVerifier) => RequestHandler
 
+export const ignoreAuthPaths = ['/info', '/health', '/ping']
+
 const authenticationMiddleware: AuthenticationMiddleware = verifyToken => {
   return async (req, res, next) => {
-    if (req.isAuthenticated() && (await verifyToken(req))) {
+    if ((req.isAuthenticated() && (await verifyToken(req))) || ignoreAuthPaths.includes(req.originalUrl)) {
       return next()
     }
     req.session.returnTo = req.originalUrl
@@ -31,8 +33,8 @@ const authenticationMiddleware: AuthenticationMiddleware = verifyToken => {
 function init(): void {
   const strategy = new Strategy(
     {
-      authorizationURL: `${config.apis.hmppsAuth.externalUrl}${config.apis.hmppsAuth.authorizeUri}`,
-      tokenURL: `${config.apis.hmppsAuth.url}${config.apis.hmppsAuth.tokenUri}`,
+      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
+      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
       clientID: config.apis.hmppsAuth.apiClientId,
       clientSecret: config.apis.hmppsAuth.apiClientSecret,
       callbackURL: `${config.domain}/sign-in/callback`,
