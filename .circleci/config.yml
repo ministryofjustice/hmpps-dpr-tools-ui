@@ -32,7 +32,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
-          command: npm run setup
+          command: npm run setup --no-audit
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
@@ -83,6 +83,9 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
+          name: Check typescript build
+          command: npm run typecheck
+      - run:
           name: Get wiremock
           command: curl -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.3.1/wiremock-standalone-3.3.1.jar
       - run:
@@ -92,6 +95,10 @@ jobs:
       - run:
           name: Run the node app.
           command: npm run start-feature
+          background: true
+      - run:
+          name: Run the node (probation) app.
+          command: npm run start-feature:probation
           background: true
       - run:
           name: Wait for node app to start
