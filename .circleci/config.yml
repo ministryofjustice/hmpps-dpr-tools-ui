@@ -251,7 +251,7 @@ workflows:
           jira_update: true
           context:
             - hmpps-common-vars
-            - hmpps-dpr-tools-ui-test-probation
+            - hmpps-dpr-tools-ui-probation-test
           requires:
             - remember-version-for-test-probation
           helm_timeout: 5m
@@ -293,7 +293,7 @@ workflows:
           jira_update: true
           context:
             - hmpps-common-vars
-            - hmpps-dpr-tools-ui-preprod-probation
+            - hmpps-dpr-tools-ui-probation-preprod
           requires:
             - remember-version-for-preprod-probation
           helm_timeout: 5m
@@ -337,7 +337,7 @@ workflows:
           jira_update: true
           context:
             - hmpps-common-vars
-            - hmpps-dpr-tools-ui-prod-probation
+            - hmpps-dpr-tools-ui-probation-prod
           requires:
             - remember-version-for-prod-probation
           helm_timeout: 5m
