@@ -2,14 +2,14 @@
 
 generic-service:
   ingress:
-    host: dpr-tools-test.probation.service.justice.gov.uk
+    host: dpr-tools-test-probation.hmpps.service.justice.gov.uk
 
   env:
-    INGRESS_URL: 'https://dpr-tools-test.probation.service.justice.gov.uk'
+    INGRESS_URL: 'https://dpr-tools-test-probation.hmpps.service.justice.gov.uk'
     HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
     HMPPS_MANAGE_USERS_URL: 'https://manage-users-api-dev.hmpps.service.justice.gov.uk'
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
-    API_URL: 'http://dpr-tools-api-test.probation.service.justice.gov.uk'
+    API_URL: 'http://dpr-tools-api-test-probation.hmpps.service.justice.gov.uk'
     TOKEN_VERIFICATION_ENABLED: true
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     DPS_URL: 'https://dps-dev.prison.service.justice.gov.uk'
