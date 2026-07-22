@@ -103,7 +103,7 @@ export default function routes(services: Services): Router {
 
   router.post('/preview/delete', (req, res) => {
     const deleteDefinitionId = req.body.deleteDefinition
-    const { token } = res.locals.user
+    const { token } = res.locals.dprUser
 
     services.previewClient.deleteDefinition(deleteDefinitionId, token).then(() => {
       res.redirect('/preview')
@@ -112,7 +112,7 @@ export default function routes(services: Services): Router {
 
   router.post('/preview/download', (req, res) => {
     const downloadDefinitionId = req.body.downloadDefinition
-    const { token } = res.locals.user
+    const { token } = res.locals.dprUser
 
     services.previewClient.downloadDefinition(downloadDefinitionId, token).then(result => {
       res.setHeader('Content-Type', 'application/json')
@@ -126,7 +126,7 @@ export default function routes(services: Services): Router {
 
   router.post('/preview/upload', upload.single('uploadDefinition'), (req, res) => {
     const definition = req.file
-    const { token } = res.locals.user
+    const { token } = res.locals.dprUser
 
     const definitionBody = definition.buffer.toString()
     const definitionId = JSON.parse(definitionBody).id
