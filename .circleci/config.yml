@@ -163,7 +163,6 @@ workflows:
             branches:
               only:
                 - main
-                - fix-token-usage
       - save-app-version:
           name: save-version
           requires:
@@ -183,7 +182,6 @@ workflows:
             branches:
               only:
                 - main
-                - fix-token-usage
           requires:
             - helm_lint
             - unit_test
