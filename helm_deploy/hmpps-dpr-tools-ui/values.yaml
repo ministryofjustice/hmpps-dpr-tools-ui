@@ -38,6 +38,7 @@ generic-service:
     INGRESS_URL: dpr-tools-ui-dev.hmpps.service.justice.gov.uk
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     SYSTEM_TOKEN_ENABLED: true
+    REQUIRED_AUTH_SOURCES: 'nomis'
 
   namespace_secrets:
     hmpps-dpr-tools-ui:

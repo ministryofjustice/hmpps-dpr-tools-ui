@@ -12,7 +12,6 @@ generic-service:
     API_URL: 'http://hmpps-dpr-tools-api-dev.hmpps-dpr-tools-dev.svc.cluster.local'
     TOKEN_VERIFICATION_ENABLED: true
     DPS_URL: 'https://dps-dev.prison.service.justice.gov.uk'
-    REQUIRED_AUTH_SOURCES: 'nomis'
 
   scheduledDowntime:
     enabled: true
