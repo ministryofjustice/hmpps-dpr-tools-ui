@@ -20,7 +20,7 @@ export default function authoriseAuthSource(layoutPath: string): RequestHandler 
         userAuthSource,
         path: req.originalUrl,
       },
-      'User attempted to access service with the wrong auth source',
+      `User attempted to access service with the wrong auth source - requiredAuthSources was ${requiredAuthSources} and userAuthSource was ${userAuthSource}`,
     )
 
     return res.status(403).render('dpr/routes/authError.njk', {
