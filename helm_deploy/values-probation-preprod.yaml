@@ -13,7 +13,6 @@ generic-service:
     TOKEN_VERIFICATION_ENABLED: true
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     DPS_URL: 'https://dps-preprod.prison.service.justice.gov.uk'
-    REQUIRED_AUTH_SOURCES: 'delius'
 
   scheduledDowntime:
     enabled: true

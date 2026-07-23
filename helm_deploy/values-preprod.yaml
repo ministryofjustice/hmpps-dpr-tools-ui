@@ -12,7 +12,6 @@ generic-service:
     API_URL: 'http://hmpps-dpr-tools-api-preprod.hmpps-dpr-tools-preprod.svc.cluster.local'
     TOKEN_VERIFICATION_ENABLED: true
     DPS_URL: 'https://dps-preprod.prison.service.justice.gov.uk'
-    REQUIRED_AUTH_SOURCES: 'nomis'
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-reporting-preprod
