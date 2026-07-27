@@ -167,7 +167,6 @@ workflows:
             branches:
               only:
                 - main
-                - tools-ui-probation
       - save-app-version:
           name: save-version
           requires:
@@ -187,7 +186,6 @@ workflows:
             branches:
               only:
                 - main
-                - tools-ui-probation
           requires:
             - helm_lint
             - unit_test
@@ -207,7 +205,6 @@ workflows:
             branches:
               only:
                 - main
-                - tools-ui-probation
           requires:
             - helm_lint
             - unit_test
