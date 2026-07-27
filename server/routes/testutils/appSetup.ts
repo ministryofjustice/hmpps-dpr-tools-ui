@@ -111,6 +111,7 @@ function appSetup(_production: boolean, userSupplier: () => Express.User): Expre
     req.flash = flashProvider
     res.locals = {
       user: { ...req.user },
+      dprUser: { ...req.user },
     }
     next()
   })
