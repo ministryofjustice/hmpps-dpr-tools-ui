@@ -2,7 +2,7 @@ import { configureAllowedScripts } from '@ministryofjustice/hmpps-npm-script-all
 
 export default configureAllowedScripts({
   allowlist: {
+    "node_modules/unrs-resolver@1.12.2": "FORBID",
     'node_modules/fsevents@2.3.3': 'FORBID',
-    'node_modules/esbuild@0.25.3': 'ALLOW',
   },
 })

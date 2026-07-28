@@ -14,12 +14,15 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
+    "inlineSources": true,
+    "sourceRoot": "/",
+    "isolatedModules": true,
     "typeRoots": ["./server/@types", "./node_modules/@types"]
   },
   "exclude": [
     "node_modules",
     "assets/**/*.js",
-    "integration_tests",
+    "cypress-tests",
     "dist",
     "cypress.config.ts",
     "coverage",
