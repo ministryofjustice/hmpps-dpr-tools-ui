@@ -1,35 +1,48 @@
+/* eslint-disable no-console */
+
 import { defineConfig } from 'cypress'
-import { resetStubs } from './integration_tests/mockApis/wiremock'
-import auth from './integration_tests/mockApis/auth'
-import tokenVerification from './integration_tests/mockApis/tokenVerification'
-import preview from './integration_tests/mockApis/preview'
-import manageUsers from './integration_tests/mockApis/manageUsers'
+import { resetStubs } from './cypress-tests/integration-tests/mockApis/wiremock'
+import auth from './cypress-tests/integration-tests/mockApis/auth'
+import tokenVerification from './cypress-tests/integration-tests/mockApis/tokenVerification'
+import reports from './cypress-tests/integration-tests/mockApis/reports'
+import manageUsers from './cypress-tests/integration-tests/mockApis/manageUsers'
+import frontendComponents from './cypress-tests/integration-tests/mockApis/frontendComponents'
 
 export default defineConfig({
   chromeWebSecurity: false,
-  fixturesFolder: 'integration_tests/fixtures',
-  screenshotsFolder: 'integration_tests/screenshots',
-  videosFolder: 'integration_tests/videos',
-  reporter: 'cypress-multi-reporters',
-  reporterOptions: {
-    configFile: 'reporter-config.json',
-  },
+  fixturesFolder: 'cypress-tests/integration-tests/fixtures',
+  screenshotsFolder: 'cypress-tests/integration-tests/screenshots',
+  videosFolder: 'cypress-tests/integration-tests/videos',
   taskTimeout: 60000,
+  video: true,
   e2e: {
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
+    env: {
+      prisonBaseUrl: 'http://localhost:3007',
+      probationBaseUrl: 'http://localhost:3005',
+    },
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
         ...auth,
-        ...manageUsers,
         ...tokenVerification,
-        ...preview,
+        ...reports,
+        ...manageUsers,
+        ...frontendComponents,
+        log(message) {
+          console.log(message)
+
+          return null
+        },
+        table(message) {
+          console.table(message)
+
+          return null
+        },
       })
     },
     baseUrl: 'http://localhost:3007',
     excludeSpecPattern: '**/!(*.cy).ts',
-    specPattern: 'integration_tests/e2e/**/*.cy.{js,jsx,ts,tsx}',
-    supportFile: 'integration_tests/support/index.ts',
+    specPattern: 'cypress-tests/integration-tests/e2e/**/*.cy.{js,jsx,ts,tsx}',
+    supportFile: 'cypress-tests/integration-tests/support/index.ts',
   },
 })

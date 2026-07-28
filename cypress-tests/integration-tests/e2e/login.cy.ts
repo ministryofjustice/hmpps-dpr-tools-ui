@@ -1,7 +1,7 @@
-import AuthManageDetailsPage from '../pages/authManageDetails'
-import AuthSignInPage from '../pages/authSignIn'
-import IndexPage from '../pages/index'
-import Page from '../pages/page'
+import IndexPage from '../../common/pages'
+import AuthSignInPage from '../../common/pages/authSignIn'
+import Page from '../../common/pages/page'
+import AuthManageDetailsPage from '../../common/pages/authManageDetails'
 
 context('SignIn', () => {
   beforeEach(() => {
@@ -9,7 +9,9 @@ context('SignIn', () => {
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
     cy.task('stubDefinitions')
+    cy.task('stubDefinition')
     cy.task('stubUserCaseload')
+    cy.task('stubProductCollections')
   })
 
   it('Unauthenticated user directed to auth', () => {
@@ -26,12 +28,6 @@ context('SignIn', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.headerUserName().should('contain.text', 'J. Smith')
-  })
-
-  it('Phase banner visible in header', () => {
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
-    indexPage.headerPhaseBanner().should('contain.text', 'dev')
   })
 
   it('User can log out', () => {

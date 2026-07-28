@@ -14,7 +14,7 @@ export default function populateCurrentUser(services: Services): RequestHandler 
           dprUser.id = user.uuid
           dprUser.emailAddress = user.email
           dprUser.displayName = user.displayName
-          res.locals.user = { ...user, ...res.locals.user }
+          res.locals.user = { ...user, ...res.locals.user, authSource: res.locals.user.authSource ?? user.authSource }
           req.session.userDetails = res.locals.user
           res.locals.dprUser = dprUser
         } else {

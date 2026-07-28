@@ -89,7 +89,63 @@ const stubDefinitions = () =>
         '      {\n' +
         '        "id": "last-month",\n' +
         '        "name": "Last month",\n' +
+        '        "description": "All movements in the past month"\n' +
+        '      }\n' +
+        '    ]\n' +
+        '  }\n' +
+        ']',
+    },
+  })
+
+const stubDefinitionExternalMovements = () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/reports/definitions/external-movements',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:
+        '  {\n' +
+        '    "id": "external-movements",\n' +
+        '    "name": "External Movements",\n' +
+        '    "description": "Reports about prisoner external movements",\n' +
+        '    "variants": [\n' +
+        '      {\n' +
+        '        "id": "last-month",\n' +
+        '        "name": "Last month",\n' +
+        '        "description": "All movements in the past month"\n' +
+        '      }\n' +
+        '    ],\n' +
+        '    "authorised": true\n' +
+        '  }',
+    },
+  })
+
+const stubDefinition = () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/reports/definitions/external-movements/last-month.*',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:
+        '  {\n' +
+        '    "id": "external-movements",\n' +
+        '    "name": "External Movements",\n' +
+        '    "description": "Reports about prisoner external movements",\n' +
+        '    "variant": {\n' +
+        '        "id": "last-month",\n' +
+        '        "name": "Last month",\n' +
         '        "resourceName": "external-movements",\n' +
+        '        "classification": "OFFICIAL",\n' +
         '        "description": "All movements in the past month",\n' +
         '        "specification": {\n' +
         '          "template": "list",\n' +
@@ -99,7 +155,8 @@ const stubDefinitions = () =>
         '              "display": "Prison Number",\n' +
         '              "sortable": true,\n' +
         '              "defaultsort": false,\n' +
-        '              "type": "string"\n' +
+        '              "type": "string",\n' +
+        '              "visible": true\n' +
         '            },\n' +
         '            {\n' +
         '              "name": "name",\n' +
@@ -107,7 +164,8 @@ const stubDefinitions = () =>
         '              "wordWrap": "None",\n' +
         '              "sortable": true,\n' +
         '              "defaultsort": false,\n' +
-        '              "type": "string"\n' +
+        '              "type": "string",\n' +
+        '              "visible": true\n' +
         '            },\n' +
         '            {\n' +
         '              "name": "date",\n' +
@@ -118,7 +176,8 @@ const stubDefinitions = () =>
         '              },\n' +
         '              "sortable": true,\n' +
         '              "defaultsort": true,\n' +
-        '              "type": "date"\n' +
+        '              "type": "date",\n' +
+        '              "visible": true\n' +
         '            },\n' +
         '            {\n' +
         '              "name": "origin",\n' +
@@ -126,7 +185,8 @@ const stubDefinitions = () =>
         '              "wordWrap": "None",\n' +
         '              "sortable": true,\n' +
         '              "defaultsort": false,\n' +
-        '              "type": "string"\n' +
+        '              "type": "string",\n' +
+        '              "visible": true\n' +
         '            },\n' +
         '            {\n' +
         '              "name": "destination",\n' +
@@ -134,7 +194,8 @@ const stubDefinitions = () =>
         '              "wordWrap": "None",\n' +
         '              "sortable": true,\n' +
         '              "defaultsort": false,\n' +
-        '              "type": "string"\n' +
+        '              "type": "string",\n' +
+        '              "visible": true\n' +
         '            },\n' +
         '            {\n' +
         '              "name": "direction",\n' +
@@ -154,58 +215,59 @@ const stubDefinitions = () =>
         '              },\n' +
         '              "sortable": true,\n' +
         '              "defaultsort": false,\n' +
-        '              "type": "string"\n' +
+        '              "type": "string",\n' +
+        '              "visible": true\n' +
         '            },\n' +
         '            {\n' +
         '              "name": "type",\n' +
         '              "display": "Type",\n' +
         '              "sortable": true,\n' +
         '              "defaultsort": false,\n' +
-        '              "type": "string"\n' +
+        '              "type": "string",\n' +
+        '              "visible": true\n' +
         '            },\n' +
         '            {\n' +
         '              "name": "reason",\n' +
         '              "display": "Reason",\n' +
         '              "sortable": true,\n' +
         '              "defaultsort": false,\n' +
-        '              "type": "string"\n' +
+        '              "type": "string",\n' +
+        '              "visible": true\n' +
         '            }\n' +
         '          ]\n' +
         '        }\n' +
         '      }\n' +
-        '    ]\n' +
-        '  }\n' +
-        ']',
+        '  }\n',
     },
   })
 
-const stubUploadDefinitionSuccess = () =>
+const stubUserCaseload = () =>
   stubFor({
     request: {
-      method: 'PUT',
-      urlPattern: '/reports/definitions/success',
+      method: 'GET',
+      urlPattern: '/reports/user/caseload/active',
     },
     response: {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
       },
-      fixedDelayMilliseconds: 1000,
+      body: '["ABC"]',
     },
   })
 
-const stubUploadDefinitionTimeout = () =>
+const stubProductCollections = () =>
   stubFor({
     request: {
-      method: 'PUT',
-      urlPattern: '/reports/definitions/timeout',
+      method: 'GET',
+      urlPattern: '/reports/productCollections',
     },
     response: {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
       },
-      fixedDelayMilliseconds: 3000,
+      body: '[]',
     },
   })
 
@@ -213,6 +275,8 @@ export default {
   stubExternalMovementsCount,
   stubExternalMovements,
   stubDefinitions,
-  stubUploadDefinitionSuccess,
-  stubUploadDefinitionTimeout,
+  stubDefinition,
+  stubUserCaseload,
+  stubProductCollections,
+  stubDefinitionExternalMovements,
 }
