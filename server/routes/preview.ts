@@ -1,11 +1,11 @@
-import { NextFunction, Request, type RequestHandler, Response, Router } from 'express'
-import multer from 'multer'
+import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/api'
 import CatalogueUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/catalogueUtils'
 import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/myReportsListUtils'
-import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/api'
+import { NextFunction, Request, type RequestHandler, Response, Router } from 'express'
+import multer from 'multer'
+import { reportDefinitionsToCards, variantDefinitionsToCards } from '../card-group/utils'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { reportDefinitionsToCards, variantDefinitionsToCards } from '../card-group/utils'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -61,7 +61,7 @@ export default function routes(services: Services): Router {
   })
 
   get('/preview', async (req, res) => {
-    const catalogue = await CatalogueUtils.initCatalogue({ res, services })
+    const catalogue = await CatalogueUtils.initCatalogue({ req, res, services })
     const myReportsData = await UserReportsListUtils.initMyReports(req, res, services, { maxRows: 10 })
 
     // Preview tool component
