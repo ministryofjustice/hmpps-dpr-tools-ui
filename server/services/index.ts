@@ -1,12 +1,14 @@
-import { type dprServices as dprServicesType } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/createDprServices'
-import { createDprServices } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/createDprServices'
+import {
+  createDprServices,
+  type dprServices as dprServicesType,
+} from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/createDprServices'
 
-import { dataAccess } from '../data'
-import UserService from './userService'
-import PreviewClient from '../data/previewClient'
 import { ApplicationInfo } from '../applicationInfo'
-import SystemTokenService from './systemTokenService'
 import config from '../config'
+import { dataAccess } from '../data'
+import PreviewClient from '../data/previewClient'
+import SystemTokenService from './systemTokenService'
+import UserService from './userService'
 
 export const services = (): Services => {
   const {
@@ -20,6 +22,7 @@ export const services = (): Services => {
     productCollectionClient,
     featureFlagService,
     hmppsAuthClient,
+    reportIdMigrationService,
   } = dataAccess()
 
   const userService = new UserService(hmppsManageUsersClient)
@@ -38,6 +41,7 @@ export const services = (): Services => {
       missingReportClient,
       productCollectionClient,
       featureFlagService,
+      reportIdMigrationService,
     },
     serviceConfig,
   )
