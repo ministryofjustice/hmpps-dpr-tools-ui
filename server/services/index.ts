@@ -34,9 +34,7 @@ export const services = (): Services => {
     saveDefaults: true,
   }
 
-  logger.info(
-    'FEATURE_FLAGS_CONFIG : ${featureFlagService}'
-  )
+  logger.info(`FEATURE_FLAGS_CONFIG : ${featureFlagService}`)
 
   const dprServices = createDprServices(
     {
@@ -51,9 +49,7 @@ export const services = (): Services => {
     serviceConfig,
   )
 
-  logger.info(
-    `SERVICE_CONFIG: ${serviceConfig}`
-  )
+  logger.info(`SERVICE_CONFIG: ${serviceConfig}`)
 
   const systemTokenService = new SystemTokenService(hmppsAuthClient, config.systemTokenEnabled)
 
