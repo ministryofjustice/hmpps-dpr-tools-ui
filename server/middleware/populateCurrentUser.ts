@@ -7,11 +7,7 @@ export default function populateCurrentUser(services: Services): RequestHandler 
   return async (req, res, next) => {
     try {
       if (res.locals.user) {
-        logger.info('SAVE_DEFAULTS_DEBUG: tools UI: locals user', JSON.stringify(res.locals.user))
-
         const user = await services.userService.getUser(res.locals.user.token)
-
-        logger.info('SAVE_DEFAULTS_DEBUG: tools UI:  service user', JSON.stringify(user))
 
         if (user) {
           const dprUser = new DprUser()
@@ -19,8 +15,6 @@ export default function populateCurrentUser(services: Services): RequestHandler 
           dprUser.id = user.uuid
           dprUser.emailAddress = user.email
           dprUser.displayName = user.displayName
-
-          logger.info('SAVE_DEFAULTS_DEBUG: tools UI:  dprUser user', JSON.stringify(dprUser))
 
           res.locals.user = { ...user, ...res.locals.user, authSource: res.locals.user.authSource ?? user.authSource }
           req.session.userDetails = res.locals.user
