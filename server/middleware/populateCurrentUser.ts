@@ -7,8 +7,17 @@ export default function populateCurrentUser(services: Services): RequestHandler 
   return async (req, res, next) => {
     try {
       if (res.locals.user) {
+<<<<<<< HEAD
         const user = await services.userService.getUser(res.locals.user.token)
 
+=======
+        logger.info('SAVE_DEFAULTS_DEBUG: tools UI: locals user', JSON.stringify(res.locals.user))
+
+        const user = await services.userService.getUser(res.locals.user.token)
+
+        logger.info('SAVE_DEFAULTS_DEBUG: tools UI:  service user', JSON.stringify(user))
+
+>>>>>>> main
         if (user) {
           const dprUser = new DprUser()
           dprUser.token = res.locals.user.token
@@ -16,9 +25,16 @@ export default function populateCurrentUser(services: Services): RequestHandler 
           dprUser.emailAddress = user.email
           dprUser.displayName = user.displayName
 
+<<<<<<< HEAD
+=======
+          logger.info('SAVE_DEFAULTS_DEBUG: tools UI:  dprUser user', JSON.stringify(dprUser))
+
+>>>>>>> main
           res.locals.user = { ...user, ...res.locals.user, authSource: res.locals.user.authSource ?? user.authSource }
           req.session.userDetails = res.locals.user
           res.locals.dprUser = dprUser
+
+          logger.info('SAVE_DEFAULTS_DEBUG: tools UI:  locals user', JSON.stringify(res.locals.dprUser))
         } else {
           logger.info('No user available')
         }
