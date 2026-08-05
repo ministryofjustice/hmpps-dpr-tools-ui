@@ -19,8 +19,6 @@ export default function populateCurrentUser(services: Services): RequestHandler 
           res.locals.user = { ...user, ...res.locals.user, authSource: res.locals.user.authSource ?? user.authSource }
           req.session.userDetails = res.locals.user
           res.locals.dprUser = dprUser
-
-          logger.info('SAVE_DEFAULTS_DEBUG: tools UI:  locals user', JSON.stringify(res.locals.dprUser))
         } else {
           logger.info('No user available')
         }
