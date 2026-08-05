@@ -1,5 +1,5 @@
 import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/api'
-import CatalogueUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/catalogueUtils'
+import { initCatalogue } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/reportCatalogueUtils'
 import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/myReportsListUtils'
 import { NextFunction, Request, type RequestHandler, Response, Router } from 'express'
 import multer from 'multer'
@@ -61,7 +61,7 @@ export default function routes(services: Services): Router {
   })
 
   get('/preview', async (req, res) => {
-    const catalogue = await CatalogueUtils.initCatalogue({ req, res, services })
+    const catalogue = await initCatalogue(res, req, services)
     const myReportsData = await UserReportsListUtils.initMyReports(req, res, services, { maxRows: 10 })
 
     // Preview tool component

@@ -1,17 +1,21 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import UserReportsListUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/myReportsListUtils'
-import CatalogueUtils from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/catalogueUtils'
 import { appWithAllRoutes } from './testutils/appSetup'
 
 let app: Express
+UserReportsListUtils.initMyReports = jest.fn()
+
+jest.mock('@ministryofjustice/hmpps-digital-prison-reporting-frontend/reportCatalogueUtils', () => ({
+  initCatalogue: jest.fn().mockResolvedValue({
+    catalogueConfig: { products: [], totals: { products: 0, variants: 0 }, headings: [] },
+    productCollectionConfig: {},
+  }),
+}))
 
 beforeEach(() => {
   app = appWithAllRoutes({})
 })
-
-UserReportsListUtils.initMyReports = jest.fn()
-CatalogueUtils.initCatalogue = jest.fn()
 
 afterEach(() => {
   jest.resetAllMocks()

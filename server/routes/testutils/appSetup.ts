@@ -104,7 +104,8 @@ function appSetup(_production: boolean, userSupplier: () => Express.User): Expre
 
   app.set('view engine', 'njk')
 
-  nunjucksSetup(app, testAppInfo)
+  const env = nunjucksSetup(app, testAppInfo)
+  env.addFilter('dpr.safe', (value: string) => value)
   app.use(cookieSession({ keys: [''] }))
   app.use((req, res, next) => {
     req.user = userSupplier()
