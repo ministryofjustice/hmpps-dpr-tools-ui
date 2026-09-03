@@ -14,9 +14,9 @@ export default class PreviewClient {
     })
   }
 
-  uploadDefinition(definitionId: string, definition: string, token: string): Promise<void> {
+  uploadDefinition(definition: string, token: string): Promise<void> {
     return new RestClient('Preview API Client', this.config, token).put({
-      path: `/definitions/${definitionId}`,
+      path: `/definitions`,
       data: definition,
       headers: {
         'content-type': 'application/json',

@@ -129,10 +129,9 @@ export default function routes(services: Services): Router {
     const { token } = res.locals.dprUser
 
     const definitionBody = definition.buffer.toString()
-    const definitionId = JSON.parse(definitionBody).id
 
     services.previewClient
-      .uploadDefinition(definitionId, definitionBody, token)
+      .uploadDefinition(definitionBody, token)
       .then(() => {
         res.redirect('/preview')
       })

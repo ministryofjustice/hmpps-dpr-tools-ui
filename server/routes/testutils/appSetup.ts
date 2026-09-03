@@ -72,7 +72,7 @@ const previewClient: PreviewClient = {
     definitions.pop()
     return Promise.resolve()
   },
-  uploadDefinition: (definitionId, definition) => {
+  uploadDefinition: definition => {
     definitions.push(JSON.parse(definition))
     return Promise.resolve()
   },
