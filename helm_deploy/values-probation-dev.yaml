@@ -5,7 +5,7 @@ generic-service:
     host: dpr-tools-probation-dev.hmpps.service.justice.gov.uk
 
   env:
-    INGRESS_URL: 'https://dpr-tools--probationdev.hmpps.service.justice.gov.uk'
+    INGRESS_URL: 'https://dpr-tools-probation-dev.hmpps.service.justice.gov.uk'
     HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
     HMPPS_MANAGE_USERS_URL: 'https://manage-users-api-dev.hmpps.service.justice.gov.uk'
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
