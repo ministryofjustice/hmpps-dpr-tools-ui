@@ -55,7 +55,7 @@
   "dependencies": {
     "basic-auth": "^2.0.1",
     "cors": "^2.8.5",
-    "express": "^4.21.2",
+    "express": "^5.2.1",
     "is-plain-object": "^5.0.0",
     "jose": "^5.10.0",
     "oauth2-mock-server": "^7.2.1"
