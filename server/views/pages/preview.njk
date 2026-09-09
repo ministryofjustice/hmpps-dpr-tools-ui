@@ -22,12 +22,13 @@
         >
 
         {% if errorMessage %}
+          {% set decodedErrorMessage = errorMessage | urldecode %}
           {{
             govukErrorSummary({
               titleText: errorSummary,
               errorList: [
                 {
-                  text: errorMessage
+                  text: decodedErrorMessage
                 }
               ]
             })
