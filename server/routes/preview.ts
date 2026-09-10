@@ -141,7 +141,8 @@ export default function routes(services: Services): Router {
           summary = 'Upload failed'
         }
         const message = reason.data ? reason.data.userMessage : reason.message
-        res.redirect(`/preview?errorSummary=${encodeURI(summary)}&errorMessage=${encodeURI(message)}`)
+        // We encode twice in case we end up with people putting in values into the DPD that get blocked by security rules, even when URL encoded.
+        res.redirect(`/preview?errorSummary=${encodeURI(summary)}&errorMessage=${encodeURI(encodeURI(message))}`)
       })
   })
 

@@ -1,5 +1,5 @@
 # Stage: base image
-FROM node:24.12-bullseye-slim AS base
+FROM node:24.12-bookworm-slim AS base
 
 ARG BUILD_NUMBER
 ARG GIT_REF
@@ -37,8 +37,9 @@ ARG BUILD_NUMBER
 ARG GIT_REF
 ARG GIT_BRANCH
 
-RUN apt-get update && \
-        apt-get install -y make python g++
+RUN apt-get update
+RUN apt-get install -y python-is-python3
+RUN apt-get install -y make python3 g++
 
 COPY package*.json ./
 COPY .npmrc ./
