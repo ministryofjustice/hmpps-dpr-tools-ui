@@ -123,7 +123,7 @@
     "is-plain-object": "^5.0.0",
     "jose": "^6.2.3",
     "jwt-decode": "^4.0.0",
-    "multer": "2.2.0",
+    "multer": "2.3.0",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
