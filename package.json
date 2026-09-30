@@ -148,7 +148,6 @@
     "@types/connect-flash": "0.0.40",
     "@types/cookie-session": "^2.0.49",
     "@types/cors": "^2.8.19",
-    "@types/csurf": "^1.11.3",
     "@types/express-session": "^1.18.2",
     "@types/fs-extra": "^11.0.4",
     "@types/http-errors": "^2.0.5",

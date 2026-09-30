@@ -1,3 +1,4 @@
+import { ExtraLocals } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/extraLocals'
 import type { UserDetails } from '../../services/userService'
 
 export default {}
@@ -7,13 +8,18 @@ declare module 'express-session' {
   interface SessionData {
     returnTo: string
     nowInMinutes: number
-    userDetails: User
+    userDetails: UserDetails
   }
 }
 
 export declare global {
   namespace Express {
-    interface User extends Partial<UserDetails> {
+    interface Locals extends ExtraLocals {
+      /** When true, GOV.UK / MoJ initAll run only inside #main-content so API header/footer scripts own the banner. */
+      scopeMoJGovInitToMain?: boolean
+    }
+    interface User {
+      username: string
       token: string
       authSource: string
     }
@@ -22,10 +28,6 @@ export declare global {
       verified?: boolean
       id: string
       logout(done: (err: unknown) => void): void
-    }
-
-    interface Locals {
-      user: Express.User
     }
   }
 }
