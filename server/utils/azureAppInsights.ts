@@ -1,5 +1,87 @@
-import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
-import type { ApplicationInfo } from '../applicationInfo'
+/* eslint no-param-reassign: 0 */
+
+import {
+  setup,
+  defaultClient,
+  TelemetryClient,
+  DistributedTracingModes,
+  Contracts,
+  getCorrelationContext,
+} from 'applicationinsights'
+import { EnvelopeTelemetry } from 'applicationinsights/out/Declarations/Contracts'
+import { components } from '@ministryofjustice/hmpps-digital-prison-reporting-frontend/api'
+import { RequestHandler, Request, Response } from 'express'
+import { v4 } from 'uuid'
+import fs from 'fs'
+import Dict = NodeJS.Dict
+
+const packageData = JSON.parse(fs.readFileSync('./package.json').toString())
+const { buildNumber } = fs.existsSync('./build-info.json')
+  ? JSON.parse(fs.readFileSync('./build-info.json').toString())
+  : { buildNumber: packageData.version }
+
+function defaultName(): string {
+  return packageData.name
+}
+
+function version(): string {
+  return buildNumber
+}
+
+export type ContextObject = {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  [name: string]: any
+}
+
+type CustomData = {
+  uuid: string
+  activeCaseLoadId: string
+  product?: string
+  reportName?: string
+  page?: number | string
+}
+const getCustomData = (
+  params: Dict<string>,
+  query: Request['query'],
+  body: Dict<string>,
+  locals: Response['locals'],
+): CustomData | object => {
+  if (locals.user) {
+    const { activeCaseLoadId } = locals.user
+    const { id } = locals.dprUser
+    const selectedPage = query ? query.selectedPage : null
+
+    let reportName
+    let variantName
+
+    if (locals.definitions && (!reportName || !variantName)) {
+      const reportId = params.reportId ?? params.report ?? body?.reportId
+      const variantId = params.variantId ?? params.variant ?? params.id ?? body?.id
+
+      locals.definitions
+        .filter((r: components['schemas']['ReportDefinitionSummary']) => r.id === reportId)
+        .forEach((r: components['schemas']['ReportDefinitionSummary']) => {
+          reportName = r.name
+
+          r.variants
+            .filter((v: components['schemas']['VariantDefinitionSummary']) => v.id === variantId)
+            .forEach(v => {
+              variantName = v.name
+            })
+        })
+    }
+
+    return {
+      uuid: id,
+      activeCaseLoadId,
+      product: reportName,
+      reportName: variantName,
+      page: selectedPage ? Number(selectedPage) : '',
+    }
+  }
+
+  return {}
+}
 
 export function initialiseAppInsights(): void {
   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
@@ -10,13 +92,98 @@ export function initialiseAppInsights(): void {
   }
 }
 
-export function buildAppInsightsClient(
-  { applicationName, buildNumber }: ApplicationInfo,
-  overrideName?: string,
-): TelemetryClient {
+const getStringifiedPath = (req: Request) => {
+  if (req?.route?.path instanceof Array) {
+    return req.route?.path.join('|')
+  }
+  // instanceof doesnt work on Strings
+  if (typeof req?.route?.path === 'string') {
+    return req.route.path
+  }
+  // Just in case it's something else weird
+  return JSON.stringify(req?.route?.path)
+}
+
+export function appInsightsMiddleware(): RequestHandler {
+  return (req, res, next) => {
+    res.prependOnceListener('finish', () => {
+      const context = getCorrelationContext()
+      if (context) {
+        if (req.route) {
+          // This can be either a string or an array usually
+          const path = getStringifiedPath(req)
+          context.customProperties.setProperty(
+            'operationName',
+            `${req.method} ${path?.replace(',', '|').replace('=', '$eq')}`,
+          )
+          context.customProperties.setProperty('operationId', v4())
+        }
+        const customData = getCustomData(req.params, req.query, req.body, res.locals)
+        Object.entries(customData).forEach(([k, v]) => context.customProperties.setProperty(k, String(v)))
+      }
+    })
+    next()
+  }
+}
+
+function addUserDataToRequests(envelope: EnvelopeTelemetry, contextObjects: Record<string, unknown> | undefined) {
+  const isRequest = envelope.data.baseType === Contracts.TelemetryTypeString.Request
+  if (isRequest) {
+    const { activeCaseLoad } = (contextObjects?.['http.ServerRequest'] as Request | undefined)?.res?.locals?.user || {}
+    const { id } = (contextObjects?.['http.ServerRequest'] as Request | undefined)?.res?.locals?.dprUser || {}
+    if (id) {
+      const properties = envelope.data.baseData?.properties
+      envelope.data.baseData ??= {}
+      envelope.data.baseData.properties = {
+        uuid: id,
+        activeCaseLoadId: activeCaseLoad?.caseLoadId,
+        ...properties,
+      }
+    }
+  }
+  return true
+}
+
+const addQueryDataToRequests = (
+  { tags, data }: EnvelopeTelemetry,
+  contextObjects: { [name: string]: any } | undefined,
+) => {
+  const customProperties = contextObjects?.correlationContext?.customProperties
+  const operationNameOverride = customProperties?.getProperty('operationName')
+  const uuidOverride = customProperties?.getProperty('uuid')
+  const activeCaseLoadIdOverride = customProperties?.getProperty('activeCaseLoadId')
+  const productOverride = customProperties?.getProperty('product')
+  const reportNameOverride = customProperties?.getProperty('reportName')
+  const pageOverride = customProperties?.getProperty('page')
+  if (operationNameOverride && tags) {
+    tags['ai.operation.name'] = operationNameOverride
+    tags['ai.operation.uuid'] = uuidOverride
+    tags['ai.operation.activecaseloadid'] = activeCaseLoadIdOverride
+    tags['ai.operation.product'] = productOverride
+    tags['ai.operation.report_name'] = reportNameOverride
+    tags['ai.operation.page'] = pageOverride
+    if (data?.baseData) {
+      data.baseData.properties.name = operationNameOverride
+      data.baseData.properties.uuid = uuidOverride
+      data.baseData.properties.activeCaseloadId = activeCaseLoadIdOverride
+      data.baseData.properties.product = productOverride
+      data.baseData.properties.report_name = reportNameOverride
+      data.baseData.properties.page = pageOverride
+    }
+  }
+  return true
+}
+
+export function buildAppInsightsClient(name = defaultName()): TelemetryClient | null {
   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
-    defaultClient.context.tags['ai.cloud.role'] = overrideName || applicationName
-    defaultClient.context.tags['ai.application.ver'] = buildNumber
+    defaultClient.context.tags['ai.cloud.role'] = name
+    defaultClient.context.tags['ai.application.ver'] = version()
+    defaultClient.addTelemetryProcessor(({ data }) => {
+      const { url } = data.baseData!
+      return !url?.endsWith('/health') && !url?.endsWith('/ping') && !url?.endsWith('/metrics')
+    })
+    defaultClient.addTelemetryProcessor(addUserDataToRequests)
+    defaultClient.addTelemetryProcessor(addQueryDataToRequests)
     return defaultClient
   }
   return null
