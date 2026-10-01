@@ -163,7 +163,7 @@
     "@types/querystringify": "^2.0.2",
     "@types/superagent": "^8.1.11",
     "@types/supertest": "^7.2.1",
-    "@types/uuid": "^10.0.0",
+    "@types/uuid": "^11.0.0",
     "@typescript-eslint/eslint-plugin": "^8.70.0",
     "audit-ci": "^7.1.0",
     "axe-core": "4.13.0",
