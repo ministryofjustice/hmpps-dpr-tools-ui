@@ -24,7 +24,8 @@ jobs:
       probation-chart-name: hmpps-dpr-tools-ui-probation
       probation-release-name: hmpps-dpr-tools-ui-probation
       deploy-dev-on-feature-branches: true
-      deploy-ref: 'refs/heads/PDHD-305'
+      deploy-test-on-feature-branches: true
+      deploy-preprod-on-feature-branches: true
       node-version: '24'
       slack-channel: 'dpr_cicd_alerts'
       # Image: ghcr.io/ministryofjustice/hmpps-dpr-tools-ui
