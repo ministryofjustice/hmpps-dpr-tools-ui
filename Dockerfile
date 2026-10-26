@@ -1,17 +1,9 @@
-# Stage: base image
-FROM node:24.12-bookworm-slim AS base
+# Stage: build assets
+FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine AS build
 
 ARG BUILD_NUMBER
 ARG GIT_REF
 ARG GIT_BRANCH
-
-LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
-
-ENV TZ=Europe/London
-RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
-
-RUN addgroup --gid 2000 --system appgroup && \
-        adduser --uid 2000 --system appuser --gid 2000
 
 WORKDIR /app
 
@@ -25,34 +17,20 @@ ENV BUILD_NUMBER=${BUILD_NUMBER}
 ENV GIT_REF=${GIT_REF}
 ENV GIT_BRANCH=${GIT_BRANCH}
 
-RUN apt-get update && \
-        apt-get upgrade -y && \
-        apt-get autoremove -y && \
-        rm -rf /var/lib/apt/lists/*
-
-# Stage: build assets
-FROM base as build
-
-ARG BUILD_NUMBER
-ARG GIT_REF
-ARG GIT_BRANCH
-
-RUN apt-get update
-RUN apt-get install -y python-is-python3
-RUN apt-get install -y make python3 g++
-
-COPY package*.json ./
-COPY .npmrc ./
-COPY .allowed-scripts.mjs ./
-RUN CYPRESS_INSTALL_BINARY=0 npm run setup --no-audit
+COPY package*.json .npmrc .allowed-scripts.mjs ./
+RUN CYPRESS_INSTALL_BINARY=0 NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false npm run setup
+ENV NODE_ENV='production'
 
 COPY . .
 RUN npm run build
 
-RUN npm prune --no-audit --omit=dev
+ENV BUILD_NUMBER=${BUILD_NUMBER}
+ENV GIT_REF=${GIT_REF}
+
+RUN npm prune --no-audit --omit=dev --no-fund
 
 # Stage: copy production assets and dependencies
-FROM base
+FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine-runtime
 
 COPY --from=build --chown=appuser:appgroup \
         /app/package.json \
@@ -69,6 +47,9 @@ COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
 
 EXPOSE 3000 3001
+
+ENV BUILD_NUMBER=${BUILD_NUMBER}
+ENV GIT_REF=${GIT_REF}
 ENV NODE_ENV='production'
 USER 2000
 
