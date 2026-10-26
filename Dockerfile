@@ -48,8 +48,6 @@ COPY --from=build --chown=appuser:appgroup \
 
 EXPOSE 3000 3001
 
-ENV BUILD_NUMBER=${BUILD_NUMBER}
-ENV GIT_REF=${GIT_REF}
 ENV NODE_ENV='production'
 USER 2000
 
