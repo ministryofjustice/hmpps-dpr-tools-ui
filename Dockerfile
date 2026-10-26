@@ -53,4 +53,4 @@ ENV GIT_REF=${GIT_REF}
 ENV NODE_ENV='production'
 USER 2000
 
-CMD ["sh", "-c", "node $NODE_OPTIONS dist/server.js | bunyan -o short"]
+CMD ["sh", "-c", "node $NODE_OPTIONS dist/server.js | node_modules/.bin/bunyan -o short"]
