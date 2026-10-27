@@ -24,13 +24,14 @@ ENV NODE_ENV='production'
 COPY . .
 RUN npm run build
 
-ENV BUILD_NUMBER=${BUILD_NUMBER}
-ENV GIT_REF=${GIT_REF}
-
 RUN npm prune --no-audit --omit=dev --no-fund
 
 # Stage: copy production assets and dependencies
 FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine-runtime
+
+ARG BUILD_NUMBER
+ARG GIT_REF
+ARG GIT_BRANCH
 
 COPY --from=build --chown=appuser:appgroup \
         /app/package.json \
@@ -45,6 +46,10 @@ COPY --from=build --chown=appuser:appgroup \
 
 COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
+
+ENV BUILD_NUMBER=${BUILD_NUMBER}
+ENV GIT_REF=${GIT_REF}
+ENV GIT_BRANCH=${GIT_BRANCH}
 
 EXPOSE 3000 3001
 
