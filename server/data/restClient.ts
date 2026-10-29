@@ -4,10 +4,10 @@ import Agent, { HttpsAgent } from 'agentkeepalive'
 import superagent from 'superagent'
 
 import logger from '../../logger'
-import sanitiseError from '../sanitisedError'
-import type { UnsanitisedError } from '../sanitisedError'
-import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
 import { ApiConfig } from '../config'
+import type { UnsanitisedError } from '../sanitisedError'
+import sanitiseError from '../sanitisedError'
+import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
 
 interface Request {
   path: string
@@ -172,7 +172,7 @@ export default class RestClient {
             reject(error)
           } else if (response) {
             const s = new Readable()
-            // eslint-disable-next-line no-underscore-dangle,@typescript-eslint/no-empty-function
+
             s._read = () => {}
             s.push(response.body)
             s.push(null)

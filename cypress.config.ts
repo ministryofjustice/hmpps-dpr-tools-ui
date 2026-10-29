@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 
 import { defineConfig } from 'cypress'
-import { resetStubs } from './cypress-tests/integration-tests/mockApis/wiremock'
 import auth from './cypress-tests/integration-tests/mockApis/auth'
-import tokenVerification from './cypress-tests/integration-tests/mockApis/tokenVerification'
-import reports from './cypress-tests/integration-tests/mockApis/reports'
-import manageUsers from './cypress-tests/integration-tests/mockApis/manageUsers'
 import frontendComponents from './cypress-tests/integration-tests/mockApis/frontendComponents'
+import manageUsers from './cypress-tests/integration-tests/mockApis/manageUsers'
+import reports from './cypress-tests/integration-tests/mockApis/reports'
+import tokenVerification from './cypress-tests/integration-tests/mockApis/tokenVerification'
+import { resetStubs } from './cypress-tests/integration-tests/mockApis/wiremock'
 
 export default defineConfig({
   chromeWebSecurity: false,
