@@ -136,6 +136,7 @@
   },
   "devDependencies": {
     "@bahmutov/cypress-esbuild-preprocessor": "github:bahmutov/cypress-esbuild-preprocessor",
+    "@eslint/config-helpers": "0.7.0",
     "@jest/globals": "30.5.2",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
     "@ministryofjustice/hmpps-precommit-hooks": "3.0.2",
@@ -165,6 +166,7 @@
     "@types/supertest": "^7.2.1",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.71.2",
+    "@typescript-eslint/parser": "8.72.0",
     "audit-ci": "^7.1.0",
     "axe-core": "4.14.0",
     "chokidar": "^3.6.0",
@@ -179,12 +181,11 @@
     "esbuild-plugin-copy": "^2.1.1",
     "esbuild-plugin-manifest": "^1.0.5",
     "esbuild-sass-plugin": "^3.7.0",
-    "eslint": "^8.56.0",
-    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-typescript": "^3.7.0",
-    "eslint-plugin-cypress": "^3.6.0",
-    "eslint-plugin-import": "^2.32.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-cypress": "^7.0.2",
+    "eslint-plugin-import-x": "4.17.1",
     "eslint-plugin-no-only-tests": "^3.4.0",
     "eslint-plugin-prettier": "^5.5.7",
     "glob": "^13.0.6",
@@ -201,6 +202,7 @@
     "sass": "^1.105.2",
     "supertest": "^7.3.1",
     "ts-jest": "^29.4.15",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "8.72.0"
   }
 }

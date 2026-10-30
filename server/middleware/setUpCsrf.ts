@@ -1,5 +1,5 @@
-import { Router } from 'express'
 import { csrfSync } from 'csrf-sync'
+import { Router } from 'express'
 
 const testMode = process.env.NODE_ENV === 'test'
 
@@ -14,7 +14,6 @@ export default function setUpCsrf(): Router {
       // By default, csrf-sync uses x-csrf-token header, but we use the token in forms and send it in the request body, so change getTokenFromRequest so it grabs from there
       getTokenFromRequest: req => {
         if (req.is('application/x-www-form-urlencoded')) {
-          // eslint-disable-next-line no-underscore-dangle
           return req.body._csrf
         }
 

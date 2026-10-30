@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken'
 import { Response } from 'superagent'
 
-import { stubFor, getMatchingRequests } from './wiremock'
-import tokenVerification from './tokenVerification'
 import { AuthSource } from './manageUsers'
+import tokenVerification from './tokenVerification'
+import { getMatchingRequests, stubFor } from './wiremock'
 
 const createToken = (authSource: AuthSource = 'nomis') => {
   const payload = {
