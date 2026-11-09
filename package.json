@@ -100,7 +100,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "9.0.0",
-    "@ministryofjustice/hmpps-digital-prison-reporting-frontend": "9.10.1",
+    "@ministryofjustice/hmpps-digital-prison-reporting-frontend": "9.11.0",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.3",
     "basic-auth": "^3.0.0",
@@ -188,7 +188,7 @@
     "eslint-plugin-import-x": "4.17.1",
     "eslint-plugin-no-only-tests": "^3.4.0",
     "eslint-plugin-prettier": "^5.5.7",
-    "glob": "^13.0.6",
+    "glob": "^14.0.2",
     "jest": "^30.5.1",
     "jest-html-reporter": "^4.4.2",
     "jest-junit": "^17.0.0",
