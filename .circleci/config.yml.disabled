@@ -161,6 +161,14 @@ workflows:
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
+          name: build_docker_test
+          additional_docker_tag: 'Build.${CIRCLE_WORKFLOW_ID}'
+          publish: false
+          filters:
+            branches:
+              ignore:
+                - main
+      - hmpps/build_docker:
           name: build_docker
           additional_docker_tag: 'Build.${CIRCLE_WORKFLOW_ID}'
           filters:

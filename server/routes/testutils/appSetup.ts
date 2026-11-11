@@ -86,13 +86,13 @@ const testAppInfo: ApplicationInfo = {
   branchName: 'main',
 }
 
-export const user: Express.User = {
-  name: 'FIRST LAST',
+export const user = {
+  firstName: 'first',
+  lastName: 'last',
   userId: 'id',
   token: 'token',
   username: 'user1',
-  displayName: 'First Last',
-  active: true,
+  display: 'First Last',
   activeCaseLoadId: 'MDI',
   authSource: 'NOMIS',
 }
@@ -112,7 +112,36 @@ function appSetup(_production: boolean, userSupplier: () => Express.User): Expre
     req.flash = flashProvider
     res.locals = {
       user: { ...req.user },
-      dprUser: { ...req.user },
+      bookmarkingEnabled: true,
+      collectionsEnabled: true,
+      csrfToken: '',
+      definitions: [],
+      downloadingEnabled: true,
+      dprUser: {
+        ...req.user,
+        id: 'dprUser',
+      },
+      featureFlags: {
+        flags: {},
+        lastUpdated: 0,
+      },
+      nestedBaseUrl: '',
+      requestMissingEnabled: true,
+      saveDefaultsEnabled: true,
+      dprPaths: {
+        bookmarkActionEndpoint: '',
+        downloadActionEndpoint: '',
+        productCollectionEndpoint: '',
+        bookmarkListPath: '',
+        requestedListPath: '',
+        recentlyViewedListPath: '',
+        reportsCatalogue: '',
+        userReportsList: '',
+        dprHomepage: '',
+        requestReportPath: '',
+        viewReportPath: '',
+        subscribePath: '',
+      },
     }
     next()
   })

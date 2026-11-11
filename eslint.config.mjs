@@ -1,0 +1,191 @@
+/* eslint-disable import-x/no-extraneous-dependencies */
+
+import { defineConfig, globalIgnores } from '@eslint/config-helpers'
+import { importX } from 'eslint-plugin-import-x'
+import noOnlyTests from 'eslint-plugin-no-only-tests'
+import eslintPluginPrettier from 'eslint-plugin-prettier'
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
+
+export default defineConfig([
+  globalIgnores([
+    'node_modules',
+    'public',
+    'assets',
+    'cypress.json',
+    'reporter-config.json',
+    'dist/',
+    'oauth2-mock-server',
+    'logs',
+    '*.log',
+    'npm-debug.log*',
+    'lerna-debug.log*',
+    'report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json',
+    'pids',
+    '*.pid',
+    '*.seed',
+    '*.pid.lock',
+    'lib-cov',
+    'coverage',
+    '*.lcov',
+    '.nyc_output',
+    '.grunt',
+    'bower_components',
+    '.lock-wscript',
+    'build/Release',
+    'node_modules/',
+    'jspm_packages/',
+    'web_modules/',
+    '*.tsbuildinfo',
+    '.npm',
+    '.eslintcache',
+    '.rpt2_cache/',
+    '.rts2_cache_cjs/',
+    '.rts2_cache_es/',
+    '.rts2_cache_umd/',
+    '.node_repl_history',
+    '*.tgz',
+    '.env',
+    '.env.test',
+    '.cache',
+    '.parcel-cache',
+    '.next',
+    'out',
+    '.nuxt',
+    'dist',
+    '.cache/',
+    '.vuepress/dist',
+    '.serverless/',
+    '.fusebox/',
+    '.dynamodb/',
+    '.tern-port',
+    '.vscode-test',
+    '.pnp.*',
+    'assets/stylesheets/*.css',
+    '.idea',
+    '.vscode',
+    'dist/',
+    'test_results/',
+    'cypress-tests/**/*.png',
+    'cypress-tests/**/*.mp4',
+    '*/*.iml',
+    '**/Chart.lock',
+    'wiremock.jar',
+  ]),
+  {
+    plugins: {
+      'import-x': importX,
+      'no-only-tests': noOnlyTests,
+      prettier: eslintPluginPrettier,
+    },
+    settings: {
+      'import-x/resolver': {
+        typescript: true,
+      },
+    },
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.jest,
+      },
+    },
+    rules: {
+      'dot-notation': 'off',
+      'import-x/prefer-default-export': 'off',
+      'no-use-before-define': 0,
+      semi: 0,
+      'import-x/no-unresolved': 'error',
+      'import-x/extensions': [
+        'error',
+        'ignorePackages',
+        {
+          js: 'never',
+          mjs: 'never',
+          jsx: 'never',
+          ts: 'never',
+          tsx: 'never',
+        },
+      ],
+      'comma-dangle': ['error', 'always-multiline'],
+      'import-x/no-extraneous-dependencies': [
+        'error',
+        {
+          devDependencies: [
+            '**/*.spec.ts',
+            '**/*.test.js',
+            '**/*.test.ts',
+            '**/testutils/**',
+            'playwright.config.ts',
+            'cypress.config.ts',
+            'cypress.testapp.config.ts',
+            'sharedCypressConfig.ts',
+          ],
+        },
+      ],
+      'no-only-tests/no-only-tests': 'error',
+      'prettier/prettier': [
+        'error',
+        {
+          trailingComma: 'all',
+          singleQuote: true,
+          printWidth: 120,
+          semi: false,
+        },
+      ],
+      'no-unused-vars': [
+        1,
+        {
+          argsIgnorePattern: 'res|next|^err|_',
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
+  {
+    files: ['**/*.ts'],
+    extends: [...tseslint.configs.recommended],
+    plugins: {
+      'import-x': importX,
+      prettier: eslintPluginPrettier,
+    },
+    settings: {
+      'import-x/resolver': {
+        typescript: true,
+      },
+    },
+    rules: {
+      'class-methods-use-this': 0,
+      'no-useless-constructor': 0,
+      'no-unused-vars': 'off',
+      'no-console': 'error',
+      'no-param-reassign': ['error', { props: false }],
+      'import-x/no-unresolved': 'error',
+      'import-x/no-named-as-default': 0,
+      'import-x/no-named-as-default-member': 0,
+      'import-x/extensions': 0,
+      'prettier/prettier': [
+        'error',
+        {
+          trailingComma: 'all',
+          singleQuote: true,
+          printWidth: 120,
+          semi: false,
+        },
+      ],
+      'no-shadow': 'off',
+      '@typescript-eslint/no-use-before-define': 0,
+      '@typescript-eslint/no-shadow': ['error'],
+      '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        1,
+        {
+          argsIgnorePattern: 'res|next|^err|_',
+          ignoreRestSiblings: true,
+        },
+      ],
+      '@typescript-eslint/semi': 0,
+    },
+  },
+])

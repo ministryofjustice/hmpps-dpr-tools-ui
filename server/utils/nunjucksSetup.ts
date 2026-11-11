@@ -1,12 +1,11 @@
-/* eslint-disable no-param-reassign */
-import path from 'path'
-import nunjucks, { type Environment } from 'nunjucks'
 import express from 'express'
 import fs from 'fs'
-import { initialiseName } from './utils'
+import nunjucks, { type Environment } from 'nunjucks'
+import path from 'path'
+import logger from '../../logger'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
-import logger from '../../logger'
+import { initialiseName } from './utils'
 
 const production = process.env.NODE_ENV === 'production'
 
