@@ -1,24 +1,56 @@
 name: Release
 
-# Helm-only promote. Triggered manually or by digital-prison-reporting-releases.
-# Does not rebuild — image tag must already exist in GHCR.
+# TEST BRANCH ONLY (PDHD-305) — DO NOT MERGE.
+# Helm-only release of an existing tag. Does not rebuild the image.
+# hmpps-reporting-releases dispatches environment, release-tag, verify-image,
+# and optional release-values-yaml.
 
 on:
+  # Push trigger only registers this workflow so it can be dispatched before
+  # release.yml exists on main (the job is skipped on push).
+  push:
+    # BEFORE MERGE TO MAIN: branches: [main]
+    branches: [PDHD-305]
   workflow_dispatch:
     inputs:
       environment:
         description: Target environment (must match a GitHub Environment)
         type: choice
         options:
+          - dev
+          - test
           - preprod
           - prod
-          - test
-          - dev
+          - probation-dev
+          - probation-test
+          - probation-preprod
+          - probation-prod
         required: true
-      app-version:
-        description: Existing image tag (e.g. Build.<sha>)
+      release-tag:
+        description: Stable app release tag (e.g. v1.0.1)
         type: string
-        required: true
+        required: false
+        default: ''
+      app-version:
+        description: dev/test only, instead of release-tag (rc-* label or Build.<sha>)
+        type: string
+        required: false
+        default: ''
+      checkout-ref:
+        description: dev/test only, with app-version (commit SHA for chart + values)
+        type: string
+        required: false
+        default: ''
+      helm-chart-name:
+        description: Chart to deploy (default hmpps-dpr-tools-ui; probation = hmpps-dpr-tools-ui-probation)
+        type: string
+        required: false
+        default: ''
+      release-name:
+        description: Helm release name (default = chart-name-environment)
+        type: string
+        required: false
+        default: ''
       release-values-yaml:
         description: Optional extra Helm values YAML (from releases config/)
         type: string
@@ -37,12 +69,16 @@ permissions:
 
 jobs:
   release:
-    uses: ministryofjustice/hmpps-reporting-workflows/.github/workflows/generic_release_pipeline.yml@v1
+    if: github.event_name == 'workflow_dispatch'
+    uses: ministryofjustice/hmpps-reporting-workflows/.github/workflows/generic_release_pipeline.yml@test/tag-based-releases
     secrets: inherit
     with:
       environment: ${{ inputs.environment }}
+      release-tag: ${{ inputs.release-tag }}
       app-version: ${{ inputs.app-version }}
-      # Defaults: chart/release = repo name (hmpps-dpr-tools-ui)
+      checkout-ref: ${{ inputs.checkout-ref }}
+      helm-chart-name: ${{ inputs.helm-chart-name }}
+      release-name: ${{ inputs.release-name }}
       release-values-yaml: ${{ inputs.release-values-yaml }}
       verify-image: ${{ inputs.verify-image == true || inputs.verify-image == 'true' }}
       slack-notification: ${{ inputs.environment == 'prod' && 'true' || 'false' }}
