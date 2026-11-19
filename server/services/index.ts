@@ -31,6 +31,7 @@ export const services = (): Services => {
     bookmarking: true,
     download: true,
     saveDefaults: true,
+    dashboardAudit: true,
   }
 
   const dprServices = createDprServices(
