@@ -128,6 +128,7 @@ function appSetup(_production: boolean, userSupplier: () => Express.User): Expre
       nestedBaseUrl: '',
       requestMissingEnabled: true,
       saveDefaultsEnabled: true,
+      dashboardAuditEnabled: true,
       dprPaths: {
         bookmarkActionEndpoint: '',
         downloadActionEndpoint: '',
