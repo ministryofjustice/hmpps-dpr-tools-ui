@@ -6,6 +6,9 @@ import multer from 'multer'
 import { reportDefinitionsToCards, variantDefinitionsToCards } from '../card-group/utils'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
+import { UploadDefinitionResponse } from '../data/previewClient'
+
+const FLASH_UPLOAD_ERRORS_KEY = 'UPLOAD_ERRORS'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -70,14 +73,22 @@ export default function routes(services: Services): Router {
       value: definition.id,
       text: definition.name,
     }))
-    const { errorSummary, errorMessage } = req.query
+    const rawErrors = req.flash(FLASH_UPLOAD_ERRORS_KEY)
+    const errors = rawErrors?.[0] && (JSON.parse(rawErrors[0]) as UploadDefinitionResponse)
+    const mappedErrors = errors?.map(err => {
+      let html = `<div><div><strong>Path</strong>: ${err.path}</div><div><strong>Issue</strong>: ${err.issueTypeDescription}</div>`
+      if (err.extraHint) {
+        html += `<div><strong>Location</strong> or issue hint: ${err.extraHint}</div>`
+      }
+      html += `</div>`
+      return { html }
+    })
 
     res.render('pages/preview', {
       title: 'Preview Reports',
       cards: { items: reportDefinitionsToCards(reportDefinitions, '/preview/definitions'), variant: 1 },
       definitions: toolDefinitions,
-      errorSummary,
-      errorMessage,
+      errors: mappedErrors,
       breadCrumbList: [{ title: 'Home', href: '/' }],
       myReportsData,
       catalogue,
@@ -139,10 +150,17 @@ export default function routes(services: Services): Router {
         let summary = 'Invalid definition'
         if (reason.status !== 400) {
           summary = 'Upload failed'
+          ;(reason.data as UploadDefinitionResponse) = [
+            {
+              path: 'N/A',
+              issueType: 'UNKNOWN_ISSUE',
+              issueTypeDescription: summary,
+              extraHint: reason.message,
+            },
+          ]
         }
-        const message = reason.data ? reason.data.userMessage : reason.message
-        // We encode twice in case we end up with people putting in values into the DPD that get blocked by security rules, even when URL encoded.
-        res.redirect(`/preview?errorSummary=${encodeURI(summary)}&errorMessage=${encodeURI(encodeURI(message))}`)
+        req.flash(FLASH_UPLOAD_ERRORS_KEY, JSON.stringify(reason.data))
+        res.redirect(`/preview`)
       })
   })
 
