@@ -33,7 +33,6 @@ module.exports = defineConfig({
       }
 
       // Log presence only (never values) so CI can confirm secrets: inherit worked.
-      // eslint-disable-next-line no-console
       console.log(
         `[acceptance] credentials present: USERNAME=${Boolean(config.env.USERNAME)} ` +
           `PASSWORD=${Boolean(config.env.PASSWORD)} ` +
