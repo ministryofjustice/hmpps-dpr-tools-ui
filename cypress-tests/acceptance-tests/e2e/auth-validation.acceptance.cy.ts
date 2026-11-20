@@ -3,10 +3,12 @@ import Page from '../../common/pages/page'
 
 const authErrorMessage = 'Sorry, there is a problem with authenticating your request.'
 
+const typeOpts = { log: false, parseSpecialCharSequences: false }
+
 const signIn = (username: string, password: string) => {
   const page = Page.verifyOnPage(AuthSignInPage)
-  page.usernameInput().type(username)
-  page.passwordInput().type(password)
+  page.usernameInput().clear().type(username, typeOpts)
+  page.passwordInput().clear().type(password, typeOpts)
   page.signInButton().click()
 }
 

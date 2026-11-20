@@ -7,8 +7,9 @@ context('home/catalogue page smoke tests', () => {
   it('should show the reports list', () => {
     cy.visit('/?dataProductDefinitionsPath=definitions%2Fprisons%2Ftest')
     const page = Page.verifyOnPage(AuthSignInPage)
-    page.usernameInput().type(Cypress.env('USERNAME'))
-    page.passwordInput().type(Cypress.env('PASSWORD'))
+    const typeOpts = { log: false, parseSpecialCharSequences: false }
+    page.usernameInput().clear().type(Cypress.env('USERNAME'), typeOpts)
+    page.passwordInput().clear().type(Cypress.env('PASSWORD'), typeOpts)
     page.signInButton().click()
     cy.visit('/?dataProductDefinitionsPath=definitions%2Fprisons%2Ftest')
     const indexPage = Page.verifyOnPage(IndexPage)
@@ -18,8 +19,9 @@ context('home/catalogue page smoke tests', () => {
   it('should take me to the reports page when clicking the reports card', () => {
     cy.visit('/?dataProductDefinitionsPath=definitions%2Fprisons%2Ftest')
     const page = Page.verifyOnPage(AuthSignInPage)
-    page.usernameInput().type(Cypress.env('USERNAME'))
-    page.passwordInput().type(Cypress.env('PASSWORD'))
+    const typeOpts = { log: false, parseSpecialCharSequences: false }
+    page.usernameInput().clear().type(Cypress.env('USERNAME'), typeOpts)
+    page.passwordInput().clear().type(Cypress.env('PASSWORD'), typeOpts)
     page.signInButton().click()
     cy.visit('/?dataProductDefinitionsPath=definitions%2Fprisons%2Ftest')
     const verifyPage = Page.verifyOnPage(IndexPage)
