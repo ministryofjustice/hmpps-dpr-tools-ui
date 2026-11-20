@@ -66,17 +66,18 @@ const downloadPermissionService: dprServices['downloadPermissionService'] = {
   enabled: true,
 } as unknown as dprServices['downloadPermissionService']
 
-// @ts-expect-error Incomplete value for testing
-const previewClient: PreviewClient = {
-  deleteDefinition: () => {
+// Incomplete PreviewClient for route tests — cast avoids private-field / signature drift.
+const previewClient = {
+  deleteDefinition: (_definitionId: string, _token: string) => {
     definitions.pop()
     return Promise.resolve()
   },
-  uploadDefinition: definition => {
+  uploadDefinition: (definition: string, _token: string) => {
     definitions.push(JSON.parse(definition))
-    return Promise.resolve()
+    return Promise.resolve({})
   },
-}
+  downloadDefinition: (_definitionId: string, _token: string) => Promise.resolve(new Response()),
+} as unknown as PreviewClient
 
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',

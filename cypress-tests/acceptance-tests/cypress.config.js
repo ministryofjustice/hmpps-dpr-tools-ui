@@ -14,18 +14,38 @@ module.exports = defineConfig({
   e2e: {
     specPattern: '**/*.acceptance.cy.ts',
     async setupNodeEvents(on, config) {
-      // This is required for the preprocessor to be able to generate JSON reports after each run, and more,
       on('file:preprocessor', createBundler())
+
+      // Explicitly map CI secrets — do not rely on config placeholders winning over CYPRESS_*.
+      config.env.USERNAME = process.env.CYPRESS_USERNAME || ''
+      config.env.PASSWORD = process.env.CYPRESS_PASSWORD || ''
+      config.env.PROBATION_USERNAME = process.env.CYPRESS_PROBATION_USERNAME || ''
+      config.env.PROBATION_PASSWORD = process.env.CYPRESS_PROBATION_PASSWORD || ''
+
+      const missing = ['USERNAME', 'PASSWORD', 'PROBATION_USERNAME', 'PROBATION_PASSWORD'].filter(
+        key => !config.env[key],
+      )
+      if (missing.length) {
+        throw new Error(
+          `Acceptance tests missing Cypress credentials: ${missing.join(', ')}. ` +
+            'Set repo secrets CYPRESS_USERNAME, CYPRESS_PASSWORD, CYPRESS_PROBATION_USERNAME, CYPRESS_PROBATION_PASSWORD.',
+        )
+      }
+
+      // Log presence only (never values) so CI can confirm secrets: inherit worked.
+      console.log(
+        `[acceptance] credentials present: USERNAME=${Boolean(config.env.USERNAME)} ` +
+          `PASSWORD=${Boolean(config.env.PASSWORD)} ` +
+          `PROBATION_USERNAME=${Boolean(config.env.PROBATION_USERNAME)} ` +
+          `PROBATION_PASSWORD=${Boolean(config.env.PROBATION_PASSWORD)}`,
+      )
+
       return config
     },
     baseUrl: 'https://dpr-tools-ui-dev.hmpps.service.justice.gov.uk/',
     supportFile: 'cypress-tests/acceptance-tests/support/index.ts',
   },
   env: {
-    USERNAME: 'Populated from CYPRESS_USERNAME env var',
-    PASSWORD: 'Populated from CYPRESS_PASSWORD env var',
-    PROBATION_USERNAME: 'Populated from CYPRESS_PROBATION_USERNAME env var',
-    PROBATION_PASSWORD: 'Populated from CYPRESS_PROBATION_PASSWORD env var',
     SIGN_IN_URL: 'sign-in-dev.hmpps.service.justice.gov.uk',
     API_BASE_URL: 'https://dpr-tools-ui-dev.hmpps.service.justice.gov.uk',
     PROBATION_BASE_URL: 'https://dpr-tools-probation-dev.hmpps.service.justice.gov.uk/',
