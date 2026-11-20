@@ -74,7 +74,7 @@ const previewClient = {
   },
   uploadDefinition: (definition: string, _token: string) => {
     definitions.push(JSON.parse(definition))
-    return Promise.resolve({})
+    return Promise.resolve([])
   },
   downloadDefinition: (_definitionId: string, _token: string) => Promise.resolve(new Response()),
 } as unknown as PreviewClient
