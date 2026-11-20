@@ -21,16 +21,11 @@
           >Preview definitions catalogue</a
         >
 
-        {% if errorMessage %}
-          {% set decodedErrorMessage = errorMessage | urldecode %}
+        {% if errors %}
           {{
             govukErrorSummary({
-              titleText: errorSummary,
-              errorList: [
-                {
-                  text: decodedErrorMessage
-                }
-              ]
+              titleText: "Upload failed",
+              errorList: errors
             })
           }}
         {% endif %}

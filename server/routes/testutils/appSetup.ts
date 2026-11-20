@@ -74,7 +74,7 @@ const previewClient: PreviewClient = {
   },
   uploadDefinition: definition => {
     definitions.push(JSON.parse(definition))
-    return Promise.resolve()
+    return Promise.resolve([])
   },
 }
 
