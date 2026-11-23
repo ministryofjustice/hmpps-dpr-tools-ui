@@ -36,11 +36,7 @@ jobs:
       enable-probation: true
       probation-chart-name: hmpps-dpr-tools-ui-probation
       probation-release-name: hmpps-dpr-tools-ui-probation
-      # Cypress: integration on (local Wiremock/apps).
-      # Acceptance stays off until DEV IP allowlist / self-hosted runners +
-      # CYPRESS_* secrets are ready — then uncomment:
-      # enable-acceptance-tests: true
+      # Cypress integration only — matches CircleCI (no acceptance tests).
       enable-integration-tests: true
-      # enable-acceptance-tests: false   # default false; omit until IP access
       node-version: '24'
       slack-channel: 'dpr_cicd_alerts'
