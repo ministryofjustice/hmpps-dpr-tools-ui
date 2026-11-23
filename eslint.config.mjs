@@ -158,7 +158,7 @@ export default defineConfig([
       'class-methods-use-this': 0,
       'no-useless-constructor': 0,
       'no-unused-vars': 'off',
-      'no-console': 'error',
+      'no-console': 'off',
       'no-param-reassign': ['error', { props: false }],
       'import-x/no-unresolved': 'error',
       'import-x/no-named-as-default': 0,
