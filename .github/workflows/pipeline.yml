@@ -36,10 +36,7 @@ jobs:
       enable-probation: true
       probation-chart-name: hmpps-dpr-tools-ui-probation
       probation-release-name: hmpps-dpr-tools-ui-probation
-      # Cypress: integration only — matches CircleCI (no acceptance job / no auth secrets).
-      # Re-enable acceptance later when tools-ui Auth/test users are confirmed:
-      # enable-acceptance-tests: true
-      # acceptance-runs-on: '["self-hosted","Linux","X64","hmpps-github-actions-runner"]'
+      # Cypress integration only — matches CircleCI (no acceptance tests).
       enable-integration-tests: true
       node-version: '24'
       slack-channel: 'dpr_cicd_alerts'
