@@ -74,7 +74,6 @@ export default function routes(services: Services): Router {
       text: definition.name,
     }))
     const rawErrors = req.flash(FLASH_UPLOAD_ERRORS_KEY)
-    console.log(`\n\n rawerrors: ${JSON.stringify(rawErrors)} \n\n`)
     const errors = rawErrors?.[0] && (JSON.parse(rawErrors[0]) as UploadDefinitionResponse)
     const mappedErrors = errors?.map(err => {
       let html = `<div><div><strong>Path</strong>: ${err.path}</div><div><strong>Issue</strong>: ${err.issueTypeDescription}</div>`
@@ -148,7 +147,6 @@ export default function routes(services: Services): Router {
         res.redirect('/preview')
       })
       .catch(reason => {
-        console.log(`\n\n data: ${reason.data} \n\n`)
         let summary = 'Invalid definition'
         if (reason.status !== 400) {
           summary = 'Upload failed'

@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { defineConfig } from 'cypress'
 import auth from './cypress-tests/integration-tests/mockApis/auth'
 import frontendComponents from './cypress-tests/integration-tests/mockApis/frontendComponents'

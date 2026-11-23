@@ -85,6 +85,7 @@ const getCustomData = (
 
 export function initialiseAppInsights(): void {
   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
+    // eslint-disable-next-line no-console
     console.log('Enabling azure application insights')
 
     setup().setDistributedTracingMode(DistributedTracingModes.AI_AND_W3C).start()
