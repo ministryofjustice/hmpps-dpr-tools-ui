@@ -272,6 +272,65 @@ const stubProductCollections = () =>
     },
   })
 
+const stubUploadDefinitionFailure = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/reports/definitions',
+    },
+    response: {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([
+        {
+          path: '$.report[0].id',
+          issueType: 'MISSING_FIELD',
+          extraHint: '',
+          issueTypeDescription: 'A required field is missing',
+        },
+        {
+          path: '$.report[0].specification.field[1].sortable',
+          issueType: 'INVALID_FIELD_VALUE',
+          extraHint: '.....isible\":\"true\",\"sortable\":null,\"defaultsort\":true},{\"name\":\".....',
+          issueTypeDescription: 'This field has an invalid value',
+        }
+      ])
+    },
+  })
+
+const stubUploadDefinitionSuccess = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/reports/definitions',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([])
+    },
+  })
+
+const stubUploadDefinitionTimeout = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/reports/definitions',
+    },
+    response: {
+      status: 500,
+      fixedDelayMilliseconds: 3000,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([])
+    },
+  })
+
 export default {
   stubExternalMovementsCount,
   stubExternalMovements,
@@ -280,4 +339,7 @@ export default {
   stubUserCaseload,
   stubProductCollections,
   stubDefinitionExternalMovements,
+  stubUploadDefinitionFailure,
+  stubUploadDefinitionSuccess,
+  stubUploadDefinitionTimeout,
 }

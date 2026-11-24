@@ -1,6 +1,13 @@
 import { ApiConfig } from '../config'
 import RestClient from './restClient'
 
+export type UploadDefinitionResponse = {
+  path: string
+  issueType: 'MISSING_FIELD' | 'INVALID_FIELD_VALUE' | 'TRAILING_COMMA' | 'GENERAL_SYNTAX_ERROR' | 'UNKNOWN_ISSUE'
+  extraHint: string | undefined
+  issueTypeDescription: string
+}[]
+
 export default class PreviewClient {
   private config: ApiConfig
 
@@ -14,7 +21,7 @@ export default class PreviewClient {
     })
   }
 
-  uploadDefinition(definition: string, token: string): Promise<void> {
+  uploadDefinition(definition: string, token: string): Promise<UploadDefinitionResponse> {
     return new RestClient('Preview API Client', this.config, token).put({
       path: `/definitions`,
       data: definition,
